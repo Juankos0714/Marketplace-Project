@@ -8,4 +8,5 @@ export interface Videogame {
     price: number;
     imageUrl: string[];
     inStock: boolean;
+    quatity:number;
   }
