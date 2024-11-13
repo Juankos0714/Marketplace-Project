@@ -5,9 +5,7 @@ export interface Videogame {
     genre: string[];
     platform: string[];
     publisher: string;
-    releaseDate: Date;
-    rating: number;
     price: number;
-    imageUrl: string;
+    imageUrl: string[];
     inStock: boolean;
   }
