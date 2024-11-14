@@ -8,11 +8,10 @@ export const videogamesDB: Videogame[] = [
     genre: ["Acción", "Aventura", "RPG"],
     platform: ["Nintendo Switch", "Wii U"],
     publisher: "Nintendo",
-    releaseDate: new Date("2017-03-03"),
-    rating: 9.5,
     price: 59.99,
-    imageUrl: "zelda-botw.jpg",
-    inStock: true
+    imageUrl: ["zelda1.jpg", "zelda2.jpg", "zelda3.jpg"],
+    inStock: true,
+    quantity:10
   },
   {
     id: "2",
@@ -21,10 +20,10 @@ export const videogamesDB: Videogame[] = [
     genre: ["Acción", "Aventura", "Mundo Abierto"],
     platform: ["PS4", "Xbox One", "PC"],
     publisher: "Rockstar Games",
-    releaseDate: new Date("2018-10-26"),
-    rating: 9.8,
     price: 49.99,
-    imageUrl: "rdr2.jpg",
-    inStock: true
+    imageUrl: ["rdd_II1.jpg","rdd_II2.jpg","rdd_II3.jpg"],
+    inStock: true,
+    quantity:10
   }
 ];
+
