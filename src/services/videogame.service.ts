@@ -18,16 +18,19 @@ app.use(cors());
 app.use(helmet());
 app.use(express.json());
 
-
+// Routes
 app.use('/api/cart', cartRoutes);
 app.use('/api/videogames', videogameRoutes);
 
+// Error handling middleware
 app.use(errorHandler);
 
+// Start server function
 const startServer = async () => {
     try {
         await initializeDatabase();
-
+        
+        // Seed the database with mock data
         const videogameService = new VideogameService();
         await videogameService.seedDatabase();
         

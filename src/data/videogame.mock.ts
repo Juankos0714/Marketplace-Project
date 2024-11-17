@@ -1,6 +1,6 @@
-import { Videogame } from '../types/videogame';
+import { Videogame } from '../dto/videogame.dto';
 
-export const videogamesDB: Videogame[] = [
+export const videogamesMock: Partial<Videogame>[] = [
   {
     id: "1",
     title: "The Legend of Zelda: Breath of the Wild",
@@ -8,10 +8,11 @@ export const videogamesDB: Videogame[] = [
     genre: ["Acción", "Aventura", "RPG"],
     platform: ["Nintendo Switch", "Wii U"],
     publisher: "Nintendo",
+    releaseDate: new Date("2017-03-03"),
+    rating: 9.5,
     price: 59.99,
-    imageUrl: ["zelda1.jpg", "zelda2.jpg", "zelda3.jpg"],
-    inStock: true,
-    quantity:10
+    imageUrl: "zelda-botw.jpg",
+    inStock: true
   },
   {
     id: "2",
@@ -20,10 +21,10 @@ export const videogamesDB: Videogame[] = [
     genre: ["Acción", "Aventura", "Mundo Abierto"],
     platform: ["PS4", "Xbox One", "PC"],
     publisher: "Rockstar Games",
+    releaseDate: new Date("2018-10-26"),
+    rating: 9.8,
     price: 49.99,
-    imageUrl: ["rdd_II1.jpg","rdd_II2.jpg","rdd_II3.jpg"],
-    inStock: true,
-    quantity:10
+    imageUrl: "rdr2.jpg",
+    inStock: true
   }
 ];
-

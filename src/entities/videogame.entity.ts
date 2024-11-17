@@ -1,9 +1,10 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from "typeorm";
+import { Cart } from "./cart.entity";
 
 @Entity("videogames")
 export class Videogame {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn("uuid")
+  id: string;
 
   @Column()
   title: string;
@@ -20,10 +21,10 @@ export class Videogame {
   @Column()
   publisher: string;
 
-  @Column()
+  @Column("timestamp")
   releaseDate: Date;
 
-  @Column("decimal", { precision: 4, scale: 2 })
+  @Column("decimal", { precision: 3, scale: 1 })
   rating: number;
 
   @Column("decimal", { precision: 10, scale: 2 })
@@ -32,12 +33,15 @@ export class Videogame {
   @Column()
   imageUrl: string;
 
-  @Column({ default: true })
+  @Column()
   inStock: boolean;
 
-  @CreateDateColumn()
+  @OneToMany(() => Cart, (cart) => cart.videogame)
+  carts: Cart[];
+
+  @Column({ type: "timestamp", default: () => "CURRENT_TIMESTAMP" })
   createdAt: Date;
 
-  @UpdateDateColumn()
+  @Column({ type: "timestamp", default: () => "CURRENT_TIMESTAMP", onUpdate: "CURRENT_TIMESTAMP" })
   updatedAt: Date;
 }
