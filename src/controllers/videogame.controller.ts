@@ -1,114 +1,77 @@
 import { Request, Response } from 'express';
-import { AppDataSource } from '../config/database';
-import { Videogame } from '../entities/videogame.entity';
-import { Between, Like } from 'typeorm';
+import { VideogameService } from '../services/videogame.service';
+import { CreateVideogameDto, UpdateVideogameDto } from '../dto/videogame.dto';
 
 export class VideogameController {
-  private videogameRepository = AppDataSource.getRepository(Videogame);
+  private videogameService: VideogameService;
 
-  public async getAll(req: Request, res: Response) {
-    try {
-      const page = parseInt(req.query.page as string) || 1;
-      const limit = parseInt(req.query.limit as string) || 10;
-      const genre = req.query.genre as string;
-      const platform = req.query.platform as string;
-      const search = req.query.search as string;
-      const minPrice = parseFloat(req.query.minPrice as string);
-      const maxPrice = parseFloat(req.query.maxPrice as string);
-
-      let whereClause: any = {};
-
-      if (search) {
-        whereClause.title = Like(`%${search}%`);
-      }
-
-      if (genre) {
-        whereClause.genre = Like(`%${genre}%`);
-      }
-
-      if (platform) {
-        whereClause.platform = Like(`%${platform}%`);
-      }
-
-      if (minPrice && maxPrice) {
-        whereClause.price = Between(minPrice, maxPrice);
-      }
-
-      const [games, total] = await this.videogameRepository.findAndCount({
-        where: whereClause,
-        skip: (page - 1) * limit,
-        take: limit,
-        order: { createdAt: 'DESC' }
-      });
-
-      res.json({
-        data: games,
-        meta: {
-          total,
-          page,
-          lastPage: Math.ceil(total / limit)
-        }
-      });
-    } catch (error) {
-      res.status(500).json({ message: 'Error fetching games' });
-    }
-  }
-
-  public async getOne(req: Request, res: Response) {
-    try {
-      const game = await this.videogameRepository.findOne({
-        where: { id: parseInt(req.params.id) }
-      });
-
-      if (!game) {
-        return res.status(404).json({ message: 'Game not found' });
-      }
-
-      res.json(game);
-    } catch (error) {
-      res.status(500).json({ message: 'Error fetching game' });
-    }
+  constructor() {
+    this.videogameService = new VideogameService();
   }
 
   public async create(req: Request, res: Response) {
     try {
-      const game = this.videogameRepository.create(req.body);
-      await this.videogameRepository.save(game);
-      res.status(201).json(game);
+      const videogameData: CreateVideogameDto = req.body;
+      const result = await this.videogameService.create(videogameData);
+      res.status(201).json(result);
     } catch (error) {
-      res.status(500).json({ message: 'Error creating game' });
+      res.status(500).json({ message: 'Error creating videogame' });
+    }
+  }
+
+  public async findAll(req: Request, res: Response) {
+    try {
+      const videogames = await this.videogameService.findAll();
+      res.json(videogames);
+    } catch (error) {
+      res.status(500).json({ message: 'Error fetching videogames' });
+    }
+  }
+
+  public async findOne(req: Request, res: Response) {
+    try {
+      const { id } = req.params;
+      const videogame = await this.videogameService.findOne(id);
+      
+      if (!videogame) {
+        return res.status(404).json({ message: 'Videogame not found' });
+      }
+      
+      res.json(videogame);
+    } catch (error) {
+      res.status(500).json({ message: 'Error fetching videogame' });
     }
   }
 
   public async update(req: Request, res: Response) {
     try {
-      const game = await this.videogameRepository.findOne({
-        where: { id: parseInt(req.params.id) }
-      });
-
-      if (!game) {
-        return res.status(404).json({ message: 'Game not found' });
+      const { id } = req.params;
+      const updateData: UpdateVideogameDto = req.body;
+      
+      const result = await this.videogameService.update(id, updateData);
+      
+      if (!result) {
+        return res.status(404).json({ message: 'Videogame not found' });
       }
-
-      this.videogameRepository.merge(game, req.body);
-      const result = await this.videogameRepository.save(game);
+      
       res.json(result);
     } catch (error) {
-      res.status(500).json({ message: 'Error updating game' });
+      res.status(500).json({ message: 'Error updating videogame' });
     }
   }
 
   public async delete(req: Request, res: Response) {
     try {
-      const result = await this.videogameRepository.delete(req.params.id);
+      const { id } = req.params;
+      const success = await this.videogameService.delete(id);
       
-      if (result.affected === 0) {
-        return res.status(404).json({ message: 'Game not found' });
+      if (!success) {
+        return res.status(404).json({ message: 'Videogame not found' });
       }
-
+      
       res.status(204).send();
     } catch (error) {
-      res.status(500).json({ message: 'Error deleting game' });
+      res.status(500).json({ message: 'Error deleting videogame' });
     }
   }
 }

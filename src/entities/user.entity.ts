@@ -1,29 +1,97 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn } from "typeorm";
-import { IsEmail, MinLength } from "class-validator";
+import {
+  Table,
+  Column,
+  Model,
+  DataType,
+  CreatedAt,
+  UpdatedAt,
+  HasMany
+} from 'sequelize-typescript';
+import { Cart } from './cart.entity';
 
-@Entity("users")
-export class User {
-  @PrimaryGeneratedColumn()
+// Mantenemos el enum UserRole
+export enum UserRole {
+  USER = "user",
+  ADMIN = "admin"
+}
+
+@Table({
+  tableName: 'users',
+  timestamps: true
+})
+export class User extends Model {
+  @Column({
+    type: DataType.INTEGER,
+    primaryKey: true,
+    autoIncrement: true
+  })
   id: number;
 
-  @Column({ unique: true })
-  @IsEmail()
+  @Column({
+    type: DataType.STRING,
+    unique: true,
+    allowNull: false,
+    validate: {
+      isEmail: {
+        msg: "Invalid email format"
+      }
+    }
+  })
   email: string;
 
-  @Column()
-  @MinLength(6)
+  @Column({
+    type: DataType.STRING,
+    allowNull: false,
+    validate: {
+      len: {
+        args: [6, 100],
+        msg: "Password must be at least 6 characters long"
+      }
+    }
+  })
   password: string;
 
   @Column({
-    type: "enum",
-    enum: ["user", "admin"],
-    default: "user"
+    type: DataType.ENUM(...Object.values(UserRole)),
+    defaultValue: UserRole.USER,
+    validate: {
+      isIn: {
+        args: [Object.values(UserRole)],
+        msg: "Invalid role type"
+      }
+    }
   })
-  role: "user" | "admin";
+  role: UserRole;
 
-  @CreateDateColumn()
+  @HasMany(() => Cart)
+  carts: Cart[];
+
+  @CreatedAt
+  @Column({
+    type: DataType.DATE,
+    field: 'created_at'
+  })
   createdAt: Date;
 
-  @UpdateDateColumn()
+  @UpdatedAt
+  @Column({
+    type: DataType.DATE,
+    field: 'updated_at'
+  })
   updatedAt: Date;
+
+  // Método para las asociaciones
+  static associate(models: any) {
+    User.hasMany(models.Cart, {
+      foreignKey: 'userId',
+      as: 'carts'
+    });
+  }
+
+  // Método helper para verificar si es admin
+  isAdmin(): boolean {
+    return this.role === UserRole.ADMIN;
+  }
+
+  // Puedes agregar más métodos de instancia aquí según necesites
 }
