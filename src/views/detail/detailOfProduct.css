@@ -92,6 +92,9 @@ h1, h2 {
 
 .product-image {
   max-width: 60%;
+  max-height: 300px;
+  width: 500px;
+  background: #000000cc;
   overflow: hidden;
   z-index: 999;
 }
