@@ -1,38 +1,47 @@
+// src/config/database.ts
 import { Sequelize } from 'sequelize-typescript';
-import { User } from "../dto/user.dto";
-import { Videogame } from "../dto/videogame.dto";
-import { Cart } from "../dto/cart.dto"
+import { User } from '../dto/user.entity';
+import { Videogame } from '../dto/videogame.dto';
+import { Cart } from '../dto/cart.entity';
 import dotenv from 'dotenv';
 
 dotenv.config();
 
-export const sequelize = new Sequelize({
-    dialect: 'postgres',
-    host: process.env.DB_HOST || "localhost",
-    port: parseInt(process.env.DB_PORT || "5432"),
-    username: process.env.DB_USERNAME || "postgres",
-    password: process.env.DB_PASSWORD || "postgres",
-    database: process.env.DB_NAME || "videogame_shop",
-    logging: process.env.NODE_ENV === "development",
-    models: [User, Videogame, Cart], // Tus modelos
-    sync: { force: false }, // Equivalente a synchronize: true en TypeORM
-    // Opciones adicionales de Sequelize
-    pool: {
-        max: 5,
-        min: 0,
-        acquire: 30000,
-        idle: 10000
+// Railway proporciona una URL de conexión completa
+const DATABASE_URL = process.env.DATABASE_URL;
+
+// Configuración de Sequelize para Railway
+export const sequelize = new Sequelize(DATABASE_URL || '', {
+  dialect: 'mysql',
+  dialectModule: require('mysql2'), // Específico para mysql2
+  models: [User, Videogame, Cart],
+  pool: {
+    max: 5,
+    min: 0,
+    acquire: 30000,
+    idle: 10000
+  },
+  // Opciones adicionales para Railway
+  dialectOptions: {
+    ssl: {
+      require: true,
+      rejectUnauthorized: false // En caso de que Railway use un certificado auto-firmado
     }
+  },
+  logging: process.env.NODE_ENV === 'development' ? console.log : false
 });
 
-export const initializeDatabase = async () => {
-    try {
-        await sequelize.authenticate();
-        // Sincroniza los modelos con la base de datos
-        await sequelize.sync();
-        console.log("Database connection established");
-    } catch (error) {
-        console.error("Error connecting to database:", error);
-        throw error;
-    }
+// Función para probar la conexión
+export const testDatabaseConnection = async () => {
+  try {
+    await sequelize.authenticate();
+    console.log('✅ Conexión establecida correctamente con Railway.');
+    
+    // Sincronizar modelos con la base de datos
+    await sequelize.sync({ alter: true }); // usar con precaución en producción
+    console.log('✅ Modelos sincronizados con la base de datos.');
+  } catch (error) {
+    console.error('❌ Error al conectar con la base de datos:', error);
+    throw error;
+  }
 };
