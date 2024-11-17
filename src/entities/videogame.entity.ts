@@ -4,7 +4,7 @@ import { Cart } from "./cart.entity";
 @Entity("videogames")
 export class Videogame {
   @PrimaryGeneratedColumn("uuid")
-  id: string;
+  id: number;
 
   @Column()
   title: string;
@@ -44,4 +44,7 @@ export class Videogame {
 
   @Column({ type: "timestamp", default: () => "CURRENT_TIMESTAMP", onUpdate: "CURRENT_TIMESTAMP" })
   updatedAt: Date;
+
+  @OneToMany(() => Cart, cart => cart.videogame)
+  cartItems: Cart[];
 }

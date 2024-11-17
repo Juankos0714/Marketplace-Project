@@ -28,7 +28,7 @@ export class User {
   @IsEnum(UserRole, { message: "Invalid role type" })
   role: UserRole;
 
-  @OneToMany(() => Cart, (cart) => cart.user)
+  @OneToMany(() => Cart, cart => cart.user)
   carts: Cart[];
 
   @CreateDateColumn()

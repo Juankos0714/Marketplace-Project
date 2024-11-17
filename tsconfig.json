@@ -4,7 +4,7 @@
     "module": "CommonJS",
     "lib": ["ES2018"],
     "outDir": "./dist",
-    "rootDir": "dist",
+    "rootDir": "./src",
     "strict": true,
     "strictPropertyInitialization": false,
     "moduleResolution": "node",
@@ -14,6 +14,6 @@
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true
   },
-  "include": ["dist/**/*"],
+  "include": ["src/**/*"],
   "exclude": ["node_modules", "dist"]
 }
