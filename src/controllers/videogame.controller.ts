@@ -74,4 +74,21 @@ export class VideogameController {
       res.status(500).json({ message: 'Error deleting videogame' });
     }
   }
+
+  // view details of a videogame
+
+  public async getVideogameDetails(req: Request, res: Response) {
+    try {
+      const { id } = req.params;
+      const videogame = await this.videogameService.getVideogameDetails(id);
+      
+      if (!videogame) {
+        return res.status(404).json({ message: 'Videogame not found' });
+      }
+      
+      res.json(videogame);
+    } catch (error) {
+      res.status(500).json({ message: 'Error fetching videogame details' });
+    }
+  }
 }
