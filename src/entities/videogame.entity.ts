@@ -16,11 +16,11 @@ import { Cart } from './cart.entity';
 })
 export class Videogame extends Model {
   @Column({
-    type: DataType.UUID,
+    type: DataType.INTEGER,
     primaryKey: true,
     defaultValue: DataType.UUIDV4
   })
-  id: string;
+  id: number;
 
   @Column({
     type: DataType.STRING,
@@ -35,7 +35,7 @@ export class Videogame extends Model {
   description: string;
 
   @Column({
-    type: DataType.JSON, // Usando JSON para arrays
+    type: DataType.TEXT,
     get() {
       const rawValue = this.getDataValue('genre');
       return rawValue ? JSON.parse(rawValue) : [];
@@ -47,7 +47,7 @@ export class Videogame extends Model {
   genre: string[];
 
   @Column({
-    type: DataType.JSON, // Usando JSON para arrays
+    type: DataType.TEXT, // Usando JSON para arrays
     get() {
       const rawValue = this.getDataValue('platform');
       return rawValue ? JSON.parse(rawValue) : [];
