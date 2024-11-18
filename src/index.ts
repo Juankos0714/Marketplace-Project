@@ -1,30 +1,35 @@
-import 'reflect-metadata';
+// src/app.ts
 import express from 'express';
-import dotenv from 'dotenv';
-import { AppDataSource } from './config/database';
-import authRoutes from './routes/auth.routes';
-import videogameRoutes from './routes/videogame.routes';
+import { initDatabase } from './config/sequelize.config';
 import cors from 'cors';
-import helmet from 'helmet';
+import morgan from 'morgan';
 
-dotenv.config();
+export const createApp = async () => {
+  // Inicializar base de datos
+  await initDatabase();
 
-const app = express();
+  const app = express();
 
-app.use(cors());
-app.use(helmet());
-app.use(express.json());
+  // Middlewares
+  app.use(cors());
+  app.use(morgan('dev'));
+  app.use(express.json());
+  app.use(express.urlencoded({ extended: true }));
 
-app.use('/api/auth', authRoutes);
-app.use('/api/videogames', videogameRoutes);
+  // Rutas básicas
+  app.get('/health', (req, res) => {
+    res.json({ status: 'OK', timestamp: new Date() });
+  });
 
-const PORT = process.env.PORT || 3000;
+  return app;
+};
 
-AppDataSource.initialize()
-  .then(() => {
-    console.log('Database connected successfully');
+// Para iniciar el servidor
+if (require.main === module) {
+  const PORT = process.env.PORT || 3000;
+  createApp().then(app => {
     app.listen(PORT, () => {
-      console.log(`Server running on port ${PORT}`);
+      console.log(`🚀 Servidor corriendo en el puerto ${PORT}`);
     });
-  })
-  .catch((error) => console.log('TypeORM connection error: ', error));
+  });
+}
