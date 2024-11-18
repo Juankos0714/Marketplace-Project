@@ -1,4 +1,5 @@
 export interface CreateVideogameDto {
+  id:number;
   title: string;
   description: string;
   genre: string[];
