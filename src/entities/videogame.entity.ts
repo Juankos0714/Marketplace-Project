@@ -11,16 +11,28 @@ import {
 import { Cart } from './cart.entity';
 
 @Table({
+
   tableName: 'videogames',
+
   timestamps: true
+
 })
-export class Videogame extends Model {
+
+export class Videogame extends Model<Videogame> {
+
   @Column({
-    type: DataType.INTEGER,
+
+    type: DataType.BIGINT.UNSIGNED, // Cambio explícito
+
     primaryKey: true,
-    defaultValue: DataType.UUIDV4
+
+    autoIncrement: true,
+
+    field: 'id' // Aseguramos que el campo se llame exactamente 'id'
+
   })
-  id: number;
+
+  id!: number;
 
   @Column({
     type: DataType.STRING,
@@ -122,7 +134,8 @@ export class Videogame extends Model {
   static associate(models: any) {
     Videogame.hasMany(models.Cart, {
       foreignKey: 'videogameId',
-      as: 'cartItems'
+      as: 'cartItems',
+      onDelete: 'CASCADE'
     });
   }
 

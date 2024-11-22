@@ -1,8 +1,11 @@
+// src/config/sequelize.config.ts
 import { Sequelize, SequelizeOptions } from 'sequelize-typescript';
+import { QueryTypes } from 'sequelize';
 import { User } from '../entities/user.entity';
 import { Videogame } from '../entities/videogame.entity';
 import { Cart } from '../entities/cart.entity';
 import dotenv from 'dotenv';
+import parseUrl from 'parse-url';
 
 dotenv.config();
 
@@ -13,6 +16,8 @@ const baseConfig: SequelizeOptions = {
   define: {
     timestamps: true,
     underscored: true,
+    charset: 'utf8mb4',
+    collate: 'utf8mb4_unicode_ci'
   },
   dialect: 'mysql',
   dialectModule: require('mysql2'),
@@ -47,81 +52,159 @@ const configs: { [key: string]: SequelizeOptions } = {
 
 // Función para crear la instancia de Sequelize
 const createSequelizeInstance = (): Sequelize => {
-  const config = configs[env];
-  
-  // Si estás en producción, usa la URL de conexión
-  if (env === 'production' && process.env.RAILWAY_TCP_PROXY_HOST) {
-    const url = new URL(process.env.RAILWAY_TCP_PROXY_HOST);
+  // Prioriza la conexión por URL de Railway
+  if (process.env.RAILWAY_TCP_PROXY_URL) {
+    try {
+      // Parsea la URL de conexión de Railway
+      const parsedUrl = parseUrl(process.env.RAILWAY_TCP_PROXY_URL);
+      
+      return new Sequelize({
+        ...baseConfig,
+        host: parsedUrl.resource,
+        port: parseInt(parsedUrl.port || '3306'),
+        username: parsedUrl.user,
+        password: parsedUrl.password,
+        database: parsedUrl.pathname.replace('/', ''),
+        dialectOptions: {
+          ssl: {
+            require: true,
+            rejectUnauthorized: false
+          }
+        }
+      });
+    } catch (error) {
+      console.error('Error al parsear la URL de conexión:', error);
+    }
+  }
+
+  // Usa la configuración basada en variables de entorno separadas
+  if (env === 'production') {
     return new Sequelize({
-      ...config,
-      host: url.hostname,
-      port: parseInt(url.port || '3306'),
-      username: url.username,
-      password: url.password,
-      database: url.pathname.replace('/', ''),
+      ...configs.production,
+      host: process.env.RAILWAY_HOST || '',
+      port: parseInt(process.env.RAILWAY_PORT || '3306'),
+      username: process.env.RAILWAY_USER || '',
+      password: process.env.RAILWAY_PASSWORD || '',
+      database: process.env.RAILWAY_DATABASE || '',
     });
   }
 
-  return new Sequelize(config);
+  // Fallback a la configuración de desarrollo
+  return new Sequelize(configs.development);
 };
 
 export const sequelize = createSequelizeInstance();
 
-// Función de inicialización de base de datos
+// Función de depuración del esquema de base de datos
+const debugDatabaseSchema = async () => {
+  try {
+    const [results] = await sequelize.query(
+      "SELECT TABLE_NAME, COLUMN_NAME, DATA_TYPE, CHARACTER_MAXIMUM_LENGTH, COLUMN_TYPE " +
+      "FROM INFORMATION_SCHEMA.COLUMNS " +
+      "WHERE TABLE_SCHEMA = :dbName",
+      {
+        replacements: { dbName: process.env.RAILWAY_DATABASE || process.env.DB_NAME },
+        type: QueryTypes.SELECT
+      }
+    );
+
+    console.log('Esquema de la base de datos:');
+    console.table(results);
+  } catch (error) {
+    console.error('Error al depurar el esquema de la base de datos:', error);
+  }
+};
+
 export const initDatabase = async () => {
   try {
     console.log('Intentando conectar con la base de datos...');
     console.log('Entorno:', env);
+    
+    // Log de las variables de conexión para depuración
+    console.log('Variables de conexión:', {
+      HOST: process.env.RAILWAY_HOST || process.env.RAILWAY_TCP_PROXY_URL,
+      PORT: process.env.RAILWAY_PORT,
+      USER: process.env.RAILWAY_USER,
+      DATABASE: process.env.RAILWAY_DATABASE
+    });
 
     await sequelize.authenticate();
     console.log('✅ Conexión a la base de datos establecida correctamente.');
 
-    // Configuración de sincronización más segura
-    if (env === 'development') {
-      await sequelize.sync({ force: true });  // Usa force: true con precaución
-      console.log('✅ Modelos sincronizados en modo desarrollo.');
-    } else {
-      await sequelize.sync({ alter: { drop: false } });
-      console.log('✅ Modelos verificados en producción.');
-    }
+    // Usar alter: true para modificar tablas existentes de manera segura
+    await sequelize.sync({ 
+      alter: {
+        drop: false
+      },
+      logging: console.log
+    });
 
-    // Configuración de asociaciones manuales
+    console.log('✅ Modelos sincronizados.');
+
     setupAssociations();
+
+    // Opcional: Descomentar para depurar el esquema
+    // await debugDatabaseSchema();
 
   } catch (error) {
     console.error('❌ Error al conectar con la base de datos:', error);
     
-    // Loguea detalles específicos del error
+    // Log detallado de errores
     if (error instanceof Error) {
-      console.error('Detalles del error:', {
+      console.error('Detalles del error completos:', {
+        name: error.name,
         message: error.message,
         stack: error.stack
       });
+
+      // Si es un error de Sequelize, muestra detalles adicionales
+      if ('parent' in error) {
+        console.error('Error de base de datos:', (error as any).parent);
+      }
     }
     
     throw error;
   }
 };
-
-// Función para configurar asociaciones manualmente
 const setupAssociations = () => {
+  // Asociaciones entre User y Cart
   User.hasMany(Cart, {
-    foreignKey: 'userId',
-    as: 'carts'
+    foreignKey: {
+      name: 'userId',
+      allowNull: false
+    },
+    as: 'carts',
+    onDelete: 'CASCADE'
   });
+  
   Cart.belongsTo(User, {
-    foreignKey: 'userId',
-    as: 'user'
+    foreignKey: {
+      name: 'userId',
+      allowNull: false
+    },
+    as: 'user',
+    onDelete: 'CASCADE'
   });
 
+  // Asociaciones entre Videogame y Cart
   Videogame.hasMany(Cart, {
-    foreignKey: 'videogameId',
-    as: 'cartItems'
+    foreignKey: {
+      name: 'videogameId',
+      allowNull: false
+    },
+    as: 'cartItems',
+    onDelete: 'CASCADE'
   });
+  
   Cart.belongsTo(Videogame, {
-    foreignKey: 'videogameId',
-    as: 'videogame'
+    foreignKey: {
+      name: 'videogameId',
+      allowNull: false
+    },
+    as: 'videogame',
+    onDelete: 'CASCADE'
   });
 };
 
+// Tipo de exportación para conexión de base de datos
 export type DbConnection = typeof sequelize;

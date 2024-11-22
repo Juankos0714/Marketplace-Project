@@ -1,27 +1,31 @@
-// src/app.ts
 import express from 'express';
 import { initDatabase } from './config/sequelize.config';
 import cors from 'cors';
 import morgan from 'morgan';
 
 export const createApp = async () => {
-  // Inicializar base de datos
-  await initDatabase();
+  try {
+    // Inicializar base de datos
+    await initDatabase();
 
-  const app = express();
+    const app = express();
 
-  // Middlewares
-  app.use(cors());
-  app.use(morgan('dev'));
-  app.use(express.json());
-  app.use(express.urlencoded({ extended: true }));
+    // Middlewares
+    app.use(cors());
+    app.use(morgan('dev'));
+    app.use(express.json());
+    app.use(express.urlencoded({ extended: true }));
 
-  // Rutas básicas
-  app.get('/health', (req, res) => {
-    res.json({ status: 'OK', timestamp: new Date() });
-  });
+    // Rutas básicas
+    app.get('/health', (req, res) => {
+      res.json({ status: 'OK', timestamp: new Date() });
+    });
 
-  return app;
+    return app;
+  } catch (error) {
+    console.error('Error al crear la aplicación:', error);
+    throw error;
+  }
 };
 
 // Para iniciar el servidor
@@ -31,5 +35,8 @@ if (require.main === module) {
     app.listen(PORT, () => {
       console.log(`🚀 Servidor corriendo en el puerto ${PORT}`);
     });
+  }).catch(error => {
+    console.error('Error al iniciar el servidor:', error);
+    process.exit(1);
   });
 }

@@ -3,14 +3,15 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "start": "node dist/app.js",
-    "dev": "ts-node-dev src/app.ts",
+    "start": "node dist/index.js",
+    "dev": "ts-node-dev src/index.ts",
     "build": "tsc",
     "db:migrate": "sequelize-cli db:migrate",
     "db:seed": "sequelize-cli db:seed:all"
   },
   "dependencies": {
     "@types/morgan": "^1.9.9",
+    "@types/url-parse": "^1.4.11",
     "bcryptjs": "^2.4.3",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.0",
@@ -21,12 +22,14 @@
     "jsonwebtoken": "^9.0.2",
     "morgan": "^1.10.0",
     "mysql2": "^3.11.4",
+    "parse-url": "^9.2.0",
     "pg": "^8.13.1",
     "pg-hstore": "^2.3.4",
     "reflect-metadata": "^0.1.13",
     "sequelize": "^6.37.5",
     "sequelize-typescript": "^2.1.6",
-    "typeorm": "^0.3.17"
+    "typeorm": "^0.3.17",
+    "url-parse": "^1.5.10"
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.6",
@@ -34,6 +37,7 @@
     "@types/express": "^4.17.21",
     "@types/jsonwebtoken": "^9.0.5",
     "@types/node": "^20.10.0",
+    "@types/sequelize": "^4.28.20",
     "@types/validator": "^13.12.2",
     "ts-node": "^10.9.1",
     "ts-node-dev": "^2.0.0",

@@ -1,14 +1,14 @@
-import {
-  Table,
-  Column,
-  Model,
-  ForeignKey,
-  BelongsTo,
-  DataType,
-  CreatedAt,
-  UpdatedAt,
-  Index,
-  Unique
+// src/entities/cart.entity.ts
+import { 
+  Table, 
+  Column, 
+  Model, 
+  PrimaryKey, 
+  AutoIncrement, 
+  ForeignKey, 
+  BelongsTo, 
+  Default,
+  DataType
 } from 'sequelize-typescript';
 import { User } from './user.entity';
 import { Videogame } from './videogame.entity';
@@ -16,98 +16,63 @@ import { Videogame } from './videogame.entity';
 @Table({
   tableName: 'carts',
   timestamps: true,
-  indexes: [
-    {
-      unique: true,
-      fields: ['userId', 'videogameId']  // Equivalente al @Unique de TypeORM
-    }
-  ]
+  underscored: true
 })
-export class Cart extends Model {
+export class Cart extends Model<Cart> {
+  @PrimaryKey
+  @AutoIncrement
   @Column({
-    type: DataType.INTEGER,
-    primaryKey: true,
-    autoIncrement: true
+    type: DataType.BIGINT.UNSIGNED,
+    allowNull: false
   })
-  id: number;
+  id!: number;
 
   @ForeignKey(() => User)
-  @Index  // Mejora performance en búsquedas por usuario
   @Column({
-    type: DataType.INTEGER,
+    type: DataType.BIGINT.UNSIGNED,
     allowNull: false,
     field: 'user_id'
   })
-  userId: number;
-
-  @BelongsTo(() => User, {
-    onDelete: 'CASCADE'  // Si se elimina el usuario, se elimina su carrito
-  })
-  user: User;
+  userId!: number;
 
   @ForeignKey(() => Videogame)
   @Column({
-    type: DataType.INTEGER,
+    type: DataType.BIGINT.UNSIGNED,
     allowNull: false,
     field: 'videogame_id'
   })
-  videogameId: number;
-
-  @BelongsTo(() => Videogame, {
-    onDelete: 'CASCADE'
-  })
-  videogame: Videogame;
+  videogameId!: number;
 
   @Column({
     type: DataType.INTEGER,
-    defaultValue: 1,
-    validate: {
-      min: 1  // Asegura que la cantidad siempre sea positiva
-    }
+    defaultValue: 1
   })
-  quantity: number;
+  quantity!: number;
 
   @Column({
-    type: DataType.DECIMAL(10, 2),
-    field: 'unit_price'
+    type: DataType.DECIMAL(10, 2)
   })
-  unitPrice: number;
+  unitPrice!: number;
 
+  @Default('pending')
   @Column({
-    type: DataType.STRING(20),
-    defaultValue: 'pending',
-    validate: {
-      isIn: [['pending', 'saved_for_later', 'removed']]
-    }
+    type: DataType.STRING(20)
   })
-  status: 'pending' | 'saved_for_later' | 'removed';
+  status!: string;
 
-  @CreatedAt
-  @Column({
-    type: DataType.DATE,
-    field: 'created_at'
-  })
-  createdAt: Date;
+  @BelongsTo(() => User)
+  user!: User;
 
-  @UpdatedAt
-  @Column({
-    type: DataType.DATE,
-    field: 'updated_at'
-  })
-  updatedAt: Date;
+  @BelongsTo(() => Videogame)
+  videogame!: Videogame;
 
-  // Método de ayuda para calcular el precio total
-  getTotalPrice(): number {
-    return this.quantity * this.unitPrice;
-  }
-
-  // Métodos adicionales que Sequelize necesita para las relaciones
+  // Método de asociación estático
   static associate(models: any) {
-    Cart.belongsTo(models.User, {
+    this.belongsTo(models.User, {
       foreignKey: 'userId',
       as: 'user'
     });
-    Cart.belongsTo(models.Videogame, {
+    this.belongsTo(models.Videogame, {
       foreignKey: 'videogameId',
       as: 'videogame'
     });

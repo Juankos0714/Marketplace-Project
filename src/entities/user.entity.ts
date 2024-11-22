@@ -1,97 +1,70 @@
-import {
-  Table,
-  Column,
-  Model,
-  DataType,
+// src/entities/user.entity.ts
+import { 
+  Table, 
+  Column, 
+  Model, 
+  PrimaryKey, 
+  AutoIncrement, 
+  HasMany,
   CreatedAt,
   UpdatedAt,
-  HasMany
+  DataType
 } from 'sequelize-typescript';
 import { Cart } from './cart.entity';
 
-// Mantenemos el enum UserRole
 export enum UserRole {
-  USER = "user",
-  ADMIN = "admin"
+  USER = 'user',
+  ADMIN = 'admin'
 }
 
 @Table({
   tableName: 'users',
-  timestamps: true
+  timestamps: true,
+  underscored: true
 })
-export class User extends Model {
+export class User extends Model<User> {
+  @PrimaryKey
+  @AutoIncrement
   @Column({
-    type: DataType.INTEGER,
-    primaryKey: true,
-    autoIncrement: true
+    type: DataType.BIGINT.UNSIGNED,
+    allowNull: false
   })
-  id: number;
+  id!: number;
 
   @Column({
-    type: DataType.STRING,
+    type: DataType.STRING(255),
     unique: true,
     allowNull: false,
     validate: {
-      isEmail: {
-        msg: "Invalid email format"
-      }
+      isEmail: true
     }
   })
-  email: string;
+  email!: string;
 
   @Column({
-    type: DataType.STRING,
-    allowNull: false,
-    validate: {
-      len: {
-        args: [6, 100],
-        msg: "Password must be at least 6 characters long"
-      }
-    }
+    type: DataType.STRING(255),
+    allowNull: false
   })
-  password: string;
+  password!: string;
 
   @Column({
     type: DataType.ENUM(...Object.values(UserRole)),
-    defaultValue: UserRole.USER,
-    validate: {
-      isIn: {
-        args: [Object.values(UserRole)],
-        msg: "Invalid role type"
-      }
-    }
+    defaultValue: UserRole.USER
   })
-  role: UserRole;
+  role!: UserRole;
 
   @HasMany(() => Cart)
-  carts: Cart[];
+  carts!: Cart[];
 
-  @CreatedAt
-  @Column({
-    type: DataType.DATE,
-    field: 'created_at'
-  })
-  createdAt: Date;
-
-  @UpdatedAt
-  @Column({
-    type: DataType.DATE,
-    field: 'updated_at'
-  })
-  updatedAt: Date;
-
-  // Método para las asociaciones
+  // Método de asociación estático
   static associate(models: any) {
-    User.hasMany(models.Cart, {
+    this.hasMany(models.Cart, {
       foreignKey: 'userId',
       as: 'carts'
     });
   }
 
-  // Método helper para verificar si es admin
   isAdmin(): boolean {
     return this.role === UserRole.ADMIN;
   }
-
-  // Puedes agregar más métodos de instancia aquí según necesites
 }
