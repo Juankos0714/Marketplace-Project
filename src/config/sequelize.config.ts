@@ -50,21 +50,13 @@ const configs: { [key: string]: SequelizeOptions } = {
   }
 };
 
-// Función para crear la instancia de Sequelize
 const createSequelizeInstance = (): Sequelize => {
-  // Prioriza la conexión por URL de Railway
-  if (process.env.RAILWAY_TCP_PROXY_URL) {
-    try {
-      // Parsea la URL de conexión de Railway
-      const parsedUrl = parseUrl(process.env.RAILWAY_TCP_PROXY_URL);
-      
-      return new Sequelize({
+  if (env === 'production') {
+    // Usar directamente la URL de conexión si está disponible
+    if (process.env.MYSQL_URL) {
+      console.log('Conectando usando MYSQL_URL...');
+      return new Sequelize(process.env.MYSQL_URL, {
         ...baseConfig,
-        host: parsedUrl.resource,
-        port: parseInt(parsedUrl.port || '3306'),
-        username: parsedUrl.user,
-        password: parsedUrl.password,
-        database: parsedUrl.pathname.replace('/', ''),
         dialectOptions: {
           ssl: {
             require: true,
@@ -72,27 +64,30 @@ const createSequelizeInstance = (): Sequelize => {
           }
         }
       });
-    } catch (error) {
-      console.error('Error al parsear la URL de conexión:', error);
     }
-  }
 
-  // Usa la configuración basada en variables de entorno separadas
-  if (env === 'production') {
+    // Fallback a variables individuales
+    console.log('Conectando usando variables individuales...');
     return new Sequelize({
       ...configs.production,
-      host: process.env.RAILWAY_HOST || '',
-      port: parseInt(process.env.RAILWAY_PORT || '3306'),
-      username: process.env.RAILWAY_USER || '',
-      password: process.env.RAILWAY_PASSWORD || '',
-      database: process.env.RAILWAY_DATABASE || '',
+      host: process.env.MYSQLHOST,
+      port: parseInt(process.env.MYSQLPORT || '3306'),
+      username: process.env.MYSQLUSER,
+      password: process.env.MYSQLPASSWORD,
+      database: process.env.MYSQLDATABASE,
+      dialectOptions: {
+        ssl: {
+          require: true,
+          rejectUnauthorized: false
+        }
+      }
     });
   }
 
-  // Fallback a la configuración de desarrollo
+  // Configuración de desarrollo
+  console.log('Conectando en modo desarrollo...');
   return new Sequelize(configs.development);
 };
-
 export const sequelize = createSequelizeInstance();
 
 // Función de depuración del esquema de base de datos
@@ -119,13 +114,12 @@ export const initDatabase = async () => {
   try {
     console.log('Intentando conectar con la base de datos...');
     console.log('Entorno:', env);
-    
-    // Log de las variables de conexión para depuración
+    console.log('URL de conexión:', process.env.MYSQL_URL ? 'Disponible' : 'No disponible');
     console.log('Variables de conexión:', {
-      HOST: process.env.RAILWAY_HOST || process.env.RAILWAY_TCP_PROXY_URL,
-      PORT: process.env.RAILWAY_PORT,
-      USER: process.env.RAILWAY_USER,
-      DATABASE: process.env.RAILWAY_DATABASE
+      HOST: process.env.MYSQLHOST,
+      PORT: process.env.MYSQLPORT,
+      USER: process.env.MYSQLUSER,
+      DATABASE: process.env.MYSQLDATABASE
     });
 
     await sequelize.authenticate();

@@ -21,6 +21,7 @@
     "helmet": "^7.1.0",
     "jsonwebtoken": "^9.0.2",
     "morgan": "^1.10.0",
+    "mysql": "^2.18.1",
     "mysql2": "^3.11.4",
     "parse-url": "^9.2.0",
     "pg": "^8.13.1",
@@ -28,6 +29,7 @@
     "reflect-metadata": "^0.1.13",
     "sequelize": "^6.37.5",
     "sequelize-typescript": "^2.1.6",
+    "status": "^0.0.6",
     "typeorm": "^0.3.17",
     "url-parse": "^1.5.10"
   },
