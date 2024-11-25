@@ -5,23 +5,14 @@
     "lib": ["ES2018", "DOM"],
     "outDir": "./dist",
     "rootDir": "./src",
-    
-    // Configuración para decoradores y tipos
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "strictPropertyInitialization": false,
     "strictNullChecks": false,
-    
-    // Configuración general
     "strict": true,
     "esModuleInterop": true,
     "moduleResolution": "node",
-    "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true,
-    "useUnknownInCatchVariables": false,
-    
-    // Soporte para archivos .json
-    "resolveJsonModule": true
+    "types": ["node"]
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules", "dist"]
