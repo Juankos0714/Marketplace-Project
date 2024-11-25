@@ -2,6 +2,7 @@ import express from 'express';
 import { initDatabase } from './config/sequelize.config';
 import cors from 'cors';
 import morgan from 'morgan';
+import { authMiddleware } from './middleware/auth.middleware';
 
 export const createApp = async () => {
   try {
@@ -19,6 +20,23 @@ export const createApp = async () => {
     // Rutas básicas
     app.get('/health', (req, res) => {
       res.json({ status: 'OK', timestamp: new Date() });
+    });
+
+    // Ruta de login
+    app.post('/login', (req, res) => {
+      const { username, password } = req.body;
+
+      // Validación simple (reemplazar con validación real)
+      if (username === 'user' && password === 'password') {
+        const token = jwt.sign({ username }, 'your_jwt_secret', { expiresIn: '1h' });
+        return res.json({ token });
+      }
+      return res.status(401).send('Unauthorized');
+    });
+
+    // Ruta protegida
+    app.get('/protected', authMiddleware, (req, res) => {
+      res.send('This is a protected route');
     });
 
     return app;
