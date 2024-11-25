@@ -2,6 +2,28 @@ import express from 'express';
 import { initDatabase } from './config/sequelize.config';
 import cors from 'cors';
 import morgan from 'morgan';
+import express from 'express';
+import jwt from 'jsonwebtoken';
+
+const app = express();
+const PORT = process.env.PORT || 3000;
+
+app.use(express.json());
+
+app.post('/login', (req, res) => {
+    const { username, password } = req.body;
+
+    // Simple validation (replace with real validation)
+    if (username === 'user' && password === 'password') {
+        const token = jwt.sign({ username }, 'your_jwt_secret', { expiresIn: '1h' });
+        return res.json({ token });
+    }
+    return res.status(401).send('Unauthorized');
+});
+
+app.listen(PORT, () => {
+    console.log(`Server is running on http://localhost:${PORT}`);
+});
 
 export const createApp = async () => {
   try {
