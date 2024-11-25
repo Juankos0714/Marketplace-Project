@@ -2,19 +2,26 @@
   "compilerOptions": {
     "target": "ES2018",
     "module": "CommonJS",
-    "lib": ["ES2018"],
+    "lib": ["ES2018", "DOM"],
     "outDir": "./dist",
     "rootDir": "./src",
-    "strict": true,
-    "strictPropertyInitialization": false,
-    "moduleResolution": "node",
-    "esModuleInterop": true,
+    
+    // Configuración para decoradores y tipos
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
+    "strictPropertyInitialization": false,
+    "strictNullChecks": false,
+    
+    // Configuración general
+    "strict": true,
+    "esModuleInterop": true,
+    "moduleResolution": "node",
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    "strictNullChecks": false,
-    "useUnknownInCatchVariables": false
+    "useUnknownInCatchVariables": false,
+    
+    // Soporte para archivos .json
+    "resolveJsonModule": true
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules", "dist"]
