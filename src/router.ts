@@ -116,7 +116,3 @@ router.get(
   authMiddleware(["adm", "Vendedor"]),
   getAllSalesBySeller
 );
-
-  authMiddleware(["adm", "Vendedor"]),
-  getAllSalesBySeller
-);

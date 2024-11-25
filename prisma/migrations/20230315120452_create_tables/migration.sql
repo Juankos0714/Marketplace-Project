@@ -25,13 +25,17 @@ CREATE TABLE "Access" (
 CREATE TABLE "Product" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
+    "description" TEXT NOT NULL,
+    "image" varchar(255) NOT NULL,
+    "category" TEXT NOT NULL,
+    "platform" TEXT NOT NULL,
     "price" TEXT NOT NULL,
     "amount" INTEGER NOT NULL,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL,
     "storeId" TEXT,
 
-    CONSTRAINT "Product_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "Product_key" PRIMARY KEY ("id")
 );
 
 -- CreateTable
