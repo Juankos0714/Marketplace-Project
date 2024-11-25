@@ -1,4 +1,3 @@
-// src/config/sequelize.config.ts
 import { Sequelize, SequelizeOptions } from 'sequelize-typescript';
 import { QueryTypes } from 'sequelize';
 import { User } from '../entities/user.entity';
@@ -22,16 +21,16 @@ const baseConfig: SequelizeOptions = {
   dialectModule: require('mysql2'),
   logging: env === 'development' ? console.log : false,
   pool: {
-    max: 5,
+    max: env === 'production' ? 10 : 5,
     min: 0,
-    acquire: 60000, // Time Sequelize waits for a connection to be established
-    idle: 10000, // Time before an idle connection is released
+    acquire: 60000,
+    idle: 10000,
   },
   dialectOptions: {
-    connectTimeout: 60000, // MySQL connection timeout
+    connectTimeout: 60000,
     ssl: process.env.DB_SSL === 'true' ? {
       require: true,
-      rejectUnauthorized: false, // For self-signed certificates
+      rejectUnauthorized: false,
     } : undefined,
   },
 };
@@ -52,12 +51,6 @@ const configs: { [key: string]: SequelizeOptions } = {
     username: process.env.MYSQLUSER,
     password: process.env.MYSQLPASSWORD,
     database: process.env.MYSQLDATABASE,
-    pool: {
-      max: 10, // Increased for production
-      min: 2,
-      acquire: 60000,
-      idle: 10000,
-    },
   },
 };
 
@@ -90,18 +83,17 @@ export const initDatabase = async (): Promise<void> => {
       setupAssociations();
       return;
 
-      } catch (error) {
-        retries--;
-        console.error(`❌ Error al conectar (intentos restantes: ${retries}):`, (error as Error).message);
-        if (retries > 0) {
-          console.log('Reintentando en 5 segundos...');
-          await new Promise((res) => setTimeout(res, 5000));
-        } else {
-          console.error('Se agotaron los intentos de conexión.');
-          throw error; // Re-throw the original error
-        }
+    } catch (error) {
+      retries--;
+      console.error(`❌ Error al conectar (intentos restantes: ${retries}):`, (error as Error).message);
+      if (retries > 0) {
+        console.log('Reintentando en 5 segundos...');
+        await new Promise((res) => setTimeout(res, 5000));
+      } else {
+        console.error('Se agotaron los intentos de conexión.');
+        throw error;
       }
-      
+    }
   }
 };
 
