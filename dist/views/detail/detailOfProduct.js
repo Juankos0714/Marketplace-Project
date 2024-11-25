@@ -118,4 +118,3 @@ function createParticle() {
 }
 // Generar partículas a intervalos más cortos (cada 1000 ms)
 setInterval(createParticle, 1000); // Generar cada 1000 ms para el doble de partículas
-//# sourceMappingURL=detailOfProduct.js.map

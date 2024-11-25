@@ -12,7 +12,7 @@ export const createStore = async (req: Request, res: Response) => {
   });
 
   if (!isUser) {
-    return res.status(400).json({ message: "Usuário não existe" });
+    return res.status(400).json({ message: "El usuario no existe" });
   }
 
   const store = await prisma.store.create({
@@ -42,11 +42,11 @@ export const updateStore = async (req: Request, res: Response) => {
     });
 
     if (!isStore) {
-      return res.status(404).json({ message: "Loja não encontrada" });
+      return res.status(404).json({ message: "Tienda no encontrada" });
     }
 
     if (id !== isStore.userId) {
-      return res.status(400).json({ message: "Usuário não e dono desta Loja" });
+      return res.status(400).json({ message: "El usuario no es el propietario de esta Tienda" });
     }
 
     const store = await prisma.store.update({
@@ -74,18 +74,18 @@ export const deleteStore = async (req: Request, res: Response) => {
     });
 
     if (!isStore) {
-      return res.status(404).json({ message: "Loja não encontrada" });
+      return res.status(404).json({ message: "Tienda no encontrada" });
     }
 
     if (id !== isStore.userId) {
-      return res.status(400).json({ message: "Usuário não e dono desta Loja" });
+      return res.status(400).json({ message: "El usuario no es el propietario de esta Tienda" });
     }
 
     await prisma.store.delete({
       where: { id: storeId },
     });
 
-    return res.status(200).json({ message: "Loja deletada com sucesso." });
+    return res.status(200).json({ message: "Tienda eliminada correctamente." });
   } catch (error) {
     return res.status(400).json(error);
   }
@@ -135,7 +135,7 @@ export const getUniqueStore = async (req: Request, res: Response) => {
     });
 
     if (!store) {
-      return res.status(404).json({ message: "Loja não encontrada" });
+      return res.status(404).json({ message: "Tienda no encontrada" });
     }
 
     return res.status(200).json(store);

@@ -25,19 +25,19 @@ export const signIn = async (req: Request, res: Response) => {
     });
 
     if (!user) {
-      return res.status(400).json({ message: "Usuário não encontrado." });
+      return res.status(400).json({ message: "Usuario no encontrado." });
     }
 
     const isPasswordValid = await compare(password, user.password);
 
     if (!isPasswordValid) {
-      return res.status(400).json({ message: "Senha incorreta." });
+      return res.status(400).json({ message: "Contraseña incorrecta." });
     }
 
     const MY_SECRET_KEY = process.env.MY_SECRET_KEY;
 
     if (!MY_SECRET_KEY) {
-      throw new Error("Chave secreta não fonercida");
+      throw new Error("Clave secreta no proporcionada");
     }
 
     const token = sign({

@@ -31,7 +31,7 @@ export const createSale = async (req: Request, res: Response) => {
     if (id === userSellerId) {
       return res.status(400).json({
         message:
-          "Não é possível criar uma venda com ID de comprador e vendedor iguais",
+          "No es posible crear una venta con el mismo ID de comprador y vendedor.",
       });
     }
 
@@ -65,7 +65,7 @@ export const createSale = async (req: Request, res: Response) => {
 
     return res
       .status(201)
-      .json({ sale, message: "Compra realizada com sucesso." });
+      .json({ sale, message: "Compra realizada con éxito." });
   } catch (error) {
     return res.status(400).json(error);
   }

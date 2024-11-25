@@ -49,7 +49,7 @@ export function authMiddleware(permissions?: string[]) {
         const hasPermission = permissions.some((p) => userPermissions.includes(p))
 
         if(!hasPermission) {
-          return res.status(403).json({message: "Permissão negada."})
+          return res.status(403).json({message: "Permiso denegado."})
         }
       }
 

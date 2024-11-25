@@ -38,13 +38,13 @@ export const updateProduct = async (req: Request, res: Response) => {
     });
 
     if (!isProduct) {
-      return res.status(404).json({ message: "Product not found" });
+      return res.status(404).json({ message: "Producto no encontrado" });
     }
 
     if (id !== isProduct?.Store?.userId) {
       return res
         .status(404)
-        .json({ message: "Este produto não pertence a esse usuário" });
+        .json({ message: "Este producto no pertenece a este usuario" });
     }
 
     const Product = await prisma.product.update({
@@ -92,7 +92,7 @@ export const getUniqueProduct = async (req: Request, res: Response) => {
     });
 
     if (!product) {
-      return res.status(404).json({ message: "Product not found" });
+      return res.status(404).json({ message: "Producto no encontrado" });
     }
 
     return res.status(200).json(product);
@@ -116,13 +116,13 @@ export const deleteProduct = async (req: Request, res: Response) => {
     });
 
     if (!isProduct) {
-      return res.status(404).json({ message: "Product not found" });
+      return res.status(404).json({ message: "Producto no encontrado" });
     }
 
     if (id !== isProduct?.Store?.userId) {
       return res
         .status(404)
-        .json({ message: "Este produto não pertence a esse usuário" });
+        .json({ message: "Este producto no pertenece a este usuario" });
     }
 
     await prisma.product.delete({
@@ -131,7 +131,7 @@ export const deleteProduct = async (req: Request, res: Response) => {
       },
     });
 
-    return res.status(204).json({ message: "Produto deletado com sucesso" });
+    return res.status(204).json({ message: "Producto eliminado exitosamente" });
   } catch (error) {
     return res.status(400).json(error);
   }

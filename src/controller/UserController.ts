@@ -22,13 +22,13 @@ export const createUser = async (req: Request, res: Response) => {
     if (!isAccessName) {
       return res
         .status(400)
-        .json({ message: "Esté nivel de acesso não existe" });
+        .json({ message: "Este nivel de acceso no existe" });
     }
 
     if (isUserUniqueEmail) {
       return res
         .status(400)
-        .json({ message: "Já existe um usuário com este email" });
+        .json({ message: "Ya existe un usuario con este correo electrónico" });
     }
 
     const hashPassword = await hash(password, 8);

@@ -31,7 +31,7 @@ import { authMiddleware } from "./middlewares/AuthMiddleware";
 export const router = Router();
 
 /**
- * Rotas do usuário
+ * Rutas de usuario
  */
 router.post("/user", createUser);
 router.delete("/delete-users", authMiddleware(["adm"]), deleteManyUser);
@@ -43,13 +43,13 @@ router.get(
 );
 
 /**
- * Rotas de acessos
+ * Rutas de acceso
  */
 router.post("/access", authMiddleware(["adm"]), createAccess);
 router.get("/accesses", authMiddleware(["adm", "Vendedor"]), getAllAccesses);
 
 /**
- * Rotas da loja
+ * Almacenar rutas
  */
 router.post("/store", authMiddleware(["adm", "Vendedor"]), createStore);
 router.get(
@@ -64,7 +64,7 @@ router.put(
 );
 
 /**
- * Rotas do produto
+ * Rutas de productos
  */
 router.post(
   "/product/:storeId",
@@ -93,12 +93,12 @@ router.delete(
 );
 
 /**
- * Rotas de autenticação
+ * Rutas de autenticación
  */
 router.post("/sign-in", signIn);
 
 /**
- * Rotas da venda
+ * Rutas de venta
  */
 router.post(
   "/create-sale",
