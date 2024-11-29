@@ -88,3 +88,31 @@ export const getUniqueUser = async (req: Request, res: Response) => {
     return res.status(400).json(error);
   }
 };
+export const deleteManyUser = async (req: Request, res: Response) => {
+  try {
+    const { ids } = req.body;
+
+    if (!Array.isArray(ids)) {
+      return res.status(400).json({ message: "Se requiere un array de IDs" });
+    }
+
+    const deletedUsers = await prisma.user.deleteMany({
+      where: {
+        id: {
+          in: ids
+        }
+      }
+    });
+
+    return res.status(200).json({ 
+      message: `${deletedUsers.count} usuarios eliminados correctamente`,
+      count: deletedUsers.count 
+    });
+  } catch (error) {
+    console.error("Error al eliminar usuarios:", error);
+    return res.status(500).json({ 
+      message: "Error al eliminar usuarios",
+      error 
+    });
+  }
+};
