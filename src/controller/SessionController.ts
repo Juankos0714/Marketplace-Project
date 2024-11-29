@@ -12,15 +12,7 @@ export const signIn = async (req: Request, res: Response) => {
         email,
       },
       include: {
-        userAccess: {
-          select: {
-            Access: {
-              select: {
-                name: true,
-              },
-            },
-          },
-        },
+        Access: true, 
       },
     });
 
@@ -41,13 +33,13 @@ export const signIn = async (req: Request, res: Response) => {
     }
 
     const token = sign({
-      userId: user.id, roles: user.userAccess.map(role => role.Access?.name)
+      userId: user.id, roles: user.Access ? [user.Access.name] : []
     }, MY_SECRET_KEY, {
       algorithm: "HS256",
       expiresIn: "1h"
-    })
+    });
 
-    return res.status(200).json({token})
+    return res.status(200).json({ token });
 
   } catch (error) {
     return res.status(400).json(error);

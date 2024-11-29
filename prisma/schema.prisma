@@ -49,7 +49,7 @@ model Store {
   id         String    @id @default(uuid())
   name       String
   created_at DateTime  @default(now())
-  updated_at DateTime  @updatedAt
+  updated_at DateTime  @default(now())
   products   Product[]
   User       User?     @relation(fields: [userId], references: [id])
   userId     String?
@@ -64,7 +64,7 @@ model Sale {
   sellerId    String?
   SaleProduct SaleProduct[]
   created_at  DateTime      @default(now())
-  updated_at  DateTime      @updatedAt
+  updated_at  DateTime      @default(now())
 }
 
 model SaleProduct {
@@ -75,5 +75,5 @@ model SaleProduct {
   Product    Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
   productId  String
   created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
+  updated_at DateTime @default(now())
 }
