@@ -1,27 +1,31 @@
+// src/middlewares/AuthMiddleware.ts
 import { Request, Response, NextFunction } from "express";
+import { verify } from "jsonwebtoken";
 import { prisma } from "../database/prisma";
-import jwt from "jsonwebtoken";
 
 export const authMiddleware = (roles: string[]) => {
   return async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const token = req.headers.authorization?.split(" ")[1];
-      if (!token) {
+      const authHeader = req.headers.authorization;
+
+      if (!authHeader) {
         return res.status(401).json({ message: "Token no proporcionado" });
       }
 
-      const decoded = jwt.verify(token, process.env.JWT_SECRET) as { id: string };
+      const token = authHeader.split(" ")[1];
+      const decoded = verify(token, process.env.MY_SECRET_KEY || 'clave_secreta_para_pruebas') as any;
+
       const user = await prisma.user.findUnique({
         where: { id: decoded.id },
-        include: { Access: true } // Asegúrate de incluir Access
+        include: { Access: true }
       });
 
       if (!user) {
         return res.status(401).json({ message: "Usuario no encontrado" });
       }
 
-      const userRoles = user.Access ? [user.Access.name] : [];
-      const hasRole = roles.some(role => userRoles.includes(role));
+      const userRole = user.Access?.name;
+      const hasRole = roles.includes(userRole);
 
       if (!hasRole) {
         return res.status(403).json({ message: "Permiso denegado" });
