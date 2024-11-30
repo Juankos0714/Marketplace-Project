@@ -1,6 +1,25 @@
 import { Request, Response } from "express";
 import { prisma } from "../database/prisma";
 
+export const getStoreWithProducts = async (req: Request, res: Response) => {
+  try {
+    const { storeId } = req.params;
+
+    const store = await prisma.store.findUnique({
+      where: { id: storeId },
+      include: { products: true } // Asegúrate de incluir products
+    });
+
+    if (!store) {
+      return res.status(404).json({ message: "Tienda no encontrada" });
+    }
+
+    return res.json(store);
+  } catch (error) {
+    return res.status(500).json({ message: "Error en el servidor" });
+  }
+};
+
 export const createStore = async (req: Request, res: Response) => {
   const { name } = req.body;
   const { id } = req.user;
@@ -91,6 +110,7 @@ export const deleteStore = async (req: Request, res: Response) => {
   }
 };
 
+
 export const getAllStore = async (req: Request, res: Response) => {
   const stores = await prisma.store.findMany({
     select: {
@@ -101,16 +121,21 @@ export const getAllStore = async (req: Request, res: Response) => {
           name: true,
         },
       },
-      Product: {
+      products: {  // Cambiado de Product a products
         select: {
           id: true,
           name: true,
+          description: true,
+          image: true,
+          category: true,
+          platform: true,
           price: true,
           amount: true,
         },
       },
     },
   });
+
   return res.json(stores);
 };
 
@@ -123,12 +148,10 @@ export const getUniqueStore = async (req: Request, res: Response) => {
         id: storeId,
       },
       include: {
-        Product: {
+        products: true,  // Cambiado de Product a products
+        User: {
           select: {
-            id: true,
             name: true,
-            price: true,
-            amount: true,
           },
         },
       },
