@@ -2,7 +2,8 @@
     --main-background: #001A65;
     --secondary-background: #333;
     --text-color: #fff; /* Color del texto */
-    --button-background: #fff;
+    --button-background: #055ccc; /*Color unico del boton*/
+    --before-shadow: #fff; /*Color del destello del boton*/
     --button-hover-background: rgba(255, 255, 255, 0.5);
     --button-shadow: 0 0 50px 30px #fff;
     --color-a: #4CAF50; /* Verde */
@@ -46,7 +47,7 @@
     color: inherit;
   }
   
-  .max-width-1400px {
+  .max-width {
     max-width: var(--max-width);
     margin: auto;
   }
@@ -94,7 +95,7 @@
     top: 7%;
     left: 0%;
     opacity: 0;
-    background: var(--button-background); 
+    background: var(--before-shadow); 
     box-shadow: var(--button-shadow); 
     transform: skewX(-20deg);
   }
@@ -119,4 +120,3 @@
     box-shadow: 0 0 0 0 transparent;
     transition: box-shadow 0.2s ease-in;
   }
-  
