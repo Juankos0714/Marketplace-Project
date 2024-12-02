@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Vista de Detalle del Producto</title>
+		<link rel="stylesheet" href="../../public/styles/stylesDefault.css" />
+		<!-- Todos los archivos html lo deben incluir y siempre debe de ir de primero -->
+		<link rel="stylesheet" href="../../public/styles/detailOfProduct.css" />
+
+		<!-- Typografias aun sin definir -->
+	</head>
+
+	<body>
+		<div class="max-width">
+			<div id="particle-container">
+				<header></header>
+
+				<main>
+
+					<section class="product-detail" id="product-detail">
+
+						<div class="blurred-background" id="blurred-background"></div>
+
+						<article class="product-info">
+
+							<h2 id="product-title">Juego</h2>
+
+							<div class="description-and-price">
+								<p id="product-price"></p>
+								<p id="product-requirements"></p>
+								<p id="product-description"></p>
+							</div>
+
+							<div class="div-button">
+								<a href="#" class="button" id="buy-button"
+									>Comprar</a
+								>
+							</div>
+
+						</article>
+
+						<section class="section-image">
+							<div class=" prev product-image" id="product-image">
+								<img
+									src="../../public/images/products/DragonBall-SparkinZero.avif"
+									alt="Imagen del Juego"
+									id="div_product-image"
+									width="100%"
+								/>
+							</div>
+						</section>
+					</section>
+
+					<section class="">
+						<section class="recommendd">
+							<h2>Recomendado</h2>
+
+							<article class="card">
+								<img
+									src="../../public/images/products/DragonBall-SparkinZero.avif"
+									alt="Minecraft"
+									width="100%"
+								/>
+								<h2>Minecraft</h2>
+								<p>
+									Minecraft es un juego de construcción y
+									inventario de bloques.
+								</p>
+
+								<div class="div-button">
+									<a href="#" class="button" id="buy-button"
+										>Comprar</a
+									>
+								</div>
+							</article>
+						</section>
+
+						<section class="additional-info">
+							<h2 id="more-info-title">
+								Más información del juego
+							</h2>
+							<p>Este juego</p>
+						</section>
+					</section>
+
+				</main>
+
+				<footer></footer>
+			</div>
+		</div>
+	</body>
+
+	<script src="../../public/Ts/productDetail.js" defer></script>
+	<script src="../../public/Ts/pikerColorImage.js" defer></script>
+	<script src="../../public/Ts/particles.js" defer></script>
+</html>
