@@ -8,40 +8,39 @@ export const signIn = async (req: Request, res: Response) => {
     const { email, password } = req.body;
 
     const user = await prisma.user.findUnique({
-      where: {
-        email,
-      },
-      include: {
-        Access: true, 
-      },
+      where: { email },
+      include: { Access: true },
     });
 
     if (!user) {
       return res.status(400).json({ message: "Usuario no encontrado." });
     }
 
-    const isPasswordValid = await compare(password, user.password);
-
-    if (!isPasswordValid) {
+    const validPassword = await compare(password, user.password);
+    if (!validPassword) {
       return res.status(400).json({ message: "Contraseña incorrecta." });
     }
 
-    const MY_SECRET_KEY = process.env.MY_SECRET_KEY;
-
-    if (!MY_SECRET_KEY) {
-      throw new Error("Clave secreta no proporcionada");
-    }
-
-    const token = sign({
-      userId: user.id, roles: user.Access ? [user.Access.name] : []
-    }, MY_SECRET_KEY, {
-      algorithm: "HS256",
-      expiresIn: "1h"
+    const token = sign(
+      {
+        userId: user.id,
+        email: user.email,
+        role: user.Access.name 
+      },
+      process.env.JWT_SECRET!,
+      { expiresIn: '24h' }
+    );
+    return res.json({
+      token,
+      user: {
+        id: user.id,
+        email: user.email,
+        name: user.name,
+        role: user.Access.name
+      }
     });
 
-    return res.status(200).json({ token });
-
   } catch (error) {
-    return res.status(400).json(error);
+    return res.status(500).json({ message: "Error en el servidor" });
   }
 };
