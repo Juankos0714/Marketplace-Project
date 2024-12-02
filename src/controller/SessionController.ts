@@ -1,7 +1,7 @@
-import { compare } from "bcryptjs";
 import { Request, Response } from "express";
-import { sign } from 'jsonwebtoken';
 import { prisma } from "../database/prisma";
+import { compare } from "bcryptjs";
+import { sign } from "jsonwebtoken";
 
 export const signIn = async (req: Request, res: Response) => {
   try {
@@ -25,19 +25,20 @@ export const signIn = async (req: Request, res: Response) => {
       {
         userId: user.id,
         email: user.email,
-        role: user.Access.name 
+        role: user.Access?.name,
       },
-      process.env.JWT_SECRET!,
+      process.env.JWT_SECRET || 'clave_secreta_para_pruebas',
       { expiresIn: '24h' }
     );
+
     return res.json({
       token,
       user: {
         id: user.id,
         email: user.email,
         name: user.name,
-        role: user.Access.name
-      }
+        role: user.Access?.name,
+      },
     });
 
   } catch (error) {
