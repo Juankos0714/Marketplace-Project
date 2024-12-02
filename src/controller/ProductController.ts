@@ -4,7 +4,7 @@ import { prisma } from "../database/prisma";
 export const createProduct = async (req: Request, res: Response) => {
   try {
     const { name, description, image, category, platform, price, amount } = req.body;
-    const { storeId } = req.params;
+    const storeId = parseInt(req.params.storeId, 10); // Convertir storeId a número
 
     if (!name || !description || !image || !category || !platform || !price || !amount) {
       return res.status(400).json({ error: "Todos los campos son requeridos" });
@@ -19,11 +19,7 @@ export const createProduct = async (req: Request, res: Response) => {
         platform,
         price,
         amount,
-        Store: {
-          connect: {
-            id: storeId,
-          },
-        },
+        storeId, 
       },
     });
 
@@ -37,8 +33,8 @@ export const createProduct = async (req: Request, res: Response) => {
 export const updateProduct = async (req: Request, res: Response) => {
   try {
     const { name, description, image, category, platform, price, amount } = req.body;
-    const { productId } = req.params;
-    const { id } = req.user;
+    const productId = parseInt(req.params.productId, 10); // Convertir productId a número
+    const userId = parseInt(req.user.id, 10);
 
     const isProduct = await prisma.product.findUnique({
       where: {
@@ -53,7 +49,7 @@ export const updateProduct = async (req: Request, res: Response) => {
       return res.status(404).json({ message: "Producto no encontrado" });
     }
 
-    if (id !== isProduct?.Store?.userId) {
+    if (userId !== isProduct?.Store?.userId) {
       return res.status(403).json({ message: "Este producto no pertenece a este usuario" });
     }
 
@@ -79,8 +75,8 @@ export const updateProduct = async (req: Request, res: Response) => {
 };
 
 export const getAllProducts = async (req: Request, res: Response) => {
-  const page = parseInt(req.query.page as string) || 1;
-  const perPage = parseInt(req.query.perPage as string) || 10;
+  const page = parseInt(req.query.page as string, 10) || 1;
+  const perPage = parseInt(req.query.perPage as string, 10) || 10;
 
   const products = await prisma.product.findMany({
     skip: (page - 1) * perPage,
@@ -92,7 +88,7 @@ export const getAllProducts = async (req: Request, res: Response) => {
 
 export const getUniqueProduct = async (req: Request, res: Response) => {
   try {
-    const { productId } = req.params;
+    const productId = parseInt(req.params.productId, 10); 
     const product = await prisma.product.findUnique({
       where: {
         id: productId,
@@ -121,8 +117,8 @@ export const getUniqueProduct = async (req: Request, res: Response) => {
 
 export const deleteProduct = async (req: Request, res: Response) => {
   try {
-    const { productId } = req.params;
-    const { id } = req.user;
+    const productId = parseInt(req.params.productId, 10); 
+    const userId = parseInt(req.user.id, 10);
 
     const isProduct = await prisma.product.findUnique({
       where: {
@@ -137,7 +133,7 @@ export const deleteProduct = async (req: Request, res: Response) => {
       return res.status(404).json({ message: "Producto no encontrado" });
     }
 
-    if (id !== isProduct?.Store?.userId) {
+    if (userId !== isProduct?.Store?.userId) {
       return res.status(403).json({ message: "Este producto no pertenece a este usuario" });
     }
 

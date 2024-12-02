@@ -6,8 +6,8 @@ export const getStoreWithProducts = async (req: Request, res: Response) => {
     const { storeId } = req.params;
 
     const store = await prisma.store.findUnique({
-      where: { id: storeId },
-      include: { products: true } // Asegúrate de incluir products
+      where: { id: Number(storeId) },
+      include: { products: true } 
     });
 
     if (!store) {
@@ -26,7 +26,7 @@ export const createStore = async (req: Request, res: Response) => {
 
   const isUser = await prisma.user.findUnique({
     where: {
-      id,
+      id: Number(id),
     },
   });
 
@@ -39,7 +39,7 @@ export const createStore = async (req: Request, res: Response) => {
       name,
       User: {
         connect: {
-          id,
+          id: Number(id),
         },
       },
     },
@@ -56,7 +56,7 @@ export const updateStore = async (req: Request, res: Response) => {
 
     const isStore = await prisma.store.findUnique({
       where: {
-        id: storeId,
+        id: Number(storeId),
       },
     });
 
@@ -64,12 +64,12 @@ export const updateStore = async (req: Request, res: Response) => {
       return res.status(404).json({ message: "Tienda no encontrada" });
     }
 
-    if (id !== isStore.userId) {
+    if (Number(id) !== isStore.userId) {
       return res.status(400).json({ message: "El usuario no es el propietario de esta Tienda" });
     }
 
     const store = await prisma.store.update({
-      where: { id: storeId },
+      where: { id: Number(storeId) },
       data: {
         name,
       },
@@ -88,7 +88,7 @@ export const deleteStore = async (req: Request, res: Response) => {
 
     const isStore = await prisma.store.findUnique({
       where: {
-        id: storeId,
+        id: Number(storeId),
       },
     });
 
@@ -96,12 +96,12 @@ export const deleteStore = async (req: Request, res: Response) => {
       return res.status(404).json({ message: "Tienda no encontrada" });
     }
 
-    if (id !== isStore.userId) {
+    if (Number(id) !== isStore.userId) {
       return res.status(400).json({ message: "El usuario no es el propietario de esta Tienda" });
     }
 
     await prisma.store.delete({
-      where: { id: storeId },
+      where: { id: Number(storeId) },
     });
 
     return res.status(200).json({ message: "Tienda eliminada correctamente." });
@@ -121,7 +121,7 @@ export const getAllStore = async (req: Request, res: Response) => {
           name: true,
         },
       },
-      products: {  // Cambiado de Product a products
+      products: {  
         select: {
           id: true,
           name: true,
@@ -145,10 +145,10 @@ export const getUniqueStore = async (req: Request, res: Response) => {
 
     const store = await prisma.store.findUnique({
       where: {
-        id: storeId,
+        id: Number(storeId),
       },
       include: {
-        products: true,  // Cambiado de Product a products
+        products: true,  
         User: {
           select: {
             name: true,
