@@ -1,0 +1,143 @@
+body {
+    margin: 0;
+    font-family: 'Roboto', sans-serif;
+    background-color: #0A1F44;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: linear-gradient(90deg, #2E3192, #8E44AD);
+    padding: 10px 20px;
+    width: 100%;
+    position: static;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+}
+.header img {
+    height: 50px;
+}
+.header nav a {
+    color: white;
+    text-decoration: none;
+    margin: 0 15px;
+    font-size: 18px;
+}
+.header .search {
+    display: flex;
+    align-items: center;
+}
+.header .search input {
+    padding: 5px;
+    border: none;
+    border-radius: 5px;
+}
+.header .search i {
+    margin-left: 10px;
+    font-size: 20px;
+}
+.sidebar {
+    width: 200px;
+    background-color: #0A1F44;
+    padding: 20px;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    overflow-y: auto;
+}
+.sidebar h3 {
+    margin-top: 0;
+}
+.sidebar ul {
+    list-style: none;
+    padding: 0;
+}
+.sidebar ul li {
+    margin: 10px 0;
+}
+.sidebar ul li a {
+    color: white;
+    text-decoration: none;
+}
+.sidebar .price-filter {
+    margin-top: 20px;
+}
+.sidebar .price-filter label {
+    display: block;
+    margin-bottom: 5px;
+}
+.sidebar .price-filter input {
+    width: 100%;
+    padding: 5px;
+    border: none;
+    border-radius: 5px;
+    margin-bottom: 10px;
+}
+.content {
+    margin-left: 220px;
+    padding: 20px;
+    padding-top: 20px;
+    flex: 1;
+}
+.content h1 {
+    margin-top: 0;
+}
+.catalog {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+.catalog .item {
+    background-color: #2E3A59;
+    border-radius: 10px;
+    padding: 10px;
+    width: calc(25% - 20px);
+    box-sizing: border-box;
+    text-align: center;
+}
+.catalog .item img {
+    width: 100%;
+    border-radius: 10px;
+}
+.catalog .item h3 {
+    margin: 10px 0;
+}
+.catalog .item p {
+    margin: 5px 0;
+}
+.catalog .item button {
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+footer {
+    background-color: #2E3192;
+    color: white;
+    text-align: center;
+    padding: 10px 0;
+}
+@media (max-width: 768px) {
+    .catalog .item {
+        width: calc(50% - 20px);
+    }
+}
+@media (max-width: 480px) {
+    .catalog .item {
+        width: 100%;
+    }
+    .sidebar {
+        width: 100%;
+        position: relative;
+    }
+    .content {
+        margin-left: 0;
+    }
+}
