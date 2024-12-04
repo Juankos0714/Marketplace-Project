@@ -35,7 +35,6 @@ router.get("/get-all-users", authMiddleware(["adm"]), getAllUser); // Ruta para 
 router.get("/get-unique-user/:id", authMiddleware(["adm", "Vendedor", "Comprador"]), getUniqueUser); // Ruta para obtener un usuario único
 router.delete("/delete-users", authMiddleware(["adm"]), deleteManyUser); // Ruta para eliminar múltiples usuarios
 
-
 /**
  * Rutas de acceso
  */
@@ -65,15 +64,15 @@ router.post(
   authMiddleware(["adm", "Vendedor"]),
   createProduct
 );
-router.get(
-  "/products",
-  authMiddleware(["adm", "Vendedor", "Comprador"]),
-  getAllProducts
-);
 router.put(
   "/update-product/:productId",
   authMiddleware(["adm", "Vendedor"]),
   updateProduct
+);
+router.get(
+  "/products",
+  authMiddleware(["adm", "Vendedor", "Comprador"]),
+  getAllProducts
 );
 router.get(
   "/get-unique-product/:productId",

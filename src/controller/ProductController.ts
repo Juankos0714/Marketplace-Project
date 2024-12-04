@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { prisma } from "../database/prisma";
-import { upload } from "../middlewares/multerConfig"
+import { upload } from "../middlewares/multerConfig";
 
 export const createProduct = async (req: Request, res: Response) => {
   upload.single('image')(req, res, async (err) => {

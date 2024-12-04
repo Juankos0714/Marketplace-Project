@@ -10,22 +10,22 @@ datasource db {
 model User {
   id             Int       @id @default(autoincrement())
   name           String
-  email          String       @unique
+  email          String    @unique
   password       String
   accessId       Int?
-  sale_as_buyer  Sale[]       @relation("buyer")
-  sale_as_seller Sale[]       @relation("seller")
+  sale_as_buyer  Sale[]    @relation("buyer")
+  sale_as_seller Sale[]    @relation("seller")
   store          Store[]
-  created_at     DateTime     @default(now())
-  updated_at     DateTime     @updatedAt
-  Access         Access?      @relation(fields: [accessId], references: [id])
+  created_at     DateTime  @default(now())
+  updated_at     DateTime  @updatedAt
+  Access         Access?   @relation(fields: [accessId], references: [id])
 }
 
 model Access {
   id         Int       @id @default(autoincrement())
-  name       String       @unique
-  created_at DateTime     @default(now())
-  updated_at DateTime     @default(now())
+  name       String    @unique
+  created_at DateTime  @default(now())
+  updated_at DateTime  @default(now())
   userAccess User[]
 }
 
@@ -38,42 +38,42 @@ model Product {
   platform    String
   price       Float
   amount      Int
-  created_at  DateTime      @default(now())
-  updated_at  DateTime      @default(now())
-  Store       Store?        @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  created_at  DateTime   @default(now())
+  updated_at  DateTime   @default(now())
+  Store       Store?     @relation(fields: [storeId], references: [id], onDelete: Cascade)
   storeId     Int?
   SaleProduct SaleProduct[]
 }
 
 model Store {
-  id         Int    @id @default(autoincrement())
+  id         Int        @id @default(autoincrement())
   name       String
-  created_at DateTime  @default(now())
-  updated_at DateTime  @default(now())
+  created_at DateTime   @default(now())
+  updated_at DateTime   @default(now())
   products   Product[]
-  User       User?     @relation(fields: [userId], references: [id])
+  User       User?      @relation(fields: [userId], references: [id])
   userId     Int?
 }
 
 model Sale {
   id          Int        @id @default(autoincrement())
   total_value Float
-  Buyer       User?         @relation("buyer", fields: [buyerId], references: [id])
+  Buyer       User?      @relation("buyer", fields: [buyerId], references: [id])
   buyerId     Int?
-  Seller      User?         @relation("seller", fields: [sellerId], references: [id])
+  Seller      User?      @relation("seller", fields: [sellerId], references: [id])
   sellerId    Int?
   SaleProduct SaleProduct[]
-  created_at  DateTime      @default(now())
-  updated_at  DateTime      @default(now())
+  created_at  DateTime   @default(now())
+  updated_at  DateTime   @default(now())
 }
 
 model SaleProduct {
-  id         Int   @id @default(autoincrement())
+  id         Int        @id @default(autoincrement())
   quantity   Int
-  Sale       Sale     @relation(fields: [saleId], references: [id])
+  Sale       Sale       @relation(fields: [saleId], references: [id])
   saleId     Int
-  Product    Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  Product    Product    @relation(fields: [productId], references: [id], onDelete: Cascade)
   productId  Int
-  created_at DateTime @default(now())
-  updated_at DateTime @default(now())
+  created_at DateTime   @default(now())
+  updated_at DateTime   @default(now())
 }
