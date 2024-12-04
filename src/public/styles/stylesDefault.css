@@ -1,0 +1,123 @@
+:root {
+    --main-background: #001A65;
+    --secondary-background: linear-gradient(90deg, #001a65, #fd1d75);
+    --text-color: #fff; /* Color del texto */
+    --button-background: #001A65;
+    --button-hover-background: rgba(255, 255, 255, 0.5);
+    --button-shadow: 0 0 50px 30px #fff;
+    --color-a: #4CAF50; /* Verde */
+    --color-x: #FF9800; /* Naranja */
+    --color-y: #F44336; /* Rojo */
+    --color-b: #2196F3; /* Azul */
+    --color-triangle: #29a8a9; /* Verde aqua*/
+    --color-circle: #bf8888; /* Rojo Perrona*/
+    --color-cuadrado: #9c5899; /* Morado violudo */
+    --font-family: Arial, sans-serif;
+    --max-width: 1400px; /* Ancho máximo de la página */
+    --button-padding: 10px 20px;
+    --button-font-size: 14px;
+    --button-letter-spacing: 2px;
+    --button-border-radius: 7px;
+    --border-radius-outside: 20px;
+    --border-radius-inside: calc(var(--button-border-radius)-10px);
+  }
+  
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  body {
+    font-family: var(--font-family);
+    overflow-x: hidden;
+    background: var(--main-background);
+    color: var(--text-color);
+    height: 100vh;
+  }
+  
+  h1, h2 {
+    transition: color 0.3s ease;
+  }
+  
+  a{
+    /* quitando estilos del a */
+    text-decoration: none;
+    color: inherit;
+  }
+  
+  .max-width-1400px {
+    max-width: var(--max-width);
+    margin: auto;
+  }
+  
+  /* Botón */
+  
+  .div-button{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    user-select: none;
+  }
+  
+  a.button {	
+    position: relative;
+    padding: var(--button-padding);
+    border-radius: var(--button-border-radius);
+    font-size: var(--button-font-size);
+    text-transform: uppercase;
+    font-weight: 600;
+    letter-spacing: var(--button-letter-spacing);
+    color: var(--text-color);
+    background: var(--button-background) ;
+    overflow: hidden;
+    box-shadow: 0 0 0 0 transparent;
+    transition: all 0.2s ease-in;
+    cursor: pointer;
+    max-height: 40px;
+    margin: 0px auto;
+  }
+  
+  a.button:hover {
+    transition: all 0.2s ease-out;
+  }
+  
+  a.button:hover::before {
+    animation: btnKfm 1.5s 0s linear;
+  }
+  
+  a.button::before {
+    content: '';
+    display: block;
+    width: 0px;
+    height: 86%;
+    position: absolute;
+    top: 7%;
+    left: 0%;
+    opacity: 0;
+    background: var(--button-background); 
+    box-shadow: var(--button-shadow); 
+    transform: skewX(-20deg);
+  }
+  
+  @keyframes btnKfm {
+    from {
+        opacity: 0;
+        left: 0%;
+    }
+  
+    50% {
+        opacity: 1;
+    }
+  
+    to {
+        opacity: 0;
+        left: 100%;
+    }
+  }
+  
+  a.button:active {
+    box-shadow: 0 0 0 0 transparent;
+    transition: box-shadow 0.2s ease-in;
+  }
+  
