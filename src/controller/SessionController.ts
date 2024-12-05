@@ -8,7 +8,7 @@ export const signIn = async (req: Request, res: Response) => {
     const { email, password } = req.body;
 
     const user = await prisma.user.findUnique({
-      where: { email },
+      where: { email }, 
       include: { Access: true },
     });
 
