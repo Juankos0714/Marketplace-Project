@@ -6,7 +6,17 @@ export const createUser = async (req: Request, res: Response) => {
   try {
     const { name, email, password, accessId } = req.body;
 
-    const hashedPassword = await hash(password, 8);
+    // Verificar si el correo electrónico ya existe
+    const existingUser = await prisma.user.findUnique({
+      where: { email },
+    });
+
+    if (existingUser) {
+      return res.status(400).json({ message: "El correo electrónico ya está en uso" });
+    }
+
+    // Encriptar la contraseña
+    const hashedPassword = await hash(password, 10);
 
     const user = await prisma.user.create({
       data: {
@@ -63,9 +73,10 @@ export const getAllUser = async (req: Request, res: Response) => {
 export const getUniqueUser = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
+    const userId = Number(id);
 
     const user = await prisma.user.findUnique({
-      where: { id },
+      where: { id: userId },
       select: {
         id: true,
         name: true,
@@ -88,6 +99,7 @@ export const getUniqueUser = async (req: Request, res: Response) => {
     return res.status(400).json(error);
   }
 };
+
 export const deleteManyUser = async (req: Request, res: Response) => {
   try {
     const { ids } = req.body;

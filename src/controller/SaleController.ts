@@ -4,7 +4,7 @@ import { prisma } from "../database/prisma";
 export const createSale = async (req: Request, res: Response) => {
   try {
     const { products, userSellerId } = req.body;
-    const { id } = req.user;
+    const id = parseInt(req.user.id, 10);
 
     const productsByDatabase = await prisma.product.findMany({
       where: {
@@ -108,7 +108,7 @@ export const getAllSales = async (req: Request, res: Response) => {
 };
 
 export const getAllSalesByBuyer = async (req: Request, res: Response) => {
-  const { id } = req.user;
+  const id = parseInt(req.user.id, 10);
   const sales = await prisma.sale.findMany({
     where: {
       buyerId: id,
@@ -148,7 +148,7 @@ export const getAllSalesByBuyer = async (req: Request, res: Response) => {
 };
 
 export const getAllSalesBySeller = async (req: Request, res: Response) => {
-  const { id } = req.user;
+  const id = parseInt(req.user.id, 10);
   const sales = await prisma.sale.findMany({
     where: {
       sellerId: id,

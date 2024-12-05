@@ -12,10 +12,10 @@ export const authMiddleware = (roles: string[]) => {
       }
 
       const token = authHeader.split(" ")[1];
-      const decoded = verify(token, process.env.MY_SECRET_KEY || 'clave_secreta_para_pruebas') as any;
+      const decoded = verify(token, process.env.JWT_SECRET || 'clave_secreta_para_pruebas') as any;
 
       const user = await prisma.user.findUnique({
-        where: { id: decoded.id },
+        where: { id: decoded.userId },
         include: { Access: true }
       });
 
@@ -30,7 +30,7 @@ export const authMiddleware = (roles: string[]) => {
         return res.status(403).json({ message: "Permiso denegado" });
       }
 
-      req.user = user;
+      req.user = { ...user, id: user.id.toString() };
       next();
     } catch (error) {
       return res.status(401).json({ message: "Token inválido" });

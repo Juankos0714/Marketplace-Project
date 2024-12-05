@@ -15,11 +15,7 @@ import {
   getAllSalesBySeller,
 } from "./controller/SaleController";
 import { signIn } from "./controller/SessionController";
-import {
-  createStore,
-  getAllStore,
-  updateStore,
-} from "./controller/StoreController";
+import { createStore, getAllStore, updateStore } from "./controller/StoreController";
 import {
   createUser,
   deleteManyUser,
@@ -33,14 +29,11 @@ export const router = Router();
 /**
  * Rutas de usuario
  */
-router.post("/user", createUser);
-router.delete("/delete-users", authMiddleware(["adm"]), deleteManyUser);
-router.get("/get-all-users", authMiddleware(["adm"]), getAllUser);
-router.get(
-  "/get-unique-user",
-  authMiddleware(["adm", "Vendedor", "Comprador"]),
-  getUniqueUser
-);
+router.post("/user", createUser); // Ruta para registrar un nuevo usuario
+router.post("/sign-in", signIn); // Ruta para iniciar sesión
+router.get("/get-all-users", authMiddleware(["adm"]), getAllUser); // Ruta para obtener todos los usuarios
+router.get("/get-unique-user/:id", authMiddleware(["adm", "Vendedor", "Comprador"]), getUniqueUser); // Ruta para obtener un usuario único
+router.delete("/delete-users", authMiddleware(["adm"]), deleteManyUser); // Ruta para eliminar múltiples usuarios
 
 /**
  * Rutas de acceso
@@ -71,15 +64,15 @@ router.post(
   authMiddleware(["adm", "Vendedor"]),
   createProduct
 );
-router.get(
-  "/products",
-  authMiddleware(["adm", "Vendedor", "Comprador"]),
-  getAllProducts
-);
 router.put(
   "/update-product/:productId",
   authMiddleware(["adm", "Vendedor"]),
   updateProduct
+);
+router.get(
+  "/products",
+  authMiddleware(["adm", "Vendedor", "Comprador"]),
+  getAllProducts
 );
 router.get(
   "/get-unique-product/:productId",
