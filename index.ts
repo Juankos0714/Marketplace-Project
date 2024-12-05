@@ -21,6 +21,7 @@ app.post('/users', async (req, res) => {
     data: {
       name,
       email,
+      password: 'defaultPassword', // replace with actual password logic
     },
   });
   res.json(user);
