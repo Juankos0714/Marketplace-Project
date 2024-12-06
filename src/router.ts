@@ -1,5 +1,5 @@
 import { Router } from "express";
-
+import { mainController } from "./controller/Maincontroller";
 import { createAccess, getAllAccesses } from "./controller/AccessController";
 import {
   createProduct,
@@ -25,6 +25,8 @@ import {
 import { authMiddleware } from "./middlewares/AuthMiddleware";
 
 export const router = Router();
+
+router.get("/", mainController.index);
 
 /**
  * Rutas de usuario

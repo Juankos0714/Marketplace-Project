@@ -8,7 +8,8 @@ WORKDIR /app
 COPY package*.json ./
 
 # Instala las dependencias del proyecto
-RUN npm install
+RUN npm ci --omit=dev
+
 
 # Copia el resto de los archivos del proyecto al contenedor
 COPY . .
@@ -17,10 +18,12 @@ COPY . .
 RUN npm run build
 
 # Expone el puerto en el que la aplicación va a correr
-EXPOSE 3000
+EXPOSE 3333
+
 
 # Define la variable de entorno para la conexión a la base de datos
-ENV DATABASE_URL="postgresql://prisma:prisma123@postgres:5432/mydb?schema=public"
+ENV NODE_ENV=production
+
 
 # Comando para correr la aplicación
 CMD ["npm", "start"]

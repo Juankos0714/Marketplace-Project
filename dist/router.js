@@ -11,42 +11,40 @@ const UserController_1 = require("./controller/UserController");
 const AuthMiddleware_1 = require("./middlewares/AuthMiddleware");
 exports.router = (0, express_1.Router)();
 /**
- * Rotas do usuário
+ * Rutas de usuario
  */
-exports.router.post("/user", UserController_1.createUser);
-exports.router.delete("/delete-users", (0, AuthMiddleware_1.authMiddleware)(["adm"]), UserController_1.deleteManyUser);
-exports.router.get("/get-all-users", (0, AuthMiddleware_1.authMiddleware)(["adm"]), UserController_1.getAllUser);
-exports.router.get("/get-unique-user", (0, AuthMiddleware_1.authMiddleware)(["adm", "Vendedor", "Comprador"]), UserController_1.getUniqueUser);
+exports.router.post("/user", UserController_1.createUser); // Ruta para registrar un nuevo usuario
+exports.router.post("/sign-in", SessionController_1.signIn); // Ruta para iniciar sesión
+exports.router.get("/get-all-users", (0, AuthMiddleware_1.authMiddleware)(["adm"]), UserController_1.getAllUser); // Ruta para obtener todos los usuarios
+exports.router.get("/get-unique-user/:id", (0, AuthMiddleware_1.authMiddleware)(["adm", "Vendedor", "Comprador"]), UserController_1.getUniqueUser); // Ruta para obtener un usuario único
+exports.router.delete("/delete-users", (0, AuthMiddleware_1.authMiddleware)(["adm"]), UserController_1.deleteManyUser); // Ruta para eliminar múltiples usuarios
 /**
- * Rotas de acessos
+ * Rutas de acceso
  */
 exports.router.post("/access", (0, AuthMiddleware_1.authMiddleware)(["adm"]), AccessController_1.createAccess);
 exports.router.get("/accesses", (0, AuthMiddleware_1.authMiddleware)(["adm", "Vendedor"]), AccessController_1.getAllAccesses);
 /**
- * Rotas da loja
+ * Almacenar rutas
  */
 exports.router.post("/store", (0, AuthMiddleware_1.authMiddleware)(["adm", "Vendedor"]), StoreController_1.createStore);
 exports.router.get("/stores", (0, AuthMiddleware_1.authMiddleware)(["adm", "Vendedor", "Comprador"]), StoreController_1.getAllStore);
 exports.router.put("/update-store/:storeId", (0, AuthMiddleware_1.authMiddleware)(["adm", "Vendedor"]), StoreController_1.updateStore);
 /**
- * Rotas do produto
+ * Rutas de productos
  */
 exports.router.post("/product/:storeId", (0, AuthMiddleware_1.authMiddleware)(["adm", "Vendedor"]), ProductController_1.createProduct);
-exports.router.get("/products", (0, AuthMiddleware_1.authMiddleware)(["adm", "Vendedor", "Comprador"]), ProductController_1.getAllProducts);
 exports.router.put("/update-product/:productId", (0, AuthMiddleware_1.authMiddleware)(["adm", "Vendedor"]), ProductController_1.updateProduct);
+exports.router.get("/products", (0, AuthMiddleware_1.authMiddleware)(["adm", "Vendedor", "Comprador"]), ProductController_1.getAllProducts);
 exports.router.get("/get-unique-product/:productId", (0, AuthMiddleware_1.authMiddleware)(["adm", "Vendedor", "Comprador"]), ProductController_1.getUniqueProduct);
 exports.router.delete("/delete-product/:productId", (0, AuthMiddleware_1.authMiddleware)(["adm", "Vendedor"]), ProductController_1.deleteProduct);
 /**
- * Rotas de autenticação
+ * Rutas de autenticación
  */
 exports.router.post("/sign-in", SessionController_1.signIn);
 /**
- * Rotas da venda
+ * Rutas de venta
  */
 exports.router.post("/create-sale", (0, AuthMiddleware_1.authMiddleware)(["adm", "Vendedor", "Comprador"]), SaleController_1.createSale);
 exports.router.get("/get-all-sales", (0, AuthMiddleware_1.authMiddleware)(["adm"]), SaleController_1.getAllSales);
 exports.router.get("/get-all-sales-by-buyer", (0, AuthMiddleware_1.authMiddleware)(["adm", "Comprador"]), SaleController_1.getAllSalesByBuyer);
 exports.router.get("/get-all-sales-by-seller", (0, AuthMiddleware_1.authMiddleware)(["adm", "Vendedor"]), SaleController_1.getAllSalesBySeller);
-(0, AuthMiddleware_1.authMiddleware)(["adm", "Vendedor"]),
-    SaleController_1.getAllSalesBySeller;
-;

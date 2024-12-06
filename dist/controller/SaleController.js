@@ -5,7 +5,7 @@ const prisma_1 = require("../database/prisma");
 const createSale = async (req, res) => {
     try {
         const { products, userSellerId } = req.body;
-        const { id } = req.user;
+        const id = parseInt(req.user.id, 10);
         const productsByDatabase = await prisma_1.prisma.product.findMany({
             where: {
                 id: { in: products.map((product) => product.id) },
@@ -27,7 +27,7 @@ const createSale = async (req, res) => {
         }
         if (id === userSellerId) {
             return res.status(400).json({
-                message: "Não é possível criar uma venda com ID de comprador e vendedor iguais",
+                message: "No es posible crear una venta con el mismo ID de comprador y vendedor.",
             });
         }
         const sale = await prisma_1.prisma.sale.create({
@@ -58,7 +58,7 @@ const createSale = async (req, res) => {
         });
         return res
             .status(201)
-            .json({ sale, message: "Compra realizada com sucesso." });
+            .json({ sale, message: "Compra realizada con éxito." });
     }
     catch (error) {
         return res.status(400).json(error);
@@ -101,7 +101,7 @@ const getAllSales = async (req, res) => {
 };
 exports.getAllSales = getAllSales;
 const getAllSalesByBuyer = async (req, res) => {
-    const { id } = req.user;
+    const id = parseInt(req.user.id, 10);
     const sales = await prisma_1.prisma.sale.findMany({
         where: {
             buyerId: id,
@@ -140,7 +140,7 @@ const getAllSalesByBuyer = async (req, res) => {
 };
 exports.getAllSalesByBuyer = getAllSalesByBuyer;
 const getAllSalesBySeller = async (req, res) => {
-    const { id } = req.user;
+    const id = parseInt(req.user.id, 10);
     const sales = await prisma_1.prisma.sale.findMany({
         where: {
             sellerId: id,

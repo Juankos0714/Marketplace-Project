@@ -1,11 +1,13 @@
 import { Request, Response } from "express";
 import { prisma } from "../database/prisma";
-
+// Funcion para crear una venta, osea comprar productos
 export const createSale = async (req: Request, res: Response) => {
   try {
     const { products, userSellerId } = req.body;
     const id = parseInt(req.user.id, 10);
 
+    // el findMany se utiliza para buscar todos los productos
+    // que se encuentran en la base de datos 
     const productsByDatabase = await prisma.product.findMany({
       where: {
         id: { in: products.map((product: any) => product.id) },
