@@ -28,28 +28,7 @@
 	<body>
 		<div class="max-width">
 			<!-- Barra de navegación -->
-			<header>
-				<nav>
-					<div class="logo">
-						<img
-							src="../../public/images/products/logo.png"
-							class="logo-img"
-						/>
-						LAB GAMING
-					</div>
-					<ul>
-						<li><a href="#">Inicio</a></li>
-						<li><a href="#">Categorías</a></li>
-						<li><a href="#">Contacto</a></li>
-						<li>
-							<input type="text" placeholder="Buscar..." />
-							<a href="#">
-								<i class="fas fa-search"></i>
-							</a>
-						</li>
-					</ul>
-				</nav>
-			</header>
+			<%- include('./partials/header.ejs') %>
 
 			<main class="main">
 				<section class="section section--slider">
@@ -275,73 +254,7 @@
 			</main>
 
 			<!-- Pie de página -->
-			<footer>
-
-				<div class="footer-container">
-					<div class="footer-column">
-						<h3>Categorías</h3>
-						<!-- Agrega enlaces o categorías aquí -->
-					</div>
-					<div class="footer-column">
-						<h3>Contacto</h3>
-						<p>300 000 0000</p>
-						<p>pslabgaming@gmail.com</p>
-					</div>
-					<div class="footer-column">
-						<h3>Euipo de Trabajo</h3>
-						<div class="social-icons">
-							<!-- Ícono de GitHub del usuario 1 -->
-							<a
-								href="https://github.com/Juankos0714"
-								target="_blank"
-								aria-label="GitHub Usuario 1"
-							>
-								<i class="fa-brands fa-github"></i> Juankos0714
-							</a>
-							<!-- Ícono de GitHub del usuario 2 -->
-							<a
-								href="https://github.com/Miguel-A-VN"
-								target="_blank"
-								aria-label="GitHub Usuario 2"
-							>
-								<i class="fa-brands fa-github"></i> Miguel-A-VN
-							</a>
-							<!-- Ícono de GitHub del usuario 3 -->
-							<a
-								href="https://github.com/SebasCorrea23"
-								target="_blank"
-								aria-label="GitHub Usuario 3"
-							>
-								<i class="fa-brands fa-github"></i>
-								SebasCorrea23
-							</a>
-							<!-- Ícono de GitHub del usuario 4 -->
-							<a
-								href="https://github.com/Nicolasld222"
-								target="_blank"
-								aria-label="GitHub Usuario 4"
-							>
-								<i class="fa-brands fa-github"></i> Nicolasld222
-							</a>
-							<!-- Ícono de GitHub del usuario 5 -->
-							<a
-								href="https://github.com/megas123"
-								target="_blank"
-								aria-label="GitHub Usuario 5"
-							>
-								<i class="fa-brands fa-github"></i> megas123
-							</a>
-						</div>
-					</div>
-				</div>
-
-				<p class="footer-credits">
-					Todas las marcas registradas pertenecen a sus respectivos
-					dueños en EE. UU. y otros países. Todos los precios incluyen
-					IVA (donde sea aplicable).
-				</p>
-
-			</footer>
+			<%- include('./partials/footer.ejs') %>
 		</div>
 	</body>
 </html>
