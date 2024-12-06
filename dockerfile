@@ -18,7 +18,7 @@ COPY . .
 RUN npm run build
 
 # Expone el puerto en el que la aplicación va a correr
-EXPOSE 8080
+EXPOSE 3333
 
 
 # Define la variable de entorno para la conexión a la base de datos
