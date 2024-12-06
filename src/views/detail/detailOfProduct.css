@@ -1,0 +1,196 @@
+:root {
+  --main-background: #001A65;
+  --secondary-background: #333;
+  --text-color: #fff;
+  --button-background: #fff;
+  --button-hover-background: rgba(255, 255, 255, 0.5);
+  --button-shadow: 0 0 50px 30px #fff;
+  --color-a: #4CAF50; /* Verde */
+  --color-x: #FF9800; /* Naranja */
+  --color-y: #F44336; /* Rojo */
+  --color-b: #2196F3; /* Azul */
+  --color-triangle: #29a8a9; /* Verde */
+  --color-circle: #bf8888; /* Rojo */
+  --color-cuadrado: #9c5899; /* Morado */
+  --font-family: Arial, sans-serif;
+  --max-width: 1400px;
+  --button-padding: 10px 20px;
+  --button-border-radius: 7px;
+  --button-font-size: 14px;
+  --button-letter-spacing: 2px;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--font-family);
+  overflow-x: hidden;
+  overflow-y: auto;
+  background: var(--main-background);
+  color: var(--text-color);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+h1, h2 {
+  transition: color 0.3s ease;
+}
+
+.max-width-1400px {
+  max-width: var(--max-width);
+  margin: auto;
+}
+
+.product-detail {
+  display: flex;
+  justify-content: space-around;
+  align-content: center;
+  padding: 20px;
+  position: relative;
+  z-index: 999;
+  color: var(--text-color);
+  height: 75vh;
+  max-height: 720px;
+}
+
+.blurred-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  filter: blur(15px);
+  transform: scale(1.2);  
+  z-index: 1;
+  opacity: 0.5;
+}
+
+.product-info {
+  display: flex;
+  flex-wrap: wrap;
+  
+  z-index: 999;
+}
+
+.description-and-price {width: 100%;}
+
+.product-image img {
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain; /* Para mantener las proporciones */
+}
+
+.product-image {
+  max-width: 60%;
+  max-height: 300px;
+  width: 500px;
+  background: #000000cc;
+  overflow: hidden;
+  z-index: 999;
+}
+
+.additional-info {
+  margin-top: 5%;
+  padding: 30px;
+  z-index: 999;
+}
+
+
+button {
+  position: relative;
+  padding: var(--button-padding);
+  border-radius: var(--button-border-radius);
+  font-size: var(--button-font-size);
+  text-transform: uppercase;
+  font-weight: 600;
+  letter-spacing: var(--button-letter-spacing);
+  color: var(--text-color);
+  overflow: hidden;
+  box-shadow: 0 0 0 0 transparent;
+  transition: all 0.2s ease-in;
+  cursor: pointer;
+  max-height: 40px;
+  margin: 0px auto;
+}
+
+button:hover {
+  transition: all 0.2s ease-out;
+}
+
+button:hover::before {
+  animation: btnKfm 1.5s 0s linear;
+}
+
+/* franja */
+button::before {
+  content: '';
+  display: block;
+  width: 0px;
+  height: 86%;
+  position: absolute;
+  top: 7%;
+  left: 0%;
+  opacity: 0;
+  background: var(--button-background); 
+  box-shadow: var(--button-shadow); 
+  transform: skewX(-20deg);
+}
+
+@keyframes btnKfm {
+  from {
+      opacity: 0;
+      left: 0%;
+  }
+
+  50% {
+      opacity: 1;
+  }
+
+  to {
+      opacity: 0;
+      left: 100%;
+  }
+}
+
+button:active {
+  box-shadow: 0 0 0 0 transparent;
+  transition: box-shadow 0.2s ease-in;
+}
+
+/* Particles */
+
+#particle-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+.particle {
+  position: absolute;
+  font-size: 24px;
+  opacity: 1;
+  transition: transform 8s ease, opacity 8s ease; /* Aumentar la duración de la animación */
+}
+
+/* Colores de las letras del control de Xbox */
+.color-a { color: var(--color-a); } /* Verde */
+.color-x { color: var(--color-x); } /* Naranja */
+.color-y { color: var(--color-y); } /* Rojo */
+.color-b { color: var(--color-b); } /* Azul */
+.color-triangle { color: var(--color-triangle); } /* Verde */
+.color-circle { color: var(--color-circle); } /* Rojo */
+.color-cuadrado { color: var(--color-cuadrado); } /* Morado */
+
+header {height: 30vh;}
+footer {height: 30vh;}

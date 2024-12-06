@@ -1,9 +1,8 @@
 :root {
     --main-background: #001A65;
-    --secondary-background: #333;
+    --secondary-background: linear-gradient(90deg, #001a65, #fd1d75);
     --text-color: #fff; /* Color del texto */
-    --button-background: #055ccc; /*Color unico del boton*/
-    --before-shadow: #fff; /*Color del destello del boton*/
+    --button-background: #001A65;
     --button-hover-background: rgba(255, 255, 255, 0.5);
     --button-shadow: 0 0 50px 30px #fff;
     --color-a: #4CAF50; /* Verde */
@@ -47,10 +46,9 @@
     color: inherit;
   }
   
-  .max-width {
+  .max-width-1400px {
     max-width: var(--max-width);
     margin: auto;
-    overflow: hidden;
   }
   
   /* Botón */
@@ -71,6 +69,7 @@
     font-weight: 600;
     letter-spacing: var(--button-letter-spacing);
     color: var(--text-color);
+    background: var(--button-background) ;
     overflow: hidden;
     box-shadow: 0 0 0 0 transparent;
     transition: all 0.2s ease-in;
@@ -96,7 +95,7 @@
     top: 7%;
     left: 0%;
     opacity: 0;
-    background: var(--before-shadow); 
+    background: var(--button-background); 
     box-shadow: var(--button-shadow); 
     transform: skewX(-20deg);
   }
@@ -121,3 +120,4 @@
     box-shadow: 0 0 0 0 transparent;
     transition: box-shadow 0.2s ease-in;
   }
+  
