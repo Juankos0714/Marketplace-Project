@@ -25,8 +25,7 @@ export const createAccess = async (req: Request, res: Response) => {
   }
 };
 
-
-export const getAllAccesses = async (req: Request, res: Response) => {
+export const getAllAccesses = async (_req: Request, res: Response) => {
 
   const accesses = await prisma.access.findMany()
 
