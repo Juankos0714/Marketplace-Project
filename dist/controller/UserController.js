@@ -1,61 +1,42 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getUniqueUser = exports.getAllUser = exports.deleteManyUser = exports.createUser = void 0;
-const bcryptjs_1 = require("bcryptjs");
+exports.deleteManyUser = exports.getUniqueUser = exports.getAllUser = exports.createUser = void 0;
 const prisma_1 = require("../database/prisma");
+const bcryptjs_1 = require("bcryptjs");
 const createUser = async (req, res) => {
     try {
-        const { name, email, password, accessName } = req.body;
-        const isUserUniqueEmail = await prisma_1.prisma.user.findUnique({
-            where: {
-                email,
-            },
+        const { name, email, password, accessId } = req.body;
+        // Verificar si el correo electrónico ya existe
+        const existingUser = await prisma_1.prisma.user.findUnique({
+            where: { email },
         });
-        const isAccessName = await prisma_1.prisma.access.findUnique({
-            where: {
-                name: accessName,
-            },
-        });
-        if (!isAccessName) {
-            return res
-                .status(400)
-                .json({ message: "Esté nivel de acesso não existe" });
+        if (existingUser) {
+            return res.status(400).json({ message: "El correo electrónico ya está en uso" });
         }
-        if (isUserUniqueEmail) {
-            return res
-                .status(400)
-                .json({ message: "Já existe um usuário com este email" });
-        }
-        const hashPassword = await (0, bcryptjs_1.hash)(password, 8);
+        // Encriptar la contraseña
+        const hashedPassword = await (0, bcryptjs_1.hash)(password, 10);
         const user = await prisma_1.prisma.user.create({
             data: {
                 name,
                 email,
-                password: hashPassword,
-                userAccess: {
-                    create: {
-                        Access: {
-                            connect: {
-                                name: accessName,
-                            },
-                        },
-                    },
-                },
+                password: hashedPassword,
+                Access: {
+                    connect: {
+                        id: accessId
+                    }
+                }
             },
             select: {
                 id: true,
                 name: true,
                 email: true,
-                userAccess: {
+                Access: {
                     select: {
-                        Access: {
-                            select: {
-                                name: true,
-                            },
-                        },
-                    },
+                        name: true
+                    }
                 },
-            },
+                created_at: true
+            }
         });
         return res.status(201).json(user);
     }
@@ -64,16 +45,6 @@ const createUser = async (req, res) => {
     }
 };
 exports.createUser = createUser;
-const deleteManyUser = async (req, res) => {
-    try {
-        await prisma_1.prisma.user.deleteMany();
-        return res.status(200).json({ message: "Usuário deletados" });
-    }
-    catch (error) {
-        return res.status(400).json(error);
-    }
-};
-exports.deleteManyUser = deleteManyUser;
 const getAllUser = async (req, res) => {
     try {
         const users = await prisma_1.prisma.user.findMany({
@@ -81,20 +52,14 @@ const getAllUser = async (req, res) => {
                 id: true,
                 name: true,
                 email: true,
-                userAccess: {
+                Access: {
                     select: {
-                        Access: {
-                            select: {
-                                name: true,
-                            },
-                        },
-                    },
+                        name: true
+                    }
                 },
-            },
+                created_at: true
+            }
         });
-        if (!users) {
-            return res.status(204);
-        }
         return res.status(200).json(users);
     }
     catch (error) {
@@ -104,34 +69,24 @@ const getAllUser = async (req, res) => {
 exports.getAllUser = getAllUser;
 const getUniqueUser = async (req, res) => {
     try {
-        const { id } = req.user;
+        const { id } = req.params;
+        const userId = Number(id);
         const user = await prisma_1.prisma.user.findUnique({
-            where: {
-                id,
-            },
+            where: { id: userId },
             select: {
                 id: true,
                 name: true,
                 email: true,
-                userAccess: {
+                Access: {
                     select: {
-                        Access: {
-                            select: {
-                                name: true,
-                            },
-                        },
-                    },
+                        name: true
+                    }
                 },
-                store: {
-                    select: {
-                        id: true,
-                        name: true,
-                    },
-                },
-            },
+                created_at: true
+            }
         });
         if (!user) {
-            return res.status(204);
+            return res.status(404).json({ message: "Usuario no encontrado" });
         }
         return res.status(200).json(user);
     }
@@ -140,3 +95,30 @@ const getUniqueUser = async (req, res) => {
     }
 };
 exports.getUniqueUser = getUniqueUser;
+const deleteManyUser = async (req, res) => {
+    try {
+        const { ids } = req.body;
+        if (!Array.isArray(ids)) {
+            return res.status(400).json({ message: "Se requiere un array de IDs" });
+        }
+        const deletedUsers = await prisma_1.prisma.user.deleteMany({
+            where: {
+                id: {
+                    in: ids
+                }
+            }
+        });
+        return res.status(200).json({
+            message: `${deletedUsers.count} usuarios eliminados correctamente`,
+            count: deletedUsers.count
+        });
+    }
+    catch (error) {
+        console.error("Error al eliminar usuarios:", error);
+        return res.status(500).json({
+            message: "Error al eliminar usuarios",
+            error
+        });
+    }
+};
+exports.deleteManyUser = deleteManyUser;
