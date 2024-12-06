@@ -6,13 +6,14 @@ export const createUser = async (req: Request, res: Response) => {
   try {
     const { name, email, password, accessId } = req.body;
 
-    // Verificar si el correo electrónico ya existe
-    const existingUser = await prisma.user.findUnique({
-      where: { email },
-    });
+    if (!name || !email || !password || !accessId) {
+      return res.status(400).json({ message: "Todos los campos son obligatorios." });
+    }
 
+    // Verificar si el usuario ya existe
+    const existingUser = await prisma.user.findUnique({ where: { email } });
     if (existingUser) {
-      return res.status(400).json({ message: "El correo electrónico ya está en uso" });
+      return res.status(400).json({ message: "El usuario ya existe." });
     }
 
     // Encriptar la contraseña
