@@ -41,8 +41,14 @@ export const signIn = async (req: Request, res: Response) => {
       },
     });
 
-  } catch (error) {
-    console.error("Error en el servidor:", error);
-    return res.status(500).json({ message: "Error en el servidor", error: (error as Error).message });
+  } 
+  catch (error) {
+    console.error("Detailed Sign-In Error:", error);
+    return res.status(500).json({ 
+      message: "Server error during sign-in", 
+      errorName: error instanceof Error ? error.name : 'Unknown Error',
+      errorMessage: error instanceof Error ? error.message : 'No error details',
+      stack: error instanceof Error ? error.stack : null
+    });
   }
 };
