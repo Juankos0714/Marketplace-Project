@@ -1,89 +1,156 @@
-import { Request, Response } from "express";
+import { Request, Response, NextFunction } from "express";
 import { prisma } from "../database/prisma";
 import { compare } from "bcryptjs";
 import { sign } from "jsonwebtoken";
 
+// Diagnostic logging middleware
+export const requestLogger = (req: Request, res: Response, next: NextFunction) => {
+  const startTime = Date.now();
+  
+  // Capture original request details
+  const requestDetails = {
+    method: req.method,
+    path: req.path,
+    body: { ...req.body, password: req.body?.password ? '****' : undefined },
+    headers: {
+      contentType: req.get('Content-Type'),
+      userAgent: req.get('User-Agent')
+    },
+    timestamp: new Date().toISOString()
+  };
+
+  // Capture response
+  const originalJson = res.json;
+  res.json = function(body: any) {
+    // Attach timing and request info
+    const duration = Date.now() - startTime;
+    console.log(JSON.stringify({
+      type: 'REQUEST_DIAGNOSTIC',
+      requestDetails,
+      responseDuration: duration,
+      responseStatus: res.statusCode
+    }, null, 2));
+
+    // Call original json method
+    return originalJson.call(this, body);
+  };
+
+  next();
+};
+
 export const signIn = async (req: Request, res: Response) => {
   try {
-    // Validate request body
+    // Extensive logging of request context
+    console.log('Sign-In Request Context:', {
+      body: { 
+        email: req.body.email, 
+        passwordProvided: !!req.body.password 
+      },
+      headers: {
+        contentType: req.get('Content-Type'),
+        userAgent: req.get('User-Agent')
+      }
+    });
+
+    // Rigorous input validation
     const { email, password } = req.body;
 
-    // Comprehensive input validation
-    if (!email || !password) {
+    if (!email || typeof email !== 'string') {
+      console.warn('Invalid email input:', email);
       return res.status(400).json({ 
-        message: "Email and password are required",
-        details: {
-          email: email ? "Provided" : "Missing",
-          password: password ? "Provided" : "Missing"
+        message: "Invalid email",
+        details: { 
+          email: email,
+          type: typeof email,
+          isProvided: !!email 
         }
       });
     }
 
-    // Validate email format
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
+    if (!password || typeof password !== 'string') {
+      console.warn('Invalid password input:', !!password);
       return res.status(400).json({ 
-        message: "Invalid email format" 
+        message: "Invalid password",
+        details: { 
+          passwordProvided: !!password,
+          type: typeof password 
+        }
       });
     }
 
-    // Log authentication attempt (without sensitive info)
-    console.log(`Login attempt for email: ${email.replace(/(..)(.*)(@.*)/, "$1****$3")}`);
-
-    // Find user with comprehensive error handling
+    // Comprehensive database query with extended error handling
     const user = await prisma.user.findUnique({
       where: { email }, 
       include: { Access: true },
     }).catch((dbError) => {
-      console.error('Database query error:', dbError);
-      throw new Error('Database connection failed');
+      console.error('CRITICAL: Database Query Error', {
+        error: dbError,
+        errorName: dbError.name,
+        errorMessage: dbError.message,
+        stack: dbError.stack
+      });
+      
+      // Differentiate database-specific errors
+      if (dbError.code === 'P2002') {
+        throw new Error('DATABASE_UNIQUE_CONSTRAINT_VIOLATION');
+      }
+      
+      throw new Error('DATABASE_QUERY_FAILED');
     });
 
-    // User not found
+    // Detailed user not found logging
     if (!user) {
-      console.warn(`Login attempt for non-existent email: ${email}`);
+      console.warn('User Not Found Attempt:', {
+        email,
+        timestamp: new Date().toISOString()
+      });
       return res.status(404).json({ 
         message: "User not found",
-        code: "USER_NOT_FOUND"
+        details: { email: email }
       });
     }
 
-    // Password validation
-    const validPassword = await compare(password, user.password).catch((compareError) => {
-      console.error('Password comparison error:', compareError);
-      throw new Error('Password validation failed');
-    });
+    // Password comparison with detailed error tracking
+    const validPassword = await compare(password, user.password)
+      .catch((compareError) => {
+        console.error('Password Comparison Error:', {
+          error: compareError,
+          userEmail: email
+        });
+        throw new Error('PASSWORD_COMPARISON_FAILED');
+      });
 
-    // Incorrect password
     if (!validPassword) {
-      console.warn(`Failed login attempt for email: ${email}`);
+      console.warn('Invalid Password Attempt:', {
+        email,
+        timestamp: new Date().toISOString()
+      });
       return res.status(401).json({ 
-        message: "Invalid credentials",
-        code: "INVALID_CREDENTIALS"
+        message: "Invalid credentials" 
       });
     }
 
-    // Ensure JWT secret is defined
-    if (!process.env.JWT_SECRET) {
-      throw new Error('JWT Secret is not defined');
-    }
-
-    // Generate JWT token with additional security
+    // Token generation with extensive logging
     const token = sign(
       {
         userId: user.id,
         email: user.email,
         role: user.Access?.name,
       },
-      process.env.JWT_SECRET,
+      process.env.JWT_SECRET || '',
       { 
         expiresIn: '24h',
-        issuer: 'marketplace-app',
         algorithm: 'HS256'
       }
     );
 
-    // Successful login response
+    console.log('Successful Login:', {
+      userId: user.id,
+      email: user.email,
+      role: user.Access?.name,
+      timestamp: new Date().toISOString()
+    });
+
     return res.json({
       token,
       user: {
@@ -91,42 +158,29 @@ export const signIn = async (req: Request, res: Response) => {
         email: user.email,
         name: user.name,
         role: user.Access?.name,
-      },
-      metadata: {
-        loginTimestamp: new Date().toISOString()
       }
     });
 
   } catch (error) {
-    // Centralized error handling
-    console.error('Sign-in process error:', error);
-
-    // Differentiate between types of errors
-    if (error instanceof Error) {
-      switch (error.message) {
-        case 'Database connection failed':
-          return res.status(503).json({ 
-            message: "Service unavailable",
-            code: "DATABASE_ERROR"
-          });
-        case 'JWT Secret is not defined':
-          return res.status(500).json({ 
-            message: "Server configuration error",
-            code: "CONFIG_ERROR"
-          });
-        default:
-          return res.status(500).json({ 
-            message: "Internal server error",
-            code: "INTERNAL_ERROR",
-            details: process.env.NODE_ENV === 'development' ? error.message : undefined
-          });
+    // Comprehensive error logging
+    console.error('CRITICAL Sign-In Error', {
+      errorName: (error as Error).name,
+      errorMessage: (error as Error).message,
+      errorStack: (error as Error).stack,
+      requestBody: { 
+        email: req.body.email, 
+        passwordProvided: !!req.body.password 
       }
-    }
+    });
 
-    // Fallback for unexpected errors
     return res.status(500).json({ 
-      message: "Unexpected error occurred",
-      code: "UNEXPECTED_ERROR"
+      message: "Internal server error",
+      details: process.env.NODE_ENV === 'development' 
+        ? { 
+            errorMessage: (error as Error).message,
+            errorName: (error as Error).name, 
+          } 
+        : undefined
     });
   }
 };
