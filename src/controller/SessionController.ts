@@ -42,6 +42,7 @@ export const signIn = async (req: Request, res: Response) => {
     });
 
   } catch (error) {
-    return res.status(500).json({ message: "Error en el servidor" });
+    console.error("Error en el servidor:", error);
+    return res.status(500).json({ message: "Error en el servidor", error: (error as Error).message });
   }
 };
