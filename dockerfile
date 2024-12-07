@@ -26,4 +26,4 @@ ENV NODE_ENV=production
 
 
 # Comando para correr la aplicación
-CMD ["npm", "start"]
+CMD ["node", "dist/server.js"]
