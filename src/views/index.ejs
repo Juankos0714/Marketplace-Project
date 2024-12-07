@@ -4,8 +4,8 @@
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<title>Lab Gaming - Marketplace</title>
-		<link rel="stylesheet" href="../../public/styles/stylesDefault.css" />
-		<link rel="stylesheet" href="../../public/styles/stylesprin.css" />
+		<link rel="stylesheet" href="/styles/stylesDefault.css" />
+		<link rel="stylesheet" href="/styles/stylesprin.css" />
 
 		<link rel="preconnect" href="https://fonts.googleapis.com" />
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -31,110 +31,22 @@
 			<%- include('./partials/header.ejs') %>
 
 			<main class="main">
-				<section class="section section--slider">
-					<div class="section--slider_img-container">
-						<img
-							class="section--slider_img"
-							src="../../public/images/products/ELDENRING CONTAINER.jpg"
-							alt=""
-						/>
-						<div class="icon-overlay">
-							<span class="icon">🎮</span>
-							<span class="text">Juego 1</span>
-						</div>
-					</div>
-					<div class="section--slider_img-container">
-						<img
-							class="section--slider_img"
-							src="../../public/images/products/GODCCONTAINER.jpg"
-							alt=""
-						/>
-						<div class="icon-overlay">
-							<span class="icon">🎮</span>
-							<span class="text">GOD</span>
-						</div>
-					</div>
-					<div class="section--slider_img-container">
-						<img
-							class="section--slider_img"
-							src="../../public/images/products/HORIZONCONTAINER.jpg"
-							alt=""
-						/>
-						<div class="icon-overlay">
-							<span class="icon">🎮</span>
-							<span class="text">HORIZON</span>
-						</div>
-					</div>
-					<div class="section--slider_img-container">
-						<img
-							class="section--slider_img"
-							src="../../public/images/products/injusticeCONTAINER.jpg"
-							alt=""
-						/>
-						<div class="icon-overlay">
-							<span class="icon">🎮</span>
-							<span class="text">Injustice 2</span>
-						</div>
-					</div>
-					<div class="section--slider_img-container">
-						<img
-							class="section--slider_img"
-							src="../../public/images/products/Bloodbornecontainer.avif"
-							alt=""
-						/>
-						<div class="icon-overlay">
-							<span class="icon">🎮</span>
-							<span class="text">BLOODBORNE</span>
-						</div>
-					</div>
-					<div class="section--slider_img-container">
-						<img
-							class="section--slider_img"
-							src="../../public/images/products/GODCCONTAINER.jpg"
-							alt=""
-						/>
-						<div class="icon-overlay">
-							<span class="icon">🎮</span>
-							<span class="text">GOD</span>
-						</div>
-					</div>
-					<div class="section--slider_img-container">
-						<img
-							class="section--slider_img"
-							src="../../public/images/products/HORIZONCONTAINER.jpg"
-							alt=""
-						/>
-						<div class="icon-overlay">
-							<span class="icon">🎮</span>
-							<span class="text">HORIZON</span>
-						</div>
-					</div>
-					<div class="section--slider_img-container">
-						<img
-							class="section--slider_img"
-							src="../../public/images/products/Bloodbornecontainer.avif"
-							alt=""
-						/>
-						<div class="icon-overlay">
-							<span class="icon">🎮</span>
-							<span class="text">BLOODBORNE</span>
-						</div>
-					</div>
-				</section>
+				
+				<%- include('./partials/slider.ejs') %>
 
 				<!-- Sección de destacados -->
 				<section class="destacados">
 					<div class="destacadosTitulo">
 						<h1>Destacados de Lab Gaming</h1>
 						<img
-							src="../../public/images/products/logo.png"
+							src="/images/products/logo.png"
 							class="logo-body"
 						/>
 					</div>
 					<div class="juegos">
 						<div class="juego">
 							<img
-								src="../../public/images/products/spidermanCard.jfif"
+								src="/images/products/spidermanCard.jfif"
 								alt="Spiderman 2"
 							/>
 							<h2>Spiderman 2</h2>
@@ -145,7 +57,7 @@
 						</div>
 						<div class="juego">
 							<img
-								src="../../public/images/products/fc25Card.jfif"
+								src="/images/products/fc25Card.jfif"
 								alt="FC 25"
 							/>
 							<h2>FC 25</h2>
@@ -156,7 +68,7 @@
 						</div>
 						<div class="juego">
 							<img
-								src="../../public/images/products/eldenCard.jfif"
+								src="/images/products/eldenCard.jfif"
 								alt="Elden Ring"
 							/>
 							<h2>Elden Ring</h2>
@@ -167,7 +79,7 @@
 						</div>
 						<div class="juego">
 							<img
-								src="../../public/images/products/injusticeCard.jfif"
+								src="/images/products/injusticeCard.jfif"
 								alt="Injustice 2"
 							/>
 							<h2>Injustice 2</h2>
@@ -183,7 +95,7 @@
 					<div class="novedadesTitulo">
 						<h1>Novedades de Lab Gaming</h1>
 						<img
-							src="../../public/images/products/logo.png"
+							src="/images/products/logo.png"
 							class="logo-body"
 						/>
 					</div>
@@ -191,7 +103,7 @@
 						<div class="juegos2">
 							<div class="juego2">
 								<img
-									src="../../public/images/products/fc25Card.jfif"
+									src="/images/products/fc25Card.jfif"
 									alt="FC 25"
 								/>
 								<h2>FC 25</h2>
@@ -202,7 +114,7 @@
 							</div>
 							<div class="juego2">
 								<img
-									src="../../public/images/products/eldenCard.jfif"
+									src="/images/products/eldenCard.jfif"
 									alt="Elden Ring"
 								/>
 								<h2>Elden Ring</h2>
@@ -213,7 +125,7 @@
 							</div>
 							<div class="juego2">
 								<img
-									src="../../public/images/products/injusticeCard.jfif"
+									src="/images/products/injusticeCard.jfif"
 									alt="Injustice 2"
 								/>
 								<h2>Injustice 2</h2>
@@ -228,7 +140,7 @@
 							<p>Explora juegos gratis de nuestra colección.</p>
 							<div class="juego3">
 								<img
-									src="../../public/images/products/fc25Card.jfif"
+									src="/images/products/fc25Card.jfif"
 									alt="FC 25"
 								/>
 								<h2>FC 25</h2>
@@ -239,7 +151,7 @@
 							</div>
 							<div class="juego3">
 								<img
-									src="../../public/images/products/eldenCard.jfif"
+									src="/images/products/eldenCard.jfif"
 									alt="Elden Ring"
 								/>
 								<h2>Elden Ring</h2>

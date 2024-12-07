@@ -17,7 +17,7 @@ app.set("views", path.resolve(__dirname, "views/"));
 
 //*********************************************************************************************\\
 
-const productsRouter = require("./router/");
+// const productsRouter = require("");
 app.get('/', (_req, res) => {
   res.render('index.ejs');
 });
