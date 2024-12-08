@@ -7,10 +7,9 @@ const express_1 = __importDefault(require("express"));
 const path_1 = __importDefault(require("path"));
 const router_1 = require("./router");
 const dotenv_1 = __importDefault(require("dotenv"));
-// Load environment variables
 dotenv_1.default.config({ path: '.env' });
 const app = (0, express_1.default)();
-// Enhanced error handling for application startup
+app.use('/uploads', express_1.default.static(path_1.default.join(__dirname, '../uploads')));
 function startServer() {
     try {
         // Middleware
@@ -52,14 +51,11 @@ function validateEnvironment() {
         process.exit(1);
     }
 }
-// Run environment validation and server startup
 validateEnvironment();
 startServer();
-// Handle unhandled promise rejections
 process.on('unhandledRejection', (reason, promise) => {
     console.error('Unhandled Rejection at:', promise, 'reason:', reason);
 });
-// Handle uncaught exceptions
 process.on('uncaughtException', (error) => {
     console.error('Uncaught Exception:', error);
     process.exit(1);

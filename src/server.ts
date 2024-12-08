@@ -3,12 +3,12 @@ import path from "path";
 import { router } from "./router";
 import dotenv from "dotenv";
 
-// Load environment variables
+
 dotenv.config({ path: '.env' });
 
 const app = express();
+app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 
-// Enhanced error handling for application startup
 function startServer() {
   try {
     // Middleware
@@ -57,16 +57,14 @@ function validateEnvironment() {
   }
 }
 
-// Run environment validation and server startup
+
 validateEnvironment();
 startServer();
 
-// Handle unhandled promise rejections
 process.on('unhandledRejection', (reason, promise) => {
   console.error('Unhandled Rejection at:', promise, 'reason:', reason);
 });
 
-// Handle uncaught exceptions
 process.on('uncaughtException', (error) => {
   console.error('Uncaught Exception:', error);
   process.exit(1);
