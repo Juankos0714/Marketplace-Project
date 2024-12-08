@@ -4,7 +4,7 @@ import { router } from "./router";
 import dotenv from "dotenv";
 
 // Load environment variables
-dotenv.config();
+dotenv.config({ path: '.env.local' });
 
 const app = express();
 

@@ -16,6 +16,12 @@ export const createUser = async (req: Request, res: Response) => {
       return res.status(400).json({ message: "El usuario ya existe." });
     }
 
+    // Verificar si el accessId existe
+    const access = await prisma.access.findUnique({ where: { id: accessId } });
+    if (!access) {
+      return res.status(400).json({ message: "El accessId proporcionado no existe." });
+    }
+
     // Encriptar la contraseña
     const hashedPassword = await hash(password, 10);
 
@@ -45,7 +51,8 @@ export const createUser = async (req: Request, res: Response) => {
 
     return res.status(201).json(user);
   } catch (error) {
-    return res.status(400).json(error);
+    console.error("Error en el servidor:", error);
+    return res.status(500).json({ message: "Error en el servidor", error: (error as Error).message });
   }
 };
 
