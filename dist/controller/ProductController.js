@@ -22,8 +22,8 @@ const createProduct = async (req, res) => {
                     image,
                     category,
                     platform,
-                    price,
-                    amount,
+                    price: parseFloat(price),
+                    amount: parseInt(amount, 10),
                     storeId,
                 },
             });

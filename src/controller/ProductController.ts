@@ -25,8 +25,8 @@ export const createProduct = async (req: Request, res: Response) => {
           image,
           category,
           platform,
-          price,
-          amount,
+          price: parseFloat(price),
+          amount: parseInt(amount, 10), 
           storeId,
         },
       });
