@@ -46,7 +46,7 @@ router.get("/accesses", authMiddleware(["adm", "Vendedor"]), getAllAccesses);
 /**
  * Almacenar rutas
  */
-router.post("/store", authMiddleware(["adm", "Vendedor"]), createStore);
+router.post("/store", authMiddleware(["adm", "vendedor"]), createStore);
 router.get(
   "/stores",
   authMiddleware(["adm", "Vendedor", "Comprador"]),

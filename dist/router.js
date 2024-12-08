@@ -26,7 +26,7 @@ exports.router.get("/accesses", (0, AuthMiddleware_1.authMiddleware)(["adm", "Ve
 /**
  * Almacenar rutas
  */
-exports.router.post("/store", (0, AuthMiddleware_1.authMiddleware)(["adm", "Vendedor"]), StoreController_1.createStore);
+exports.router.post("/store", (0, AuthMiddleware_1.authMiddleware)(["adm", "vendedor"]), StoreController_1.createStore);
 exports.router.get("/stores", (0, AuthMiddleware_1.authMiddleware)(["adm", "Vendedor", "Comprador"]), StoreController_1.getAllStore);
 exports.router.put("/update-store/:storeId", (0, AuthMiddleware_1.authMiddleware)(["adm", "Vendedor"]), StoreController_1.updateStore);
 /**
