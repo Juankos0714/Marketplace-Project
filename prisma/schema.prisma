@@ -19,6 +19,7 @@ model User {
   created_at     DateTime  @default(now())
   updated_at     DateTime  @updatedAt
   Access         Access?   @relation(fields: [accessId], references: [id])
+  Cart           Cart?
 }
 
 model Access {
@@ -43,6 +44,7 @@ model Product {
   Store       Store?     @relation(fields: [storeId], references: [id], onDelete: Cascade)
   storeId     Int?
   SaleProduct SaleProduct[]
+  CartItem    CartItem[]
 }
 
 model Store {
@@ -76,4 +78,23 @@ model SaleProduct {
   productId  Int
   created_at DateTime   @default(now())
   updated_at DateTime   @default(now())
+}
+model Cart {
+  id         Int        @id @default(autoincrement())
+  user       User       @relation(fields: [userId], references: [id])
+  userId     Int        @unique 
+  items      CartItem[]
+  created_at DateTime   @default(now())
+  updated_at DateTime   @updatedAt
+}
+
+model CartItem {
+  id         Int      @id @default(autoincrement())
+  cart       Cart     @relation(fields: [cartId], references: [id], onDelete: Cascade)
+  cartId     Int
+  product    Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  productId  Int
+  quantity   Int
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
 }

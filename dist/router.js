@@ -48,3 +48,12 @@ exports.router.post("/create-sale", (0, AuthMiddleware_1.authMiddleware)(["admin
 exports.router.get("/get-all-sales", (0, AuthMiddleware_1.authMiddleware)(["admin"]), SaleController_1.getAllSales);
 exports.router.get("/get-all-sales-by-buyer", (0, AuthMiddleware_1.authMiddleware)(["admin", "comprador"]), SaleController_1.getAllSalesByBuyer);
 exports.router.get("/get-all-sales-by-seller", (0, AuthMiddleware_1.authMiddleware)(["admin", "vendedor"]), SaleController_1.getAllSalesBySeller);
+/**
+ * Rutas del carrito
+ */
+const CartController_1 = require("../src/controller/CartController");
+exports.router.get('/cart', AuthMiddleware_1.authMiddleware, CartController_1.getCart); // Ruta para obtener los productos en el carrito del usuario
+exports.router.post('/cart/products/:productId', AuthMiddleware_1.authMiddleware, CartController_1.addToCart); // Ruta para agregar un producto al carrito
+exports.router.put('/cart/items/:itemId', AuthMiddleware_1.authMiddleware, CartController_1.updateCartItem); // Ruta para actualizar la cantidad de un producto en el carrito
+exports.router.delete('/cart/items/:itemId', AuthMiddleware_1.authMiddleware, CartController_1.removeFromCart); // Ruta para eliminar un producto del carrito
+exports.router.delete('/cart', AuthMiddleware_1.authMiddleware, CartController_1.clearCart);

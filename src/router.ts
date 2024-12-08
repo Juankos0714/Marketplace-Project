@@ -111,3 +111,18 @@ router.get(
   authMiddleware(["admin", "vendedor"]),
   getAllSalesBySeller
 );
+/**
+ * Rutas del carrito
+ */
+import {
+  getCart,
+  addToCart,
+  updateCartItem,
+  removeFromCart,
+  clearCart
+} from "../src/controller/CartController";
+router.get('/cart', authMiddleware, getCart); // Ruta para obtener los productos en el carrito del usuario
+router.post('/cart/products/:productId', authMiddleware, addToCart);// Ruta para agregar un producto al carrito
+router.put('/cart/items/:itemId', authMiddleware, updateCartItem);// Ruta para actualizar la cantidad de un producto en el carrito
+router.delete('/cart/items/:itemId', authMiddleware, removeFromCart);// Ruta para eliminar un producto del carrito
+router.delete('/cart', authMiddleware, clearCart);

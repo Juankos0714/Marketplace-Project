@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "tsnd --exit-child --respawn --transpile-only --files src/index.ts",
+    "dev": "tsnd --exit-child --respawn --transpile-only --files src/server.ts",
     "seed": "ts-node prisma/seed.ts",
     "start": "node dist/server.js",
     "build": "rimraf ./dist && tsc"
