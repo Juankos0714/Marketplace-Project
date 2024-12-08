@@ -2,6 +2,7 @@ import express from "express";
 import path from "path";
 import { router } from "./router";
 import dotenv from "dotenv";
+import fs from "fs";
 
 // Cargar variables de entorno desde .env
 dotenv.config({ path: '.env' });
@@ -19,6 +20,12 @@ function validateEnvironment() {
   }
 }
 
+// Ensure the upload directory exists
+const uploadDir = path.join(__dirname, '../src/public/images');
+if (!fs.existsSync(uploadDir)) {
+  fs.mkdirSync(uploadDir, { recursive: true });
+}
+
 // Iniciar el servidor
 function startServer() {
   try {
@@ -29,8 +36,8 @@ function startServer() {
       next();
     });
 
-    // Servir archivos estáticos desde la carpeta uploads
-    app.use('/images', express.static(path.join(__dirname, '../uploads')));
+    // Servir archivos estáticos desde la carpeta src/public/images
+    app.use('/images', express.static(uploadDir));
 
     // Router
     app.use(router);

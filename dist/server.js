@@ -7,6 +7,7 @@ const express_1 = __importDefault(require("express"));
 const path_1 = __importDefault(require("path"));
 const router_1 = require("./router");
 const dotenv_1 = __importDefault(require("dotenv"));
+const fs_1 = __importDefault(require("fs"));
 // Cargar variables de entorno desde .env
 dotenv_1.default.config({ path: '.env' });
 const app = (0, express_1.default)();
@@ -19,6 +20,11 @@ function validateEnvironment() {
         process.exit(1);
     }
 }
+// Ensure the upload directory exists
+const uploadDir = path_1.default.join(__dirname, '../src/public/images');
+if (!fs_1.default.existsSync(uploadDir)) {
+    fs_1.default.mkdirSync(uploadDir, { recursive: true });
+}
 // Iniciar el servidor
 function startServer() {
     try {
@@ -28,8 +34,8 @@ function startServer() {
             console.log(`[${new Date().toISOString()}] ${req.method} ${req.path}`);
             next();
         });
-        // Servir archivos estáticos desde la carpeta uploads
-        app.use('/images', express_1.default.static(path_1.default.join(__dirname, '../uploads')));
+        // Servir archivos estáticos desde la carpeta src/public/images
+        app.use('/images', express_1.default.static(uploadDir));
         // Router
         app.use(router_1.router);
         // Template Engine
