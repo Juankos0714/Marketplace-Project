@@ -6,12 +6,18 @@ const bcryptjs_1 = require("bcryptjs");
 const createUser = async (req, res) => {
     try {
         const { name, email, password, accessId } = req.body;
-        // Verificar si el correo electrónico ya existe
-        const existingUser = await prisma_1.prisma.user.findUnique({
-            where: { email },
-        });
+        if (!name || !email || !password || !accessId) {
+            return res.status(400).json({ message: "Todos los campos son obligatorios." });
+        }
+        // Verificar si el usuario ya existe
+        const existingUser = await prisma_1.prisma.user.findUnique({ where: { email } });
         if (existingUser) {
-            return res.status(400).json({ message: "El correo electrónico ya está en uso" });
+            return res.status(400).json({ message: "El usuario ya existe." });
+        }
+        // Verificar si el accessId existe
+        const access = await prisma_1.prisma.access.findUnique({ where: { id: accessId } });
+        if (!access) {
+            return res.status(400).json({ message: "El accessId proporcionado no existe." });
         }
         // Encriptar la contraseña
         const hashedPassword = await (0, bcryptjs_1.hash)(password, 10);
@@ -41,7 +47,8 @@ const createUser = async (req, res) => {
         return res.status(201).json(user);
     }
     catch (error) {
-        return res.status(400).json(error);
+        console.error("Error en el servidor:", error);
+        return res.status(500).json({ message: "Error en el servidor", error: error.message });
     }
 };
 exports.createUser = createUser;
