@@ -8,7 +8,7 @@ const path_1 = __importDefault(require("path"));
 const router_1 = require("./router");
 const dotenv_1 = __importDefault(require("dotenv"));
 // Load environment variables
-dotenv_1.default.config({ path: '.env.local' });
+dotenv_1.default.config({ path: '.env' });
 const app = (0, express_1.default)();
 // Enhanced error handling for application startup
 function startServer() {

@@ -2,10 +2,13 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getAllSalesBySeller = exports.getAllSalesByBuyer = exports.getAllSales = exports.createSale = void 0;
 const prisma_1 = require("../database/prisma");
+// Funcion para crear una venta, osea comprar productos
 const createSale = async (req, res) => {
     try {
         const { products, userSellerId } = req.body;
         const id = parseInt(req.user.id, 10);
+        // el findMany se utiliza para buscar todos los productos
+        // que se encuentran en la base de datos 
         const productsByDatabase = await prisma_1.prisma.product.findMany({
             where: {
                 id: { in: products.map((product) => product.id) },
