@@ -1,6 +1,10 @@
-import { Request, Response } from "express";
-import { prisma } from "../database/prisma";
-import { upload } from "../middlewares/multerConfig";
+import { Request, Response, Router } from "express";
+import { PrismaClient } from "@prisma/client";
+export const prisma = new PrismaClient();
+import { upload } from "../config/multer"
+import { uploadSingle, uploadMultiple } from '../middlewares/uploadMiddleware';
+
+const router = Router();
 
 export const createProduct = async (req: Request, res: Response) => {
   upload.single('image')(req, res, async (err) => {
@@ -165,3 +169,36 @@ export const deleteProduct = async (req: Request, res: Response) => {
     return res.status(400).json(error);
   }
 };
+// For single image upload
+router.post('/upload-single', uploadSingle, async (req, res) => {
+  if (!req.file) {
+    return res.status(400).json({ message: 'No file uploaded' });
+  }
+  
+  // Access the file info
+  const imageUrl = `/images/${req.file.filename}`;
+  
+  // Save to database or process further
+  // ...
+
+  res.json({ imageUrl });
+});
+
+// For multiple images
+router.post('/upload-multiple', uploadMultiple, async (req, res) => {
+  if (!req.files || req.files.length === 0) {
+    return res.status(400).json({ message: 'No files uploaded' });
+  }
+  
+  const files = req.files as Express.Multer.File[];
+  const imageUrls = files.map(file => `/images/${file.filename}`);
+  
+  // Save to database or process further
+  // ...
+
+  res.json({ imageUrls });
+});
+router.post('/product/:storeId', uploadSingle, createProduct);
+router.put('/update-product/:productId', uploadSingle, updateProduct);
+
+export default router;
