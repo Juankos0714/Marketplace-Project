@@ -23,10 +23,15 @@ import {
   getUniqueUser,
 } from "./controller/UserController";
 import { authMiddleware } from "./middlewares/AuthMiddleware";
+import {
+  getCart,
+  addToCart,
+  updateCartItem,
+  removeFromCart,
+  clearCart
+} from "./controller/CartController";
 
 export const router = Router();
-
-
 
 /**
  * Rutas de usuario
@@ -114,15 +119,8 @@ router.get(
 /**
  * Rutas del carrito
  */
-import {
-  getCart,
-  addToCart,
-  updateCartItem,
-  removeFromCart,
-  clearCart
-} from "../src/controller/CartController";
-router.get('/cart', authMiddleware, getCart); // Ruta para obtener los productos en el carrito del usuario
-router.post('/cart/products/:productId', authMiddleware, addToCart);// Ruta para agregar un producto al carrito
-router.put('/cart/items/:itemId', authMiddleware, updateCartItem);// Ruta para actualizar la cantidad de un producto en el carrito
-router.delete('/cart/items/:itemId', authMiddleware, removeFromCart);// Ruta para eliminar un producto del carrito
-router.delete('/cart', authMiddleware, clearCart);
+router.get("/cart", authMiddleware(["comprador"]), getCart); // Ruta para obtener el carrito del usuario
+router.post("/cart/:productId", authMiddleware(["comprador"]), addToCart); // Ruta para agregar un producto al carrito
+router.put("/cart/:itemId", authMiddleware(["comprador"]), updateCartItem); // Ruta para actualizar un item del carrito
+router.delete("/cart/:itemId", authMiddleware(["comprador"]), removeFromCart); // Ruta para eliminar un item del carrito
+router.delete("/cart", authMiddleware(["comprador"]), clearCart); // Ruta para limpiar el carrito

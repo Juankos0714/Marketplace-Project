@@ -9,6 +9,7 @@ const SessionController_1 = require("./controller/SessionController");
 const StoreController_1 = require("./controller/StoreController");
 const UserController_1 = require("./controller/UserController");
 const AuthMiddleware_1 = require("./middlewares/AuthMiddleware");
+const CartController_1 = require("./controller/CartController");
 exports.router = (0, express_1.Router)();
 /**
  * Rutas de usuario
@@ -51,9 +52,8 @@ exports.router.get("/get-all-sales-by-seller", (0, AuthMiddleware_1.authMiddlewa
 /**
  * Rutas del carrito
  */
-const CartController_1 = require("../src/controller/CartController");
-exports.router.get('/cart', AuthMiddleware_1.authMiddleware, CartController_1.getCart); // Ruta para obtener los productos en el carrito del usuario
-exports.router.post('/cart/products/:productId', AuthMiddleware_1.authMiddleware, CartController_1.addToCart); // Ruta para agregar un producto al carrito
-exports.router.put('/cart/items/:itemId', AuthMiddleware_1.authMiddleware, CartController_1.updateCartItem); // Ruta para actualizar la cantidad de un producto en el carrito
-exports.router.delete('/cart/items/:itemId', AuthMiddleware_1.authMiddleware, CartController_1.removeFromCart); // Ruta para eliminar un producto del carrito
-exports.router.delete('/cart', AuthMiddleware_1.authMiddleware, CartController_1.clearCart);
+exports.router.get("/cart", (0, AuthMiddleware_1.authMiddleware)(["comprador"]), CartController_1.getCart); // Ruta para obtener el carrito del usuario
+exports.router.post("/cart/:productId", (0, AuthMiddleware_1.authMiddleware)(["comprador"]), CartController_1.addToCart); // Ruta para agregar un producto al carrito
+exports.router.put("/cart/:itemId", (0, AuthMiddleware_1.authMiddleware)(["comprador"]), CartController_1.updateCartItem); // Ruta para actualizar un item del carrito
+exports.router.delete("/cart/:itemId", (0, AuthMiddleware_1.authMiddleware)(["comprador"]), CartController_1.removeFromCart); // Ruta para eliminar un item del carrito
+exports.router.delete("/cart", (0, AuthMiddleware_1.authMiddleware)(["comprador"]), CartController_1.clearCart); // Ruta para limpiar el carrito
