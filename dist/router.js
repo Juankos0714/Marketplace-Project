@@ -2,7 +2,6 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.router = void 0;
 const express_1 = require("express");
-const Maincontroller_1 = require("./controller/Maincontroller");
 const AccessController_1 = require("./controller/AccessController");
 const ProductController_1 = require("./controller/ProductController");
 const SaleController_1 = require("./controller/SaleController");
@@ -11,7 +10,6 @@ const StoreController_1 = require("./controller/StoreController");
 const UserController_1 = require("./controller/UserController");
 const AuthMiddleware_1 = require("./middlewares/AuthMiddleware");
 exports.router = (0, express_1.Router)();
-exports.router.get("/", Maincontroller_1.mainController.index);
 /**
  * Rutas de usuario
  */
