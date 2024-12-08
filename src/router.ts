@@ -33,28 +33,28 @@ export const router = Router();
  */
 router.post("/user", createUser); // Ruta para registrar un nuevo usuario
 router.post("/sign-in", signIn); // Ruta para iniciar sesión
-router.get("/get-all-users", authMiddleware(["adm"]), getAllUser); // Ruta para obtener todos los usuarios
-router.get("/get-unique-user/:id", authMiddleware(["adm", "Vendedor", "Comprador"]), getUniqueUser); // Ruta para obtener un usuario único
-router.delete("/delete-users", authMiddleware(["adm"]), deleteManyUser); // Ruta para eliminar múltiples usuarios
+router.get("/get-all-users", authMiddleware(["admin"]), getAllUser); // Ruta para obtener todos los usuarios
+router.get("/get-unique-user/:id", authMiddleware(["admin", "vendedor", "comprador"]), getUniqueUser); // Ruta para obtener un usuario único
+router.delete("/delete-users", authMiddleware(["admin"]), deleteManyUser); // Ruta para eliminar múltiples usuarios
 
 /**
  * Rutas de acceso
  */
-router.post("/access", authMiddleware(["adm"]), createAccess);
-router.get("/accesses", authMiddleware(["adm", "Vendedor"]), getAllAccesses);
+router.post("/access", authMiddleware(["admin"]), createAccess);
+router.get("/accesses", authMiddleware(["admin", "vendedor"]), getAllAccesses);
 
 /**
  * Almacenar rutas
  */
-router.post("/store", authMiddleware(["adm", "vendedor"]), createStore);
+router.post("/store", authMiddleware(["admin", "vendedor"]), createStore);
 router.get(
   "/stores",
-  authMiddleware(["adm", "Vendedor", "Comprador"]),
+  authMiddleware(["admin", "vendedor", "comprador"]),
   getAllStore
 );
 router.put(
   "/update-store/:storeId",
-  authMiddleware(["adm", "Vendedor"]),
+  authMiddleware(["admin", "vendedor"]),
   updateStore
 );
 
@@ -63,27 +63,27 @@ router.put(
  */
 router.post(
   "/product/:storeId",
-  authMiddleware(["adm", "Vendedor"]),
+  authMiddleware(["admin", "vendedor"]),
   createProduct
 );
 router.put(
   "/update-product/:productId",
-  authMiddleware(["adm", "Vendedor"]),
+  authMiddleware(["admin", "vendedor"]),
   updateProduct
 );
 router.get(
   "/products",
-  authMiddleware(["adm", "Vendedor", "Comprador"]),
+  authMiddleware(["admin", "vendedor", "comprador"]),
   getAllProducts
 );
 router.get(
   "/get-unique-product/:productId",
-  authMiddleware(["adm", "Vendedor", "Comprador"]),
+  authMiddleware(["admin", "vendedor", "comprador"]),
   getUniqueProduct
 );
 router.delete(
   "/delete-product/:productId",
-  authMiddleware(["adm", "Vendedor"]),
+  authMiddleware(["admin", "vendedor"]),
   deleteProduct
 );
 
@@ -97,17 +97,17 @@ router.post("/sign-in", signIn);
  */
 router.post(
   "/create-sale",
-  authMiddleware(["adm", "Vendedor", "Comprador"]),
+  authMiddleware(["admin", "vendedor", "comprador"]),
   createSale
 );
-router.get("/get-all-sales", authMiddleware(["adm"]), getAllSales);
+router.get("/get-all-sales", authMiddleware(["admin"]), getAllSales);
 router.get(
   "/get-all-sales-by-buyer",
-  authMiddleware(["adm", "Comprador"]),
+  authMiddleware(["admin", "comprador"]),
   getAllSalesByBuyer
 );
 router.get(
   "/get-all-sales-by-seller",
-  authMiddleware(["adm", "Vendedor"]),
+  authMiddleware(["admin", "vendedor"]),
   getAllSalesBySeller
 );
