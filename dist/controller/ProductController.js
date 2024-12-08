@@ -70,8 +70,8 @@ const updateProduct = async (req, res) => {
                     image,
                     category,
                     platform,
-                    price,
-                    amount,
+                    price: parseFloat(price),
+                    amount: parseInt(amount, 10),
                 },
             });
             return res.status(200).json(product);

@@ -7,26 +7,21 @@ exports.upload = void 0;
 const multer_1 = __importDefault(require("multer"));
 const path_1 = __importDefault(require("path"));
 const storage = multer_1.default.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, 'uploads/');
-    },
-    filename: (req, file, cb) => {
+    destination: path_1.default.join(__dirname, "../uploads"),
+    filename: function (req, file, cb) {
         cb(null, `${Date.now()}-${file.originalname}`);
-    },
+    }
 });
-const fileFilter = (req, file, cb) => {
-    const allowedTypes = /jpeg|jpg|png/;
-    const extname = allowedTypes.test(path_1.default.extname(file.originalname).toLowerCase());
-    const mimetype = allowedTypes.test(file.mimetype);
-    if (extname && mimetype) {
+const fileFilter = (req, uploadedFile, cb) => {
+    const fileTypes = ['image/png', 'image/jpg', 'image/jpeg', 'image/gif'];
+    if (fileTypes.some(fileType => fileType === uploadedFile.mimetype)) {
         return cb(null, true);
     }
-    else {
-        cb(new Error('Solo se permiten imágenes'));
-    }
+    return cb(null, false);
 };
+const maxSize = 5 * 1024 * 1024;
 exports.upload = (0, multer_1.default)({
     storage,
+    limits: { fileSize: maxSize },
     fileFilter,
-    limits: { fileSize: 1024 * 1024 * 5 }, // 5MB
 });
