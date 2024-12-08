@@ -3,7 +3,7 @@ import { Request } from 'express';
 import path from 'path';
 
 const storage = multer.diskStorage({
-  destination: 'public/images/',
+  destination: './uploads',
   filename: (_req: Request, file: Express.Multer.File, cb: Function) => {
     cb(null, Date.now() + path.extname(file.originalname));
   }
