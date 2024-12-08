@@ -3,12 +3,23 @@ import path from "path";
 import { router } from "./router";
 import dotenv from "dotenv";
 
-// Load environment variables
+// Cargar variables de entorno desde .env
 dotenv.config({ path: '.env' });
 
 const app = express();
 
-// Enhanced error handling for application startup
+// Validar variables de entorno críticas
+function validateEnvironment() {
+  const criticalVars = ['JWT_SECRET', 'DATABASE_URL'];
+  const missingVars = criticalVars.filter(varName => !process.env[varName]);
+
+  if (missingVars.length > 0) {
+    console.error('Missing critical environment variables:', missingVars);
+    process.exit(1);
+  }
+}
+
+// Iniciar el servidor
 function startServer() {
   try {
     // Middleware
@@ -17,6 +28,9 @@ function startServer() {
       console.log(`[${new Date().toISOString()}] ${req.method} ${req.path}`);
       next();
     });
+
+    // Servir archivos estáticos desde la carpeta uploads
+    app.use('/images', express.static(path.join(__dirname, '../uploads')));
 
     // Router
     app.use(router);
@@ -46,27 +60,16 @@ function startServer() {
   }
 }
 
-// Validate critical environment variables
-function validateEnvironment() {
-  const criticalVars = ['JWT_SECRET', 'DATABASE_URL'];
-  const missingVars = criticalVars.filter(varName => !process.env[varName]);
-
-  if (missingVars.length > 0) {
-    console.error('Missing critical environment variables:', missingVars);
-    process.exit(1);
-  }
-}
-
-// Run environment validation and server startup
+// Validar variables de entorno y iniciar el servidor
 validateEnvironment();
 startServer();
 
-// Handle unhandled promise rejections
+// Manejar promesas no manejadas
 process.on('unhandledRejection', (reason, promise) => {
   console.error('Unhandled Rejection at:', promise, 'reason:', reason);
 });
 
-// Handle uncaught exceptions
+// Manejar excepciones no capturadas
 process.on('uncaughtException', (error) => {
   console.error('Uncaught Exception:', error);
   process.exit(1);

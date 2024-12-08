@@ -3,9 +3,11 @@ import { Request } from 'express';
 import path from 'path';
 
 const storage = multer.diskStorage({
-  destination: './uploads',
+  destination: (req, file, cb) => {
+    cb(null, 'src/public/images');
+  },
   filename: (_req: Request, file: Express.Multer.File, cb: Function) => {
-    cb(null, Date.now() + path.extname(file.originalname));
+    cb(null, Date.now() + '-' + file.originalname);
   }
 });
 
