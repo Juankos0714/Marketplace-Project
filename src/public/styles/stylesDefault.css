@@ -1,6 +1,6 @@
 :root {
     --main-background: #001A65;
-    --secondary-background: linear-gradient(90deg, #001a65, #fd1d75);
+    --secondary-background: linear-gradient(90deg, #001a65 35%, #fd1d75 90%, #001a65 100%);
     --text-color: #fff; /* Color del texto */
     --button-background: #001A65;
     --button-hover-background: rgba(255, 255, 255, 0.5);

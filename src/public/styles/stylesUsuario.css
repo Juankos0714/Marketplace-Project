@@ -1,0 +1,182 @@
+body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    background-image: url(../images/products/loginbackground.jpg);
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+  }
+
+  section{
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+  }
+  
+  header {
+    background:var(--secondary-background) ;
+    color: white;
+    border-bottom: 2px solid #3ecdef;
+    padding: 10px 15px;
+  }
+  
+  header nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+
+  
+  header ul {
+    list-style: none;
+    font-family: "Orbitron", sans-serif;
+    display: flex;
+    gap: 50px;
+  }
+  
+  header ul li a {
+    color: white;
+    text-decoration: none;
+  }
+
+  header .logo {
+    display: flex;
+    align-items: center;
+    font-family: "Press Start 2P", system-ui, sans-serif;
+    gap: 10px; /* Espacio entre el logo y el nombre */
+    font-size: 24px; /* Ajusta el tamaño de la fuente si es necesario */
+}
+
+header .logo-img {
+    width: 40px; /* Tamaño del logo */
+    height: auto;
+}
+
+header input{
+  width: 0;
+  position: relative;
+  bottom: 3px;
+  outline: none;
+  border: none;
+  font-weight: 400;
+  transition: 1.2s;
+  background: transparent;
+  border-radius: 20px;
+  color: #fff;
+  padding: 6px 0px 0px 5px;
+  font-size: 14px;
+}
+
+header:hover input{
+  width: 300px;
+  color: #fff;
+  border: 1px solid #fff;
+}
+
+header a.fas{
+  background-color: #fff;
+  position: relative;
+  bottom: 15px;
+}
+
+.loginForm{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    flex-direction: column;
+    gap: 20px;
+    background: rgba(255,255,255,0.1);
+    padding: 20px;
+    border-radius: 5px;
+    width: 100%;
+    max-width: 600px;
+}
+
+.loginForm input{
+    width: 100%;
+    padding: 10px 200px 0 200px;
+    margin-bottom: 15px;
+    border: 1px solid #fd1d75;
+    border-radius: 4px;
+    background-color: rgba(37, 72, 131, 0.9);
+}
+
+.usuario .container h1{
+    display: flex;
+    align-items: center;
+    font-family: "Press Start 2P", system-ui, sans-serif;
+    font-size: 24px;
+}
+
+.usuario .container label, .iniciar_cuenta{
+    font-family: "Orbitron", sans-serif;
+}
+
+footer {
+    background: var(--secondary-background);
+    color: white;
+    padding: 20px 0;
+    text-align: center;
+  }
+  
+  .footer-container {
+    display: flex;
+    justify-content: space-around;
+    align-items: flex-start;
+    padding: 0 50px;
+  }
+  
+  .footer-column {
+    flex: 1;
+    text-align: center;
+  }
+  
+  .footer-column h3 {
+    font-family: 'Press Start 2P', sans-serif;
+    font-size: 18px;
+    margin-bottom: 10px;
+  }
+  
+  .footer-column p, .footer-column a {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 14px;
+    color: white;
+  }
+  
+  .social-icons {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 10px;
+  }
+  
+  .social-icons a {
+    color: white;
+    font-size: 18px;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 1px; 
+    transition: color 0.3s, transform 0.3s;
+  }
+  
+  .social-icons a:hover {
+    color: #ffcc00; 
+    transform: scale(1.1); 
+  }
+
+  
+  
+  .footer-credits {
+    font-size: 12px;
+    margin-top: 20px;
+    font-family: 'Orbitron', sans-serif;
+    opacity: 0.8;
+  }
