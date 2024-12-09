@@ -8,6 +8,7 @@ import fs from "fs";
 dotenv.config({ path: '.env' });
 
 const app = express();
+app.use(express.static("public")); // carpeta public
 
 // Validar variables de entorno críticas
 function validateEnvironment() {
