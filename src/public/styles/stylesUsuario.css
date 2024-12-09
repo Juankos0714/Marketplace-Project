@@ -73,7 +73,7 @@ header input{
   font-size: 14px;
 }
 
-header:hover input{
+header input :hover {
   width: 300px;
   color: #fff;
   border: 1px solid #fff;
@@ -84,6 +84,16 @@ header a.fas{
   position: relative;
   bottom: 15px;
 }
+
+header ul li a i.fas.fa-shopping-cart {
+    font-size: 20px; /* Ajusta el tamaño del ícono */
+    color: white; /* Cambia el color si lo deseas */
+    transition: transform 0.3s ease;
+  }
+  
+  header ul li a:hover i.fas.fa-shopping-cart {
+    transform: scale(1.2); /* Aumenta el tamaño cuando el ícono es hover */
+  }
 
 .loginForm{
     display: flex;
