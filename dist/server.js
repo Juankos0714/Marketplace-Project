@@ -8,11 +8,10 @@ const path_1 = __importDefault(require("path"));
 const router_1 = require("./router");
 const dotenv_1 = __importDefault(require("dotenv"));
 const fs_1 = __importDefault(require("fs"));
+const cors_1 = __importDefault(require("cors"));
 // Determinar el entorno y cargar las variables de entorno adecuadas
 const envFile = process.env.NODE_ENV === 'production' ? '.env' : '.env.local';
 dotenv_1.default.config({ path: envFile });
-const app = (0, express_1.default)();
-app.use(express_1.default.static("public")); // carpeta public
 // Validar variables de entorno críticas
 function validateEnvironment() {
     const criticalVars = ['JWT_SECRET', 'DATABASE_URL'];
@@ -22,14 +21,27 @@ function validateEnvironment() {
         process.exit(1);
     }
 }
-// Ensure the upload directory exists
-const uploadDir = path_1.default.join(__dirname, '/images');
-if (!fs_1.default.existsSync(uploadDir)) {
-    fs_1.default.mkdirSync(uploadDir, { recursive: true });
-}
-// Iniciar el servidor
 function startServer() {
+    const app = (0, express_1.default)();
     try {
+        // Configuración de CORS
+        app.use((0, cors_1.default)({
+            origin: [
+                'http://localhost:5432',
+                'https://marketplace-project-frontenhttps://marketplace-project-alpha.vercel.app/d.vercel.app',
+                /\.vercel\.app$/
+            ],
+            credentials: true,
+            methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+            allowedHeaders: ['Content-Type', 'Authorization']
+        }));
+        // Configuración de carpetas estáticas
+        app.use(express_1.default.static("public"));
+        // Ensure the upload directory exists
+        const uploadDir = path_1.default.join(__dirname, '/images');
+        if (!fs_1.default.existsSync(uploadDir)) {
+            fs_1.default.mkdirSync(uploadDir, { recursive: true });
+        }
         // Middleware
         app.use(express_1.default.json());
         app.use((req, res, next) => {
@@ -58,19 +70,18 @@ function startServer() {
         });
     }
     catch (error) {
-        console.error('Failed to start server:', error);
+        console.error('Error starting server:', error);
         process.exit(1);
     }
 }
-// Validar variables de entorno y iniciar el servidor
-validateEnvironment();
-startServer();
-// Manejar promesas no manejadas
+// Event handlers for unhandled errors
 process.on('unhandledRejection', (reason, promise) => {
     console.error('Unhandled Rejection at:', promise, 'reason:', reason);
 });
-// Manejar excepciones no capturadas
 process.on('uncaughtException', (error) => {
     console.error('Uncaught Exception:', error);
     process.exit(1);
 });
+// Iniciar el servidor
+validateEnvironment();
+startServer();
