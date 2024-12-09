@@ -8,8 +8,9 @@ const path_1 = __importDefault(require("path"));
 const router_1 = require("./router");
 const dotenv_1 = __importDefault(require("dotenv"));
 const fs_1 = __importDefault(require("fs"));
-// Cargar variables de entorno desde .env
-dotenv_1.default.config({ path: '.env' });
+// Determinar el entorno y cargar las variables de entorno adecuadas
+const envFile = process.env.NODE_ENV === 'production' ? '.env' : '.env.local';
+dotenv_1.default.config({ path: envFile });
 const app = (0, express_1.default)();
 // Validar variables de entorno críticas
 function validateEnvironment() {

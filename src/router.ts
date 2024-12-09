@@ -30,8 +30,22 @@ import {
   removeFromCart,
   clearCart
 } from "./controller/CartController";
+import { renderHomePage, categories, carrito, allCategories, admin } from "./controller/MainController";
+import mainController from "./controller/MainController";
 
 export const router = Router();
+
+// Ruta para la página principal
+router.get("/", renderHomePage);
+router.get("/categories/:nombre", categories);
+
+router.get("/productCart", authMiddleware(["common_user"]), carrito);
+
+router.get("/allCategories", allCategories);
+
+router.get("/admin", authMiddleware(["admin"]), admin);
+
+export default router;
 
 /**
  * Rutas de usuario

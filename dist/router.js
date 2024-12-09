@@ -10,7 +10,15 @@ const StoreController_1 = require("./controller/StoreController");
 const UserController_1 = require("./controller/UserController");
 const AuthMiddleware_1 = require("./middlewares/AuthMiddleware");
 const CartController_1 = require("./controller/CartController");
+const MainController_1 = require("./controller/MainController");
 exports.router = (0, express_1.Router)();
+// Ruta para la página principal
+exports.router.get("/", MainController_1.renderHomePage);
+exports.router.get("/categories/:nombre", MainController_1.categories);
+exports.router.get("/productCart", (0, AuthMiddleware_1.authMiddleware)(["common_user"]), MainController_1.carrito);
+exports.router.get("/allCategories", MainController_1.allCategories);
+exports.router.get("/admin", (0, AuthMiddleware_1.authMiddleware)(["admin"]), MainController_1.admin);
+exports.default = exports.router;
 /**
  * Rutas de usuario
  */

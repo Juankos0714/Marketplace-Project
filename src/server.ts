@@ -4,8 +4,9 @@ import { router } from "./router";
 import dotenv from "dotenv";
 import fs from "fs";
 
-// Cargar variables de entorno desde .env
-dotenv.config({ path: '.env' });
+// Determinar el entorno y cargar las variables de entorno adecuadas
+const envFile = process.env.NODE_ENV === 'production' ? '.env' : '.env.local';
+dotenv.config({ path: envFile });
 
 const app = express();
 app.use(express.static("public")); // carpeta public
