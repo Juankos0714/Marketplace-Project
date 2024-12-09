@@ -130,7 +130,7 @@ export const getUniqueProduct = async (req: Request, res: Response) => {
       return res.status(404).json({ message: "Producto no encontrado" });
     }
 
-    return res.status(200).json(product);
+    return res.render('../views/detailOfproduct', { product: product });
   } catch (error) {
     return res.status(400).json(error);
   }

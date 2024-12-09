@@ -37,6 +37,7 @@ export const router = Router();
 
 // Ruta para la página principal
 router.get("/", renderHomePage);
+
 router.get("/categories/:nombre", categories);
 
 router.get("/productCart", authMiddleware(["common_user"]), carrito);
@@ -96,7 +97,7 @@ router.get(
   getAllProducts
 );
 router.get(
-  "/get-unique-product/:productId",
+  "/product/:id",
   authMiddleware(["admin", "vendedor", "comprador"]),
   getUniqueProduct
 );
@@ -138,3 +139,5 @@ router.post("/cart/:productId", authMiddleware(["comprador"]), addToCart); // Ru
 router.put("/cart/:itemId", authMiddleware(["comprador"]), updateCartItem); // Ruta para actualizar un item del carrito
 router.delete("/cart/:itemId", authMiddleware(["comprador"]), removeFromCart); // Ruta para eliminar un item del carrito
 router.delete("/cart", authMiddleware(["comprador"]), clearCart); // Ruta para limpiar el carrito
+
+console.log("router.ts - router", router);

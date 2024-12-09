@@ -1,6 +1,7 @@
 :root {
     --main-background: #001A65;
     --secondary-background: #333;
+    --sections-bg: #274a85;
     --text-color: #fff; /* Color del texto */
     --button-background: #055ccc; /*Color unico del boton*/
     --before-shadow: #fff; /*Color del destello del boton*/
@@ -37,8 +38,10 @@
     height: 100vh;
   }
   
-  h1, h2 {
+  h1, h2, p{
     transition: color 0.3s ease;
+    font-family: "Orbitron", sans-serif;
+
   }
   
   a{
@@ -77,6 +80,7 @@
     cursor: pointer;
     max-height: 40px;
     margin: 0px auto;
+    background: var(--button-background);
   }
   
   a.button:hover {
@@ -121,3 +125,44 @@
     box-shadow: 0 0 0 0 transparent;
     transition: box-shadow 0.2s ease-in;
   }
+
+  img {
+    max-width: 100%;
+    height: auto;
+  }
+
+  .logo {
+    width: 40px;
+    height: 40px;
+  }
+
+  /* barra de navegación  de la página */
+
+  /* Estilo para la barra de desplazamiento en el contenedor */
+::-webkit-scrollbar {
+  width: 12px;  /* Ancho de la barra de desplazamiento vertical */
+  height: 12px; /* Alto de la barra de desplazamiento horizontal */
+}
+
+/* Estilo para la parte "de la pista" (background) de la barra de desplazamiento */
+::-webkit-scrollbar-track {
+  background-color: #f1f1f1;  /* Color de fondo */
+  border-radius: 0px 0px 10px 10px;         /* Bordes redondeados */
+}
+
+/* Estilo para el "dedo" de la barra de desplazamiento (el control que se mueve) */
+::-webkit-scrollbar-thumb {
+  background-color: #888;  /* Color del control */
+  border-radius: 0px 0px 10px 10px;     /* Bordes redondeados */
+}
+
+/* Estilo cuando el dedo de la barra de desplazamiento está siendo tocado */
+::-webkit-scrollbar-thumb:hover {
+  background-color: #555;  /* Color del control cuando está siendo tocado */
+}
+
+/* Estilo para la barra de desplazamiento horizontal */
+::-webkit-scrollbar-horizontal {
+  height: 10px;  /* Alto para la barra horizontal */
+}
+

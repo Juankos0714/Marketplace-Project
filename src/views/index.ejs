@@ -31,137 +31,96 @@
 			<%- include('./partials/header.ejs') %>
 
 			<main class="main">
-				
 				<%- include('./partials/slider.ejs') %>
 
 				<!-- Sección de destacados -->
-				<section class="destacados">
-					<div class="destacadosTitulo">
-						<h1>Destacados de Lab Gaming</h1>
-						<img
-							src="/images/products/logo.png"
-							class="logo-body"
-						/>
+				<section class="main_section main_section--destacados">
+					<div class="destacadosTitulo section_titulo">
+						<h2>Destacados de Lab Gaming</h2>
+						<div class="logo">
+							<img
+								src="/images/products/logo.png"
+								class="logo-body"
+							/>
+						</div>
 					</div>
+
 					<div class="juegos">
-						<div class="juego">
+						<% products.forEach((product) => { %>
+						<article class="juego">
 							<img
-								src="/images/products/spidermanCard.jfif"
-								alt="Spiderman 2"
+								src="/images/products/<%= product.image %>"
+								alt="<%= product.name %>"
 							/>
-							<h2>Spiderman 2</h2>
-							<p>$210,000 COP</p>
+							<h2><%= product.name %></h2>
+							<p>$<%= product.price %></p>
 							<div class="div-button">
-								<a href="#" class="button">Comprar</a>
+								<a
+									href="/product/<%= product.id %>"
+									class="button"
+									>Comprar</a
+								>
 							</div>
-						</div>
-						<div class="juego">
-							<img
-								src="/images/products/fc25Card.jfif"
-								alt="FC 25"
-							/>
-							<h2>FC 25</h2>
-							<p>$150,000 COP</p>
-							<div class="div-button">
-								<a href="#" class="button">Comprar</a>
-							</div>
-						</div>
-						<div class="juego">
-							<img
-								src="/images/products/eldenCard.jfif"
-								alt="Elden Ring"
-							/>
-							<h2>Elden Ring</h2>
-							<p>$270,000 COP</p>
-							<div class="div-button">
-								<a href="#" class="button">Comprar</a>
-							</div>
-						</div>
-						<div class="juego">
-							<img
-								src="/images/products/injusticeCard.jfif"
-								alt="Injustice 2"
-							/>
-							<h2>Injustice 2</h2>
-							<p>$90,000 COP</p>
-							<div class="div-button">
-								<a href="#" class="button">Comprar</a>
-							</div>
-						</div>
+						</article>
+						<% }); %>
 					</div>
 				</section>
 
-				<section class="novedades">
-					<div class="novedadesTitulo">
-						<h1>Novedades de Lab Gaming</h1>
-						<img
-							src="/images/products/logo.png"
-							class="logo-body"
-						/>
-					</div>
-					<div class="dobleContainer">
-						<div class="juegos2">
-							<div class="juego2">
-								<img
-									src="/images/products/fc25Card.jfif"
-									alt="FC 25"
-								/>
-								<h2>FC 25</h2>
-								<p>$150,000 COP</p>
-								<div class="div-button">
-									<a href="#" class="button">Comprar</a>
-								</div>
-							</div>
-							<div class="juego2">
-								<img
-									src="/images/products/eldenCard.jfif"
-									alt="Elden Ring"
-								/>
-								<h2>Elden Ring</h2>
-								<p>$270,000 COP</p>
-								<div class="div-button">
-									<a href="#" class="button">Comprar</a>
-								</div>
-							</div>
-							<div class="juego2">
-								<img
-									src="/images/products/injusticeCard.jfif"
-									alt="Injustice 2"
-								/>
-								<h2>Injustice 2</h2>
-								<p>$90,000 COP</p>
-								<div class="div-button">
-									<a href="#" class="button">Comprar</a>
-								</div>
-							</div>
+				<section class="main_section main_section--novedades">
+					<div class="novedadesTitulo section_titulo">
+						<h2>Novedades de Lab Gaming</h2>
+						<div class="logo">
+							<img
+								src="/images/products/logo.png"
+								class="logo-body"
+							/>
 						</div>
-						<div class="juegos3">
-							<h2 class="titulo">Juegos gratis</h2>
+					</div>
+
+					<div class="juegos juegos-novedades">
+						<% products.forEach((product) => { %>
+						<article class="juego">
+							<img
+								src="/images/products/<%= product.image %>"
+								alt="<%= product.name %>"
+							/>
+							<h2><%= product.name %></h2>
+							<p>$<%= product.price %></p>
+							<div class="div-button">
+								<a
+									href="/product/<%= product.id %>"
+									class="button"
+									>Comprar</a
+								>
+							</div>
+						</article>
+						<% }); %>
+					</div>
+
+					<aside class="section_aside section_aside--juegosGratis">
+						<div class="top">
+							<h2 class="section_titulo">Juegos gratis</h2>
 							<p>Explora juegos gratis de nuestra colección.</p>
-							<div class="juego3">
-								<img
-									src="/images/products/fc25Card.jfif"
-									alt="FC 25"
-								/>
-								<h2>FC 25</h2>
-								<p>$150,000 COP</p>
-								<div class="div-button">
-									<a href="#" class="button">Comprar</a>
-								</div>
-							</div>
-							<div class="juego3">
-								<img
-									src="/images/products/eldenCard.jfif"
-									alt="Elden Ring"
-								/>
-								<h2>Elden Ring</h2>
-								<p>$270,000 COP</p>
-								<div class="div-button">
-									<a href="#" class="button">Comprar</a>
-								</div>
-							</div>
 						</div>
-					</div>
+						<div class="juegos">
+							<% products.forEach((product) => { %>
+							<a href="/product/<%= product.id %>">
+								<article class="juego">
+									<div class="imagen">
+										<img
+											src="/images/products/<%= product.image %>"
+											alt="<%= product.name %>"
+										/>
+									</div>
+									<div class="info-game">
+										<h2><%= product.name %></h2>
+										<p>$<%= product.price %></p>
+									</div>
+								</article>
+							</a>
+							<% }); %>
+						</div>
+					</aside>
 				</section>
 			</main>
 
