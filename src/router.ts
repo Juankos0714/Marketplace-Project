@@ -6,7 +6,7 @@ import {
   deleteProduct,
   getAllProducts,
   getUniqueProduct,
-  updateProduct,
+  updateProduct,getMostVisitedProducts
 } from "./controller/ProductController";
 import {
   createSale,
@@ -104,6 +104,11 @@ router.delete(
   "/delete-product/:productId",
   authMiddleware(["admin", "vendedor"]),
   deleteProduct
+);
+router.get(
+  "/most-visited-products", // Nueva ruta para los productos más visitados
+  authMiddleware(["admin", "vendedor", "comprador"]),
+  getMostVisitedProducts
 );
 
 /**

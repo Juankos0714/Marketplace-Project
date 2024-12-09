@@ -107,34 +107,7 @@ export const getAllProducts = async (req: Request, res: Response) => {
   return res.json(products);
 };
 
-export const getUniqueProduct = async (req: Request, res: Response) => {
-  try {
-    const productId = parseInt(req.params.productId, 10); 
-    const product = await prisma.product.findUnique({
-      where: {
-        id: productId,
-      },
-      select: {
-        id: true,
-        name: true,
-        description: true,
-        image: true,
-        category: true,
-        platform: true,
-        price: true,
-        amount: true,
-      },
-    });
 
-    if (!product) {
-      return res.status(404).json({ message: "Producto no encontrado" });
-    }
-
-    return res.status(200).json(product);
-  } catch (error) {
-    return res.status(400).json(error);
-  }
-};
 
 export const deleteProduct = async (req: Request, res: Response) => {
   try {
@@ -169,22 +142,103 @@ export const deleteProduct = async (req: Request, res: Response) => {
     return res.status(400).json(error);
   }
 };
-// For single image upload
+export const getMostVisitedProducts = async (req: Request, res: Response) => {
+  const limit = parseInt(req.query.limit as string, 10) || 10; // Número de productos a mostrar
+
+  try {
+    const products = await prisma.product.findMany({
+      orderBy: {
+        views: 'desc', // Ordenar por la cantidad de visitas en orden descendente
+      },
+      take: limit, // Limitar el número de resultados
+    });
+
+    return res.json(products);
+  } catch (error) {
+    return res.status(500).json({ error: "Error al obtener los productos más visitados" });
+  }
+};
+
+// Actualizar la función para incrementar la cantidad de visitas
+export const getUniqueProduct = async (req: Request, res: Response) => {
+  try {
+    const productId = parseInt(req.params.productId, 10);
+    const product = await prisma.product.findUnique({
+      where: {
+        id: productId,
+      },
+      select: {
+        id: true,
+        name: true,
+        description: true,
+        image: true,
+        category: true,
+        platform: true,
+        price: true,
+        amount: true,
+        views: true, 
+      },
+    });
+
+    if (!product) {
+      return res.status(404).json({ message: "Producto no encontrado" });
+    }
+
+
+    await prisma.product.update({
+      where: {
+        id: productId,
+      },
+      data: {
+        views: product.views + 1,
+      },
+    });
+
+    return res.status(200).json(product);
+  } catch (error) {
+    return res.status(400).json(error);
+  }
+};
+
 router.post('/upload-single', uploadSingle, async (req, res) => {
   if (!req.file) {
     return res.status(400).json({ message: 'No file uploaded' });
   }
-  
-  // Access the file info
+
   const imageUrl = `/images/${req.file.filename}`;
-  
-  // Save to database or process further
-  // ...
 
   res.json({ imageUrl });
 });
 
-// For multiple images
+router.post('/upload-multiple', uploadMultiple, async (req, res) => {
+  if (!req.files || req.files.length === 0) {
+    return res.status(400).json({ message: 'No files uploaded' });
+  }
+
+  const files = req.files as Express.Multer.File[];
+  const imageUrls = files.map(file => `/images/${file.filename}`);
+
+  res.json({ imageUrls });
+});
+
+router.post('/product/:storeId', uploadSingle, createProduct);
+router.put('/update-product/:productId', uploadSingle, updateProduct);
+
+
+router.get('/most-visited-products', getMostVisitedProducts);
+
+router.post('/upload-single', uploadSingle, async (req, res) => {
+  if (!req.file) {
+    return res.status(400).json({ message: 'No file uploaded' });
+  }
+
+  const imageUrl = `/images/${req.file.filename}`;
+  
+ 
+
+  res.json({ imageUrl });
+});
+
 router.post('/upload-multiple', uploadMultiple, async (req, res) => {
   if (!req.files || req.files.length === 0) {
     return res.status(400).json({ message: 'No files uploaded' });
@@ -193,8 +247,7 @@ router.post('/upload-multiple', uploadMultiple, async (req, res) => {
   const files = req.files as Express.Multer.File[];
   const imageUrls = files.map(file => `/images/${file.filename}`);
   
-  // Save to database or process further
-  // ...
+
 
   res.json({ imageUrls });
 });

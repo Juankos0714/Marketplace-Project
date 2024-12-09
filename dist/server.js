@@ -12,6 +12,7 @@ const fs_1 = __importDefault(require("fs"));
 const envFile = process.env.NODE_ENV === 'production' ? '.env' : '.env.local';
 dotenv_1.default.config({ path: envFile });
 const app = (0, express_1.default)();
+app.use(express_1.default.static("public")); // carpeta public
 // Validar variables de entorno críticas
 function validateEnvironment() {
     const criticalVars = ['JWT_SECRET', 'DATABASE_URL'];
@@ -22,7 +23,7 @@ function validateEnvironment() {
     }
 }
 // Ensure the upload directory exists
-const uploadDir = path_1.default.join(__dirname, '../src/public/images');
+const uploadDir = path_1.default.join(__dirname, '/images');
 if (!fs_1.default.existsSync(uploadDir)) {
     fs_1.default.mkdirSync(uploadDir, { recursive: true });
 }

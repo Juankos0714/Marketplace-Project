@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteProduct = exports.getUniqueProduct = exports.getAllProducts = exports.updateProduct = exports.createProduct = exports.prisma = void 0;
+exports.getUniqueProduct = exports.getMostVisitedProducts = exports.deleteProduct = exports.getAllProducts = exports.updateProduct = exports.createProduct = exports.prisma = void 0;
 const express_1 = require("express");
 const client_1 = require("@prisma/client");
 exports.prisma = new client_1.PrismaClient();
@@ -96,34 +96,6 @@ const getAllProducts = async (req, res) => {
     return res.json(products);
 };
 exports.getAllProducts = getAllProducts;
-const getUniqueProduct = async (req, res) => {
-    try {
-        const productId = parseInt(req.params.productId, 10);
-        const product = await exports.prisma.product.findUnique({
-            where: {
-                id: productId,
-            },
-            select: {
-                id: true,
-                name: true,
-                description: true,
-                image: true,
-                category: true,
-                platform: true,
-                price: true,
-                amount: true,
-            },
-        });
-        if (!product) {
-            return res.status(404).json({ message: "Producto no encontrado" });
-        }
-        return res.status(200).json(product);
-    }
-    catch (error) {
-        return res.status(400).json(error);
-    }
-};
-exports.getUniqueProduct = getUniqueProduct;
 const deleteProduct = async (req, res) => {
     try {
         const productId = parseInt(req.params.productId, 10);
@@ -154,26 +126,91 @@ const deleteProduct = async (req, res) => {
     }
 };
 exports.deleteProduct = deleteProduct;
-// For single image upload
+const getMostVisitedProducts = async (req, res) => {
+    const limit = parseInt(req.query.limit, 10) || 10; // Número de productos a mostrar
+    try {
+        const products = await exports.prisma.product.findMany({
+            orderBy: {
+                views: 'desc', // Ordenar por la cantidad de visitas en orden descendente
+            },
+            take: limit, // Limitar el número de resultados
+        });
+        return res.json(products);
+    }
+    catch (error) {
+        return res.status(500).json({ error: "Error al obtener los productos más visitados" });
+    }
+};
+exports.getMostVisitedProducts = getMostVisitedProducts;
+// Actualizar la función para incrementar la cantidad de visitas
+const getUniqueProduct = async (req, res) => {
+    try {
+        const productId = parseInt(req.params.productId, 10);
+        const product = await exports.prisma.product.findUnique({
+            where: {
+                id: productId,
+            },
+            select: {
+                id: true,
+                name: true,
+                description: true,
+                image: true,
+                category: true,
+                platform: true,
+                price: true,
+                amount: true,
+                views: true,
+            },
+        });
+        if (!product) {
+            return res.status(404).json({ message: "Producto no encontrado" });
+        }
+        await exports.prisma.product.update({
+            where: {
+                id: productId,
+            },
+            data: {
+                views: product.views + 1,
+            },
+        });
+        return res.status(200).json(product);
+    }
+    catch (error) {
+        return res.status(400).json(error);
+    }
+};
+exports.getUniqueProduct = getUniqueProduct;
 router.post('/upload-single', uploadMiddleware_1.uploadSingle, async (req, res) => {
     if (!req.file) {
         return res.status(400).json({ message: 'No file uploaded' });
     }
-    // Access the file info
     const imageUrl = `/images/${req.file.filename}`;
-    // Save to database or process further
-    // ...
     res.json({ imageUrl });
 });
-// For multiple images
 router.post('/upload-multiple', uploadMiddleware_1.uploadMultiple, async (req, res) => {
     if (!req.files || req.files.length === 0) {
         return res.status(400).json({ message: 'No files uploaded' });
     }
     const files = req.files;
     const imageUrls = files.map(file => `/images/${file.filename}`);
-    // Save to database or process further
-    // ...
+    res.json({ imageUrls });
+});
+router.post('/product/:storeId', uploadMiddleware_1.uploadSingle, exports.createProduct);
+router.put('/update-product/:productId', uploadMiddleware_1.uploadSingle, exports.updateProduct);
+router.get('/most-visited-products', exports.getMostVisitedProducts);
+router.post('/upload-single', uploadMiddleware_1.uploadSingle, async (req, res) => {
+    if (!req.file) {
+        return res.status(400).json({ message: 'No file uploaded' });
+    }
+    const imageUrl = `/images/${req.file.filename}`;
+    res.json({ imageUrl });
+});
+router.post('/upload-multiple', uploadMiddleware_1.uploadMultiple, async (req, res) => {
+    if (!req.files || req.files.length === 0) {
+        return res.status(400).json({ message: 'No files uploaded' });
+    }
+    const files = req.files;
+    const imageUrls = files.map(file => `/images/${file.filename}`);
     res.json({ imageUrls });
 });
 router.post('/product/:storeId', uploadMiddleware_1.uploadSingle, exports.createProduct);
