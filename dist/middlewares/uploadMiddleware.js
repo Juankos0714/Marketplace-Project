@@ -5,12 +5,15 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.uploadMultiple = exports.uploadSingle = void 0;
 const multer_1 = __importDefault(require("multer"));
+const path_1 = __importDefault(require("path"));
 const storage = multer_1.default.diskStorage({
     destination: (req, file, cb) => {
-        cb(null, 'src/public/images');
+        const uploadPath = path_1.default.join(__dirname, '../../public/images');
+        cb(null, uploadPath);
     },
     filename: (_req, file, cb) => {
-        cb(null, Date.now() + '-' + file.originalname);
+        const uniqueName = `${Date.now()}-${file.originalname}`;
+        cb(null, uniqueName);
     }
 });
 const fileFilter = (_req, file, cb) => {

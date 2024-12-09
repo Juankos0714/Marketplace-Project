@@ -46,6 +46,8 @@ exports.router.put("/update-product/:productId", (0, AuthMiddleware_1.authMiddle
 exports.router.get("/products", (0, AuthMiddleware_1.authMiddleware)(["admin", "vendedor", "comprador"]), ProductController_1.getAllProducts);
 exports.router.get("/get-unique-product/:productId", (0, AuthMiddleware_1.authMiddleware)(["admin", "vendedor", "comprador"]), ProductController_1.getUniqueProduct);
 exports.router.delete("/delete-product/:productId", (0, AuthMiddleware_1.authMiddleware)(["admin", "vendedor"]), ProductController_1.deleteProduct);
+exports.router.get("/most-visited-products", // Nueva ruta para los productos más visitados
+(0, AuthMiddleware_1.authMiddleware)(["admin", "vendedor", "comprador"]), ProductController_1.getMostVisitedProducts);
 /**
  * Rutas de autenticación
  */

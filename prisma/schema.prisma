@@ -45,6 +45,7 @@ model Product {
   storeId     Int?
   SaleProduct SaleProduct[]
   CartItem    CartItem[]
+  views       Int      @default(0)
 }
 
 model Store {
