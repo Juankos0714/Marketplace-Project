@@ -32,11 +32,13 @@ import {
 } from "./controller/CartController";
 import { renderHomePage, categories, carrito, allCategories, admin } from "./controller/MainController";
 import mainController from "./controller/MainController";
+import { get } from "http";
 
 export const router = Router();
 
 // Ruta para la página principal
 router.get("/", renderHomePage);
+router.get("/catalogo", getAllProducts);
 
 router.get("/categories/:nombre", categories);
 

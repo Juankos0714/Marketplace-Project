@@ -1,5 +1,5 @@
   header {
-    background: var(--secondary-background);
+    background: var(--degrade-bg);
     color: white;
     border-bottom: 2px solid #3ecdef;
     padding: 10px 15px;
@@ -175,7 +175,6 @@
     border-radius: 20px;
     text-align: center;
     width: 200px;
-    background-color: var(--secondary-background);
     min-height: 300px;
     transition: transform 0.3s ease;
 
@@ -230,7 +229,7 @@
 
 
   footer {
-    background: var(--secondary-background);
+    background: var(--degrade-bg);
     color: white;
     padding: 20px 0;
     text-align: center;

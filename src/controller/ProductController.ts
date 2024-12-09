@@ -99,12 +99,19 @@ export const getAllProducts = async (req: Request, res: Response) => {
   const page = parseInt(req.query.page as string, 10) || 1;
   const perPage = parseInt(req.query.perPage as string, 10) || 10;
 
-  const products = await prisma.product.findMany({
-    skip: (page - 1) * perPage,
-    take: perPage,
-  });
+  try {
+    // Obtener todos los productos
+    const products = await prisma.product.findMany({
+      skip: (page - 1) * perPage,
+      take: perPage,
+    });
 
-  return res.json(products);
+    // Renderizar la vista y pasar los productos
+    res.render("catalogo", { products });
+  } catch (err) {
+    console.error("Error obteniendo productos:", err);
+    res.status(500).render("errors/404.ejs"); // Renderizar página de error
+  }
 };
 
 

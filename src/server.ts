@@ -40,10 +40,10 @@ function startServer() {
     app.use(express.static("public"));
 
     // Ensure the upload directory exists
-    const uploadDir = path.join(__dirname, '/images');
-    if (!fs.existsSync(uploadDir)) {
-      fs.mkdirSync(uploadDir, { recursive: true });
-    }
+    // const uploadDir = path.join(__dirname, '/images');
+    // if (!fs.existsSync(uploadDir)) {
+    //   fs.mkdirSync(uploadDir, { recursive: true });
+    // }
 
     // Middleware
     app.use(express.json());
@@ -53,7 +53,7 @@ function startServer() {
     });
 
     // Servir archivos estáticos desde la carpeta src/public/images
-    app.use('/images', express.static(uploadDir));
+    // app.use('/images', express.static(uploadDir)); 
 
     // Router
     app.use(router);

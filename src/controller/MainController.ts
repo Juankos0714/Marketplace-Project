@@ -1,8 +1,6 @@
 import { Request, Response } from "express";
 import { prisma } from "../database/prisma";
 
-console.log(prisma);
-
 export const renderHomePage = async (req: Request, res: Response) => {
   try {
     // Obtener todos los productos
@@ -40,7 +38,7 @@ export const carrito = async (req: Request, res: Response) => {
 
 export const allCategories = async (req: Request, res: Response) => {
   try {
-    res.render("product/allCategories.ejs");
+    res.render("");
   } catch (err) {
     res.render("errors/404.ejs");
   }
