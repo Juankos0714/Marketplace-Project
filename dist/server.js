@@ -28,7 +28,7 @@ function startServer() {
         app.use((0, cors_1.default)({
             origin: [
                 'http://localhost:5432',
-                'https://marketplace-project-frontenhttps://marketplace-project-alpha.vercel.app/d.vercel.app',
+                'https://marketplace-project-eta.vercel.app/',
                 /\.vercel\.app$/
             ],
             credentials: true,
