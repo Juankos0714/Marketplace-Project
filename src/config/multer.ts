@@ -1,27 +1,35 @@
 import multer from 'multer';
 import path from 'path';
 
-// Configure multer for image upload
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, 'src/public/images');
+
+    const uploadPath = path.join(__dirname, '../../public/images/products/');
+    cb(null, uploadPath);  
   },
   filename: (req, file, cb) => {
+
     const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
     cb(null, file.fieldname + '-' + uniqueSuffix + path.extname(file.originalname));
   }
 });
 
-// File filter to accept only images
-const fileFilter = (req: Express.Request, file: Express.Multer.File, cb: multer.FileFilterCallback) => {
+interface MulterFile extends Express.Multer.File {
+  mimetype: string;
+}
+
+interface FileFilterCallback {
+  (error: Error | null, acceptFile: boolean): void;
+}
+
+const fileFilter = (req: Express.Request, file: MulterFile, cb: FileFilterCallback) => {
   if (file.mimetype.startsWith('image/')) {
     cb(null, true);
   } else {
-    cb(new Error('Not an image! Please upload an image.'));
+    cb(new Error('Not an image! Please upload an image.'), false);
   }
 };
 
-// Export the configured multer middleware
 export const upload = multer({
   storage: storage,
   fileFilter: fileFilter,
