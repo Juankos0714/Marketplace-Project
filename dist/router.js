@@ -44,7 +44,7 @@ exports.router.put("/update-store/:storeId", (0, AuthMiddleware_1.authMiddleware
 exports.router.post("/product/:storeId", (0, AuthMiddleware_1.authMiddleware)(["admin", "vendedor"]), ProductController_1.createProduct);
 exports.router.put("/update-product/:productId", (0, AuthMiddleware_1.authMiddleware)(["admin", "vendedor"]), ProductController_1.updateProduct);
 exports.router.get("/products", (0, AuthMiddleware_1.authMiddleware)(["admin", "vendedor", "comprador"]), ProductController_1.getAllProducts);
-exports.router.get("/get-unique-product/:productId", (0, AuthMiddleware_1.authMiddleware)(["admin", "vendedor", "comprador"]), ProductController_1.getUniqueProduct);
+exports.router.get("/product/:id", (0, AuthMiddleware_1.authMiddleware)(["admin", "vendedor", "comprador"]), ProductController_1.getUniqueProduct);
 exports.router.delete("/delete-product/:productId", (0, AuthMiddleware_1.authMiddleware)(["admin", "vendedor"]), ProductController_1.deleteProduct);
 exports.router.get("/most-visited-products", // Nueva ruta para los productos más visitados
 (0, AuthMiddleware_1.authMiddleware)(["admin", "vendedor", "comprador"]), ProductController_1.getMostVisitedProducts);
@@ -67,3 +67,4 @@ exports.router.post("/cart/:productId", (0, AuthMiddleware_1.authMiddleware)(["c
 exports.router.put("/cart/:itemId", (0, AuthMiddleware_1.authMiddleware)(["comprador"]), CartController_1.updateCartItem); // Ruta para actualizar un item del carrito
 exports.router.delete("/cart/:itemId", (0, AuthMiddleware_1.authMiddleware)(["comprador"]), CartController_1.removeFromCart); // Ruta para eliminar un item del carrito
 exports.router.delete("/cart", (0, AuthMiddleware_1.authMiddleware)(["comprador"]), CartController_1.clearCart); // Ruta para limpiar el carrito
+console.log("router.ts - router", exports.router);

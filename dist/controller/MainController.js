@@ -2,8 +2,18 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.admin = exports.allCategories = exports.carrito = exports.categories = exports.renderHomePage = void 0;
 const prisma_1 = require("../database/prisma");
-const renderHomePage = (req, res) => {
-    res.render("../views/index");
+console.log(prisma_1.prisma);
+const renderHomePage = async (req, res) => {
+    try {
+        // Obtener todos los productos
+        const products = await prisma_1.prisma.product.findMany();
+        // Renderizar la vista y pasar los productos
+        res.render("index", { products });
+    }
+    catch (err) {
+        console.error("Error obteniendo productos:", err);
+        res.status(500).render("errors/404.ejs"); // Renderizar página de error
+    }
 };
 exports.renderHomePage = renderHomePage;
 const categories = async (req, res) => {
@@ -11,7 +21,7 @@ const categories = async (req, res) => {
         const category = await prisma_1.prisma.product.findMany({
             where: { category: req.params.nombre },
         });
-        res.render("product/categories.ejs", { category });
+        res.render("views/categories.ejs", { category });
     }
     catch (err) {
         console.log(err);
@@ -70,13 +80,7 @@ const mainController = {
             const offerts = await prisma_1.prisma.product.findMany({
                 where: { price: { lt: 100 } },
             });
-            res.render("index", {
-                products,
-                topSeller,
-                newsComments,
-                newsAdd,
-                offerts,
-            });
+            res.render("index", { products });
         }
         catch (err) {
             console.log(err);

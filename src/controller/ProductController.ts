@@ -107,34 +107,6 @@ export const getAllProducts = async (req: Request, res: Response) => {
   return res.json(products);
 };
 
-export const getUniqueProduct = async (req: Request, res: Response) => {
-  try {
-    const productId = parseInt(req.params.productId, 10); 
-    const product = await prisma.product.findUnique({
-      where: {
-        id: productId,
-      },
-      select: {
-        id: true,
-        name: true,
-        description: true,
-        image: true,
-        category: true,
-        platform: true,
-        price: true,
-        amount: true,
-      },
-    });
-
-    if (!product) {
-      return res.status(404).json({ message: "Producto no encontrado" });
-    }
-
-    return res.render('../views/detailOfproduct', { product: product });
-  } catch (error) {
-    return res.status(400).json(error);
-  }
-};
 
 export const deleteProduct = async (req: Request, res: Response) => {
   try {
