@@ -21,7 +21,7 @@ function validateEnvironment() {
 }
 
 // Ensure the upload directory exists
-const uploadDir = path.join(__dirname, '../src/public/images');
+const uploadDir = path.join(__dirname, '/images');
 if (!fs.existsSync(uploadDir)) {
   fs.mkdirSync(uploadDir, { recursive: true });
 }
