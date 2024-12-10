@@ -1,131 +1,97 @@
 <!DOCTYPE html>
 <html lang="es">
-	<head>
-		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<title>Lab Gaming - Marketplace</title>
-		<link rel="stylesheet" href="/styles/stylesDefault.css" />
-		<link rel="stylesheet" href="/styles/stylesprin.css" />
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lab Gaming - Marketplace</title>
+  <link rel="stylesheet" href="/styles/stylesDefault.css" />
+  <link rel="stylesheet" href="/styles/stylesprin.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400..900&family=Press+Start+2P&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+</head>
+<body>
+  <div class="max-width">
+    <!-- Barra de navegación -->
+    <%- include('./partials/header.ejs') %>
 
-		<link rel="preconnect" href="https://fonts.googleapis.com" />
-		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-		<link
-			href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap"
-			rel="stylesheet"
-		/>
-		<link rel="preconnect" href="https://fonts.googleapis.com" />
-		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-		<link
-			href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400..900&family=Press+Start+2P&display=swap"
-			rel="stylesheet"
-		/>
-		<link
-			rel="stylesheet"
-			href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
-		/>
-	</head>
+    <main class="main">
+      <%- include('./partials/slider.ejs') %>
 
-	<body>
-		<div class="max-width">
-			<!-- Barra de navegación -->
-			<%- include('./partials/header.ejs') %>
+      <!-- Sección de destacados -->
+      <section class="main_section main_section--destacados">
+        <div class="destacadosTitulo section_titulo">
+          <h2>Destacados de Lab Gaming</h2>
+          <div class="logo">
+            <img src="/images/products/logo.png" class="logo-body" />
+          </div>
+        </div>
 
-			<main class="main">
-				<%- include('./partials/slider.ejs') %>
+        <div class="juegos">
+          <% products.forEach((product) => { %>
+          <article class="juego">
+            <img src="<%= product.image %>" alt="<%= product.name %>" />
+            <h2><%= product.name %></h2>
+            <p>$<%= product.price %></p>
+            <div class="div-button">
+              <a href="/product/<%= product.id %>" class="button">Comprar</a>
+            </div>
+          </article>
+          <% }); %>
+        </div>
+      </section>
 
-				<!-- Sección de destacados -->
-				<section class="main_section main_section--destacados">
-					<div class="destacadosTitulo section_titulo">
-						<h2>Destacados de Lab Gaming</h2>
-						<div class="logo">
-							<img
-								src="/images/products/logo.png"
-								class="logo-body"
-							/>
-						</div>
-					</div>
+      <section class="main_section main_section--novedades">
+        <div class="novedadesTitulo section_titulo">
+          <h2>Novedades de Lab Gaming</h2>
+          <div class="logo">
+            <img src="/images/products/logo.png" class="logo-body" />
+          </div>
+        </div>
 
-					<div class="juegos">
-						<% products.forEach((product) => { %>
-						<article class="juego">
-							<img
-								src="/images/products/<%= product.image %>"
-								alt="<%= product.name %>"
-							/>
-							<h2><%= product.name %></h2>
-							<p>$<%= product.price %></p>
-							<div class="div-button">
-								<a
-									href="/product/<%= product.id %>"
-									class="button"
-									>Comprar</a
-								>
-							</div>
-						</article>
-						<% }); %>
-					</div>
-				</section>
+        <div class="juegos juegos-novedades">
+          <% products.forEach((product) => { %>
+          <article class="juego">
+            <img src="<%= product.image %>" alt="<%= product.name %>" />
+            <h2><%= product.name %></h2>
+            <p>$<%= product.price %></p>
+            <div class="div-button">
+              <a href="/product/<%= product.id %>" class="button">Comprar</a>
+            </div>
+          </article>
+          <% }); %>
+        </div>
 
-				<section class="main_section main_section--novedades">
-					<div class="novedadesTitulo section_titulo">
-						<h2>Novedades de Lab Gaming</h2>
-						<div class="logo">
-							<img
-								src="/images/products/logo.png"
-								class="logo-body"
-							/>
-						</div>
-					</div>
+        <aside class="section_aside section_aside--juegosGratis">
+          <div class="top">
+            <h2 class="section_titulo">Juegos gratis</h2>
+            <p>Explora juegos gratis de nuestra colección.</p>
+          </div>
+          <div class="juegos">
+            <% products.forEach((product) => { %>
+            <a href="/product/<%= product.id %>">
+              <article class="juego">
+                <div class="imagen">
+                  <img src="<%= product.image %>" alt="<%= product.name %>" />
+                </div>
+                <div class="info-game">
+                  <h2><%= product.name %></h2>
+                  <p>$<%= product.price %></p>
+                </div>
+              </article>
+            </a>
+            <% }); %>
+          </div>
+        </aside>
+      </section>
+    </main>
 
-					<div class="juegos juegos-novedades">
-						<% products.forEach((product) => { %>
-						<article class="juego">
-							<img
-								src="/images/products/<%= product.image %>"
-								alt="<%= product.name %>"
-							/>
-							<h2><%= product.name %></h2>
-							<p>$<%= product.price %></p>
-							<div class="div-button">
-								<a
-									href="/product/<%= product.id %>"
-									class="button"
-									>Comprar</a
-								>
-							</div>
-						</article>
-						<% }); %>
-					</div>
-
-					<aside class="section_aside section_aside--juegosGratis">
-						<div class="top">
-							<h2 class="section_titulo">Juegos gratis</h2>
-							<p>Explora juegos gratis de nuestra colección.</p>
-						</div>
-						<div class="juegos">
-							<% products.forEach((product) => { %>
-							<a href="/product/<%= product.id %>">
-								<article class="juego">
-									<div class="imagen">
-										<img
-											src="/images/products/<%= product.image %>"
-											alt="<%= product.name %>"
-										/>
-									</div>
-									<div class="info-game">
-										<h2><%= product.name %></h2>
-										<p>$<%= product.price %></p>
-									</div>
-								</article>
-							</a>
-							<% }); %>
-						</div>
-					</aside>
-				</section>
-			</main>
-
-			<!-- Pie de página -->
-			<%- include('./partials/footer.ejs') %>
-		</div>
-	</body>
+    <!-- Pie de página -->
+    <%- include('./partials/footer.ejs') %>
+  </div>
+</body>
 </html>
