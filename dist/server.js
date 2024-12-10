@@ -9,60 +9,73 @@ const router_1 = require("./router");
 const dotenv_1 = __importDefault(require("dotenv"));
 const fs_1 = __importDefault(require("fs"));
 const cors_1 = __importDefault(require("cors"));
+const helmet_1 = __importDefault(require("helmet"));
+const morgan_1 = __importDefault(require("morgan"));
 // Determinar el entorno y cargar las variables de entorno adecuadas
 const envFile = process.env.NODE_ENV === 'production' ? '.env' : '.env.local';
 dotenv_1.default.config({ path: envFile });
 // Validar variables de entorno críticas
 function validateEnvironment() {
-    const criticalVars = ['JWT_SECRET', 'DATABASE_URL'];
-    const missingVars = criticalVars.filter(varName => !process.env[varName]);
+    const criticalVars = [
+        { name: 'JWT_SECRET', required: true },
+        { name: 'DATABASE_URL', required: true },
+    ];
+    const missingVars = criticalVars.filter(varObj => varObj.required && !process.env[varObj.name]);
     if (missingVars.length > 0) {
-        console.error('Missing critical environment variables:', missingVars);
+        console.error('Missing critical environment variables:', missingVars.map(v => v.name).join(', '));
         process.exit(1);
+    }
+}
+function ensureDirectoryExists(directoryPath) {
+    if (!fs_1.default.existsSync(directoryPath)) {
+        fs_1.default.mkdirSync(directoryPath, { recursive: true });
     }
 }
 function startServer() {
     const app = (0, express_1.default)();
     try {
+        // Seguridad adicional
+        app.use((0, helmet_1.default)());
         // Configuración de CORS
-        app.use((0, cors_1.default)({
-            origin: [
-                'http://localhost:5432',
-                'https://marketplace-project-eta.vercel.app/',
-                /\.vercel\.app$/
-            ],
+        const allowedOrigins = [
+            'http://localhost:5432',
+            'https://marketplace-project-eta.vercel.app'
+        ];
+        const corsOptions = {
+            origin: (origin, callback) => {
+                if (!origin || allowedOrigins.some(allowedOrigin => origin.match(allowedOrigin))) {
+                    callback(null, true);
+                }
+                else {
+                    callback(new Error('Not allowed by CORS'));
+                }
+            },
             credentials: true,
             methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
             allowedHeaders: ['Content-Type', 'Authorization']
-        }));
+        };
+        app.use((0, cors_1.default)(corsOptions));
         // Configuración de carpetas estáticas
+        ensureDirectoryExists(path_1.default.join(__dirname, '../public/images/products'));
         app.use(express_1.default.static("public"));
-        // Ensure the upload directory exists
-        const uploadDir = path_1.default.join(__dirname, '../public/images');
-        if (!fs_1.default.existsSync(uploadDir)) {
-            fs_1.default.mkdirSync(uploadDir, { recursive: true });
-        }
         // Middleware
         app.use(express_1.default.json());
-        app.use((req, res, next) => {
-            console.log(`[${new Date().toISOString()}] ${req.method} ${req.path}`);
-            next();
-        });
-        // Servir archivos estáticos desde la carpeta public/images
-        app.use('/images', express_1.default.static(uploadDir));
+        app.use((0, morgan_1.default)('combined')); // Logging con morgan
+        // Servir archivos estáticos desde la carpeta public/images/products
+        app.use('/images/products', express_1.default.static(path_1.default.join(__dirname, '../public/images/products')));
         // Router
         app.use(router_1.router);
         // Template Engine
         app.set("view engine", "ejs");
         app.set("views", path_1.default.join(__dirname, "views"));
-        // Global error handler
-        app.use((err, req, res, next) => {
-            console.error('Unhandled Error:', err);
+        const errorHandler = (err, req, res, next) => {
+            console.error('Unhandled Error:', err.stack); // Stack trace
             res.status(500).json({
                 message: 'Internal Server Error',
-                error: process.env.NODE_ENV === 'development' ? err.message : 'An unexpected error occurred'
+                ...(process.env.NODE_ENV === 'development' && { stack: err.stack, error: err.message })
             });
-        });
+        };
+        app.use(errorHandler);
         const port = parseInt(process.env.PORT || '3333', 10);
         const server = app.listen(port, () => {
             console.log(`Server running on port ${port} - http://localhost:${port}`);
@@ -70,15 +83,10 @@ function startServer() {
         });
         server.on('error', (err) => {
             if (err.code === 'EADDRINUSE') {
-                console.error(`Port ${port} is already in use. Trying another port...`);
+                console.error(`Port ${port} is in use. Trying another port...`);
                 const newServer = app.listen(0, () => {
-                    const address = newServer.address();
-                    if (typeof address === 'string') {
-                        console.log(`Server running on ${address}`);
-                    }
-                    else if (address && address.port) {
-                        console.log(`Server running on port ${address.port}`);
-                    }
+                    const newPort = newServer.address().port;
+                    console.log(`Server running on new port ${newPort} - http://localhost:${newPort}`);
                 });
             }
             else {

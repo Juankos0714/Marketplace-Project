@@ -18,7 +18,7 @@ export const createProduct = async (req: Request, res: Response) => {
         return res.status(400).json({ error: "Todos los campos son requeridos" });
       }
 
-      const imageUrl = req.file ? `/images/${req.file.filename}` : '';
+      const imageUrl = req.file ? `/images/products/${req.file.filename}` : '';
 
       const product = await prisma.product.create({
         data: {
@@ -69,7 +69,7 @@ export const updateProduct = async (req: Request, res: Response) => {
         return res.status(403).json({ message: "Este producto no pertenece a este usuario" });
       }
 
-      const imageUrl = req.file ? `/images/${req.file.filename}` : isProduct.image;
+      const imageUrl = req.file ? `/images/products/${req.file.filename}` : isProduct.image;
 
       const product = await prisma.product.update({
         where: {

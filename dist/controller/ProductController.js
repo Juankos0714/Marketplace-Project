@@ -16,7 +16,7 @@ const createProduct = async (req, res) => {
             if (!name || !description || !category || !platform || !price || !amount) {
                 return res.status(400).json({ error: "Todos los campos son requeridos" });
             }
-            const imageUrl = req.file ? `/images/${req.file.filename}` : '';
+            const imageUrl = req.file ? `/images/products/${req.file.filename}` : '';
             const product = await prisma_1.prisma.product.create({
                 data: {
                     name,
@@ -61,7 +61,7 @@ const updateProduct = async (req, res) => {
             if (userId !== isProduct?.Store?.userId) {
                 return res.status(403).json({ message: "Este producto no pertenece a este usuario" });
             }
-            const imageUrl = req.file ? `/images/${req.file.filename}` : isProduct.image;
+            const imageUrl = req.file ? `/images/products/${req.file.filename}` : isProduct.image;
             const product = await prisma_1.prisma.product.update({
                 where: {
                     id: productId,
