@@ -2,12 +2,12 @@ import express from "express";
 import path from "path";
 import { router } from "./router";
 import dotenv from "dotenv";
-//S
+//Saasasasas
 // Load environment variables
 dotenv.config({ path: '.env' });
 
 const app = express();
-
+//s
 // Enhanced error handling for application startup
 function startServer() {
   try {

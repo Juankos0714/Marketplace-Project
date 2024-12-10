@@ -1,5 +1,5 @@
 import { Router } from "express";
-
+//f
 import { createAccess, getAllAccesses } from "./controller/AccessController";
 import {
   createProduct,
