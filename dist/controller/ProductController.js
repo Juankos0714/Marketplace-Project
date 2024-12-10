@@ -1,14 +1,12 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getUniqueProduct = exports.getMostVisitedProducts = exports.deleteProduct = exports.getAllProducts = exports.updateProduct = exports.createProduct = exports.prisma = void 0;
+exports.getUniqueProduct = exports.getMostVisitedProducts = exports.deleteProduct = exports.getAllProducts = exports.updateProduct = exports.createProduct = void 0;
 const express_1 = require("express");
-const client_1 = require("@prisma/client");
-exports.prisma = new client_1.PrismaClient();
-const multer_1 = require("../config/multer");
+const prisma_1 = require("../database/prisma");
 const uploadMiddleware_1 = require("../middlewares/uploadMiddleware");
 const router = (0, express_1.Router)();
 const createProduct = async (req, res) => {
-    multer_1.upload.single('image')(req, res, async (err) => {
+    (0, uploadMiddleware_1.uploadSingle)(req, res, async (err) => {
         if (err) {
             return res.status(400).json({ error: err.message });
         }
@@ -18,12 +16,12 @@ const createProduct = async (req, res) => {
             if (!name || !description || !category || !platform || !price || !amount) {
                 return res.status(400).json({ error: "Todos los campos son requeridos" });
             }
-            const image = req.file ? req.file.path : '';
-            const product = await exports.prisma.product.create({
+            const imageUrl = req.file ? `/images/${req.file.filename}` : '';
+            const product = await prisma_1.prisma.product.create({
                 data: {
                     name,
                     description,
-                    image,
+                    image: imageUrl,
                     category,
                     platform,
                     price: parseFloat(price),
@@ -41,7 +39,7 @@ const createProduct = async (req, res) => {
 };
 exports.createProduct = createProduct;
 const updateProduct = async (req, res) => {
-    multer_1.upload.single('image')(req, res, async (err) => {
+    (0, uploadMiddleware_1.uploadSingle)(req, res, async (err) => {
         if (err) {
             return res.status(400).json({ error: err.message });
         }
@@ -49,7 +47,7 @@ const updateProduct = async (req, res) => {
             const { name, description, category, platform, price, amount } = req.body;
             const productId = parseInt(req.params.productId, 10);
             const userId = parseInt(req.user.id, 10);
-            const isProduct = await exports.prisma.product.findUnique({
+            const isProduct = await prisma_1.prisma.product.findUnique({
                 where: {
                     id: productId,
                 },
@@ -63,15 +61,15 @@ const updateProduct = async (req, res) => {
             if (userId !== isProduct?.Store?.userId) {
                 return res.status(403).json({ message: "Este producto no pertenece a este usuario" });
             }
-            const image = req.file ? req.file.path : isProduct.image;
-            const product = await exports.prisma.product.update({
+            const imageUrl = req.file ? `/images/${req.file.filename}` : isProduct.image;
+            const product = await prisma_1.prisma.product.update({
                 where: {
                     id: productId,
                 },
                 data: {
                     name,
                     description,
-                    image,
+                    image: imageUrl,
                     category,
                     platform,
                     price: parseFloat(price),
@@ -89,18 +87,26 @@ exports.updateProduct = updateProduct;
 const getAllProducts = async (req, res) => {
     const page = parseInt(req.query.page, 10) || 1;
     const perPage = parseInt(req.query.perPage, 10) || 10;
-    const products = await exports.prisma.product.findMany({
-        skip: (page - 1) * perPage,
-        take: perPage,
-    });
-    return res.json(products);
+    try {
+        // Obtener todos los productos
+        const products = await prisma_1.prisma.product.findMany({
+            skip: (page - 1) * perPage,
+            take: perPage,
+        });
+        // Renderizar la vista y pasar los productos
+        res.render("catalogo", { products });
+    }
+    catch (err) {
+        console.error("Error obteniendo productos:", err);
+        res.status(500).render("errors/404.ejs"); // Renderizar página de error
+    }
 };
 exports.getAllProducts = getAllProducts;
 const deleteProduct = async (req, res) => {
     try {
         const productId = parseInt(req.params.productId, 10);
         const userId = parseInt(req.user.id, 10);
-        const isProduct = await exports.prisma.product.findUnique({
+        const isProduct = await prisma_1.prisma.product.findUnique({
             where: {
                 id: productId,
             },
@@ -114,7 +120,7 @@ const deleteProduct = async (req, res) => {
         if (userId !== isProduct?.Store?.userId) {
             return res.status(403).json({ message: "Este producto no pertenece a este usuario" });
         }
-        await exports.prisma.product.delete({
+        await prisma_1.prisma.product.delete({
             where: {
                 id: productId,
             },
@@ -129,7 +135,7 @@ exports.deleteProduct = deleteProduct;
 const getMostVisitedProducts = async (req, res) => {
     const limit = parseInt(req.query.limit, 10) || 10; // Número de productos a mostrar
     try {
-        const products = await exports.prisma.product.findMany({
+        const products = await prisma_1.prisma.product.findMany({
             orderBy: {
                 views: 'desc', // Ordenar por la cantidad de visitas en orden descendente
             },
@@ -146,7 +152,7 @@ exports.getMostVisitedProducts = getMostVisitedProducts;
 const getUniqueProduct = async (req, res) => {
     try {
         const productId = parseInt(req.params.productId, 10);
-        const product = await exports.prisma.product.findUnique({
+        const product = await prisma_1.prisma.product.findUnique({
             where: {
                 id: productId,
             },
@@ -165,7 +171,7 @@ const getUniqueProduct = async (req, res) => {
         if (!product) {
             return res.status(404).json({ message: "Producto no encontrado" });
         }
-        await exports.prisma.product.update({
+        await prisma_1.prisma.product.update({
             where: {
                 id: productId,
             },
