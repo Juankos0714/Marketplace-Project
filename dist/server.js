@@ -38,7 +38,7 @@ function startServer() {
         // Configuración de carpetas estáticas
         app.use(express_1.default.static("public"));
         // Ensure the upload directory exists
-        const uploadDir = path_1.default.join(__dirname, '/images');
+        const uploadDir = path_1.default.join(__dirname, '../public/images');
         if (!fs_1.default.existsSync(uploadDir)) {
             fs_1.default.mkdirSync(uploadDir, { recursive: true });
         }
@@ -48,7 +48,7 @@ function startServer() {
             console.log(`[${new Date().toISOString()}] ${req.method} ${req.path}`);
             next();
         });
-        // Servir archivos estáticos desde la carpeta src/public/images
+        // Servir archivos estáticos desde la carpeta public/images
         app.use('/images', express_1.default.static(uploadDir));
         // Router
         app.use(router_1.router);
@@ -64,9 +64,27 @@ function startServer() {
             });
         });
         const port = parseInt(process.env.PORT || '3333', 10);
-        app.listen(port, () => {
+        const server = app.listen(port, () => {
             console.log(`Server running on port ${port} - http://localhost:${port}`);
             console.log(`Environment: ${process.env.NODE_ENV || 'development'}`);
+        });
+        server.on('error', (err) => {
+            if (err.code === 'EADDRINUSE') {
+                console.error(`Port ${port} is already in use. Trying another port...`);
+                const newServer = app.listen(0, () => {
+                    const address = newServer.address();
+                    if (typeof address === 'string') {
+                        console.log(`Server running on ${address}`);
+                    }
+                    else if (address && address.port) {
+                        console.log(`Server running on port ${address.port}`);
+                    }
+                });
+            }
+            else {
+                console.error('Failed to start server:', err);
+                process.exit(1);
+            }
         });
     }
     catch (error) {

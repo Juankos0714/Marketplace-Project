@@ -2,7 +2,6 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.admin = exports.allCategories = exports.carrito = exports.categories = exports.renderHomePage = void 0;
 const prisma_1 = require("../database/prisma");
-console.log(prisma_1.prisma);
 const renderHomePage = async (req, res) => {
     try {
         // Obtener todos los productos
@@ -42,7 +41,7 @@ const carrito = async (req, res) => {
 exports.carrito = carrito;
 const allCategories = async (req, res) => {
     try {
-        res.render("product/allCategories.ejs");
+        res.render("");
     }
     catch (err) {
         res.render("errors/404.ejs");

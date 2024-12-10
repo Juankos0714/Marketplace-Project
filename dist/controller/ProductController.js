@@ -87,11 +87,19 @@ exports.updateProduct = updateProduct;
 const getAllProducts = async (req, res) => {
     const page = parseInt(req.query.page, 10) || 1;
     const perPage = parseInt(req.query.perPage, 10) || 10;
-    const products = await prisma_1.prisma.product.findMany({
-        skip: (page - 1) * perPage,
-        take: perPage,
-    });
-    return res.json(products);
+    try {
+        // Obtener todos los productos
+        const products = await prisma_1.prisma.product.findMany({
+            skip: (page - 1) * perPage,
+            take: perPage,
+        });
+        // Renderizar la vista y pasar los productos
+        res.render("catalogo", { products });
+    }
+    catch (err) {
+        console.error("Error obteniendo productos:", err);
+        res.status(500).render("errors/404.ejs"); // Renderizar página de error
+    }
 };
 exports.getAllProducts = getAllProducts;
 const deleteProduct = async (req, res) => {

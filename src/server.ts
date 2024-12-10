@@ -5,7 +5,6 @@ import dotenv from "dotenv";
 import fs from "fs";
 import cors from 'cors';
 
-
 // Determinar el entorno y cargar las variables de entorno adecuadas
 const envFile = process.env.NODE_ENV === 'production' ? '.env' : '.env.local';
 dotenv.config({ path: envFile });
@@ -41,10 +40,10 @@ function startServer() {
     app.use(express.static("public"));
 
     // Ensure the upload directory exists
-    // const uploadDir = path.join(__dirname, '/images');
-    // if (!fs.existsSync(uploadDir)) {
-    //   fs.mkdirSync(uploadDir, { recursive: true });
-    // }
+    const uploadDir = path.join(__dirname, '../public/images');
+    if (!fs.existsSync(uploadDir)) {
+      fs.mkdirSync(uploadDir, { recursive: true });
+    }
 
     // Middleware
     app.use(express.json());
@@ -53,8 +52,8 @@ function startServer() {
       next();
     });
 
-    // Servir archivos estáticos desde la carpeta src/public/images
-    // app.use('/images', express.static(uploadDir)); 
+    // Servir archivos estáticos desde la carpeta public/images
+    app.use('/images', express.static(uploadDir)); 
 
     // Router
     app.use(router);
@@ -74,9 +73,26 @@ function startServer() {
 
     const port: number = parseInt(process.env.PORT || '3333', 10);
     
-    app.listen(port, () => {
+    const server = app.listen(port, () => {
       console.log(`Server running on port ${port} - http://localhost:${port}`);
       console.log(`Environment: ${process.env.NODE_ENV || 'development'}`);
+    });
+
+    server.on('error', (err: NodeJS.ErrnoException) => {
+      if (err.code === 'EADDRINUSE') {
+        console.error(`Port ${port} is already in use. Trying another port...`);
+        const newServer = app.listen(0, () => {
+          const address = newServer.address();
+          if (typeof address === 'string') {
+            console.log(`Server running on ${address}`);
+          } else if (address && address.port) {
+            console.log(`Server running on port ${address.port}`);
+          }
+        });
+      } else {
+        console.error('Failed to start server:', err);
+        process.exit(1);
+      }
     });
 
   } catch (error) {
