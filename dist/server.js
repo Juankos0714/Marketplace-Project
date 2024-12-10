@@ -54,7 +54,7 @@ function startServer() {
         app.use(router_1.router);
         // Template Engine
         app.set("view engine", "ejs");
-        app.set("views", path_1.default.resolve(__dirname, "views/"));
+        app.set("views", path_1.default.join(__dirname, "views"));
         // Global error handler
         app.use((err, req, res, next) => {
             console.error('Unhandled Error:', err);

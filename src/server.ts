@@ -5,6 +5,7 @@ import dotenv from "dotenv";
 import fs from "fs";
 import cors from 'cors';
 
+
 // Determinar el entorno y cargar las variables de entorno adecuadas
 const envFile = process.env.NODE_ENV === 'production' ? '.env' : '.env.local';
 dotenv.config({ path: envFile });
@@ -60,7 +61,7 @@ function startServer() {
 
     // Template Engine
     app.set("view engine", "ejs");
-    app.set("views", path.resolve(__dirname, "views/"));
+    app.set("views", path.join(__dirname, "views"));
 
     // Global error handler
     app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {

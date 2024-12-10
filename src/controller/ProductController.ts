@@ -1,13 +1,11 @@
 import { Request, Response, Router } from "express";
-import { PrismaClient } from "@prisma/client";
-export const prisma = new PrismaClient();
-import { upload } from "../config/multer"
+import { prisma } from "../database/prisma";
 import { uploadSingle, uploadMultiple } from '../middlewares/uploadMiddleware';
 
 const router = Router();
 
 export const createProduct = async (req: Request, res: Response) => {
-  upload.single('image')(req, res, async (err) => {
+  uploadSingle(req, res, async (err) => {
     if (err) {
       return res.status(400).json({ error: err.message });
     }
@@ -20,13 +18,13 @@ export const createProduct = async (req: Request, res: Response) => {
         return res.status(400).json({ error: "Todos los campos son requeridos" });
       }
 
-      const image = req.file ? req.file.path : '';
+      const imageUrl = req.file ? `/images/${req.file.filename}` : '';
 
       const product = await prisma.product.create({
         data: {
           name,
           description,
-          image,
+          image: imageUrl,
           category,
           platform,
           price: parseFloat(price),
@@ -44,7 +42,7 @@ export const createProduct = async (req: Request, res: Response) => {
 };
 
 export const updateProduct = async (req: Request, res: Response) => {
-  upload.single('image')(req, res, async (err) => {
+  uploadSingle(req, res, async (err) => {
     if (err) {
       return res.status(400).json({ error: err.message });
     }
@@ -71,7 +69,7 @@ export const updateProduct = async (req: Request, res: Response) => {
         return res.status(403).json({ message: "Este producto no pertenece a este usuario" });
       }
 
-      const image = req.file ? req.file.path : isProduct.image;
+      const imageUrl = req.file ? `/images/${req.file.filename}` : isProduct.image;
 
       const product = await prisma.product.update({
         where: {
@@ -80,7 +78,7 @@ export const updateProduct = async (req: Request, res: Response) => {
         data: {
           name,
           description,
-          image,
+          image: imageUrl,
           category,
           platform,
           price: parseFloat(price),
