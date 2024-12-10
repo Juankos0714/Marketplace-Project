@@ -2,7 +2,7 @@ import express from "express";
 import path from "path";
 import { router } from "./router";
 import dotenv from "dotenv";
-
+//S
 // Load environment variables
 dotenv.config({ path: '.env' });
 
