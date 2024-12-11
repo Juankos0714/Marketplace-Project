@@ -169,3 +169,93 @@ background-color: #555;  /* Color del control cuando está siendo tocado */
 height: 10px;  /* Alto para la barra horizontal */
 }
 
+/* Header */
+
+header nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+}
+
+header ul {
+  list-style: none;
+  font-family: "Orbitron", sans-serif;
+  display: flex;
+  gap: 50px;
+  margin: 0;
+  padding: 0;
+  align-items: center;
+  height: 100%;
+}
+
+header ul li {
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+
+header ul li a {
+  color: white;
+  text-decoration: none;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  transition: color 0.3s, transform 0.3s;
+}
+
+header ul li a:focus {
+  outline: 2px solid var(--accent-color);
+  outline-offset: 2px;
+}
+
+header .logo {
+  display: flex;
+  align-items: center;
+  font-family: "Press Start 2P", system-ui, sans-serif;
+  gap: 10px;
+  font-size: 24px;
+  height: 100%;
+}
+
+header .logo-img {
+  width: 40px;
+  height: auto;
+}
+
+header input {
+  width: 0;
+  outline: none;
+  border: none;
+  font-weight: 400;
+  transition: width 1.2s ease, color 0.5s ease, border 0.5s ease;
+  background: transparent;
+  border-radius: 20px;
+  color: #fff;
+  padding: 6px 0px 6px 5px;
+  font-size: 14px;
+}
+
+header:hover input {
+  width: 300px;
+  color: #fff;
+  border: 1px solid #fff;
+}
+
+header a.fas {
+  background-color: #fff;
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+
+header ul li a i.fas.fa-shopping-cart {
+  font-size: 20px;
+  color: white;
+  transition: transform 0.3s ease;
+}
+
+header ul li a:hover i.fas.fa-shopping-cart {
+  transform: scale(1.2);
+}

@@ -1,0 +1,29 @@
+<%- include('../partials/header.ejs') %>
+<body>
+    <h1>Formulario de Producto</h1>
+    <form action="/submit" method="post">
+        <label for="name">Nombre:</label>
+        <input type="text" id="name" name="name" required><br><br>
+
+        <label for="description">Descripción:</label>
+        <textarea id="description" name="description" required></textarea><br><br>
+
+        <label for="image">Imagen:</label>
+        <input type="file" id="image" name="image" accept="image/*" required><br><br>
+
+        <label for="category">Categoría:</label>
+        <input type="text" id="category" name="category" required><br><br>
+
+        <label for="plataform">Plataforma:</label>
+        <input type="text" id="plataform" name="plataform" required><br><br>
+
+        <label for="price">Precio:</label>
+        <input type="number" id="price" name="price" step="0.01" required><br><br>
+
+        <label for="amount">Cantidad:</label>
+        <input type="number" id="amount" name="amount" required><br><br>
+
+        <input type="submit" value="Enviar">
+    </form>
+</body>
+</html>

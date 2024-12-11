@@ -138,6 +138,7 @@ router.get(
   authMiddleware(["admin", "vendedor"]),
   getAllSalesBySeller
 );
+
 /**
  * Rutas del carrito
  */

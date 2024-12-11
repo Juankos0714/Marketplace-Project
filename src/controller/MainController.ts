@@ -19,7 +19,7 @@ export const categories = async (req: Request, res: Response) => {
     const category = await prisma.product.findMany({
       where: { category: req.params.nombre },
     });
-    res.render("views/categories.ejs", { category });
+    res.render("catalogo", { category });
   } catch (err) {
     console.log(err);
     res.render("errors/404.ejs");
@@ -29,7 +29,7 @@ export const categories = async (req: Request, res: Response) => {
 export const carrito = async (req: Request, res: Response) => {
   try {
     const products = await prisma.product.findMany();
-    res.render("product/productCart.ejs", { products });
+    res.render("viwes/productCart.ejs", { products });
   } catch (err) {
     console.log(err);
     res.render("errors/404.ejs");
