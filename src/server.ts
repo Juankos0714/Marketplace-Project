@@ -72,7 +72,7 @@ function startServer() {
     app.use(cors(corsOptions));
 
     // Configuración de carpetas estáticas
-    // ensureDirectoryExists(path.join(__dirname, '../public/images/products'));
+    ensureDirectoryExists(path.join(__dirname, '../public/images/products'));
     app.use(express.static("public"));
 
     // Middleware
@@ -80,12 +80,10 @@ function startServer() {
     app.use(morgan('combined')); // Logging con morgan
 
     // Servir archivos estáticos desde la carpeta public/images/products
-    // app.use('/images/products', express.static(path.join(__dirname, '../public/images/products')));
+    app.use('/images/products', express.static(path.join(__dirname, '../public/images/products')));
 
     // Router
     app.use(router);
-
-    app.use()
 
     // Template Engine
     app.set("view engine", "ejs");

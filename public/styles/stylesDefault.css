@@ -1,5 +1,5 @@
 :root {
-  --main-background: url(images/bg.jpg);
+  --main-background: url(/images/bg.jpg) no-repeat center center fixed;	
   --secondary-background: #333;
   --sections-bg: #274a85;
   --card-bg: #254883;
