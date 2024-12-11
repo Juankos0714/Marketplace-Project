@@ -4,7 +4,7 @@ exports.getUniqueProduct = exports.getMostVisitedProducts = exports.deleteProduc
 const express_1 = require("express");
 const prisma_1 = require("../database/prisma");
 const uploadMiddleware_1 = require("../middlewares/uploadMiddleware");
-const router = (0, express_1.Router)(); // Asegúrate de que la ruta sea correcta
+const router = (0, express_1.Router)();
 const createProduct = async (req, res) => {
     (0, uploadMiddleware_1.uploadSingle)(req, res, async (err) => {
         if (err) {
@@ -61,7 +61,7 @@ const updateProduct = async (req, res) => {
             if (userId !== isProduct?.Store?.userId) {
                 return res.status(403).json({ message: "Este producto no pertenece a este usuario" });
             }
-            const imageUrl = req.file ? `/images/products/${req.file.filename}` : isProduct.image;
+            const imageUrl = req.file ? `${req.file.filename}` : isProduct.image;
             const product = await prisma_1.prisma.product.update({
                 where: {
                     id: productId,
