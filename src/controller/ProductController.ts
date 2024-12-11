@@ -94,14 +94,14 @@ export const updateProduct = async (req: Request, res: Response) => {
 };
 
 export const getAllProducts = async (req: Request, res: Response) => {
-  const page = parseInt(req.query.page as string, 10) || 1;
-  const perPage = parseInt(req.query.perPage as string, 10) || 10;
+  // const page = parseInt(req.query.page as string, 10) || 1;
+  // const perPage = parseInt(req.query.perPage as string, 10) || 10;
 
   try {
     // Obtener todos los productos
     const products = await prisma.product.findMany({
-      skip: (page - 1) * perPage,
-      take: perPage,
+      // skip: (page - 1) * perPage,
+      // take: perPage,
     });
 
     // Renderizar la vista y pasar los productos

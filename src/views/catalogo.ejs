@@ -1,373 +1,73 @@
+<!DOCTYPE html>
 <html lang="en">
- <head>
+<head>
   <meta charset="utf-8"/>
   <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&amp;display=swap" rel="stylesheet"/>
-  <link rel="stylesheet" href="../../public/styles/stylesDefault.css">
-  <link rel="stylesheet" href="../../public/styles/catalogo.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400..900&family=Press+Start+2P&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="/styles/stylesDefault.css">
+  <link rel="stylesheet" href="/styles/catalogo.css">
   <title>
    Gaming Catalog
   </title>
+</head>
+    
+<body>
+    <div class="max-width">
+        <!-- Barra de navegación -->
+<%- include('./partials/header.ejs') %>
+        <main class="main">
+          <div class="sidebar">
+            <h3>Consola</h3>
+            <ul>
+                <li><a href="#ps4">PS4</a></li>
+                <li><a href="#ps5">PS5</a></li>
+                <li><a href="#pc">PC</a></li>
+                <li><a href="#xbox">XBOX</a></li>
+            </ul>
 
- </head>
- <body>
+            <h3>Géneros</h3>
+            <ul>
+                <li><a href="#accion">Acción</a></li>
+                <li><a href="#aventura">Aventura</a></li>
+                <li><a href="#deportes">Deportes</a></li>
+                <li><a href="#estrategia">Carrera</a></li>
+            </ul>
 
-<%- include('partials/header') %>
-  
-    <aside class="sidebar">
-    <h3>
-        Consola
-    </h3>
-    <ul>
-        <li>
-        <a href="#ps4">
-        PS4
-        </a>
-        </li>
-        <li>
-        <a href="#ps5">
-        PS5
-        </a>
-        </li>
-        <li>
-        <a href="#pc">
-            PC
-        </a>
-        </li>
-        <li>
-            <a href="#xbox">
-        XBOX
-        </a>
-        </li>
-        <li>
-        <a href="#switch">
-        SWITCH
-        </a>
-        </li>
-    </ul>
-    <h3>
-        Géneros
-    </h3>
-    <ul>
-        <li>
-        <a href="#accion">
-        Acción
-        </a>
-        </li>
-        <li>
-        <a href="#aventura">
-        Aventura
-        </a>
-        </li>
-        <li>
-        <a href="#deportes">
-        Deportes
-        </a>
-        </li>
-        <li>
-        <a href="#rpg">
-        RPG
-        </a>
-        </li>
-        <li>
-        <a href="#estrategia">
-        Estrategia
-        </a>
-        </li>
-    </ul>
-    <div class="price-filter">
-        <h3>
-            Filtro de Precios
-        </h3>
-        <label for="min-price">
-            Precio Mínimo
-        </label>
-        <input id="min-price" placeholder="0" type="number"/>
-        <label for="max-price">
-        Precio Máximo
-        </label>
-        <input id="max-price" placeholder="1000000" type="number"/>
-        <button>
-        Aplicar
-        </button>
+            <div class="price-filter">
+                <h3>Filtro de Precios</h3>
+                <label for="min-price">Precio Mínimo</label>
+                <input id="min-price" placeholder="0" type="number"/>
+                <label for="max-price">Precio Máximo</label>
+                <input id="max-price" placeholder="1000000" type="number"/>
+                <div class="div-button">
+                    <a href="#" class="button">Aplicar</a>
+                </div>
+            </div>
+          </div>
+            
+            <div class="catalog">
+              <h2>Categorías/Catálogo</h2>
+                <% products.forEach((product) => { %>
+                    <article class="item">
+                      <img src="<%= product.image %>" alt="<%= product.name %>" />
+                      <h2><%= product.name %></h2>
+                      <p>$<%= product.price %></p>
+                      <div class="div-button">
+                        <a href="/product/<%= product.id %>" class="button">Comprar</a>
+                      </div>
+                    </article>
+                    <% }); %>
+            </div>
+        </main>
+        <%- include('./partials/footer.ejs') %>
     </div>
-    </aside>
-
-    <main class="content">
-
-        <div class="title">
-            <h2>
-                Categorías/Catálogo
-            </h2>
-        </div>
-
-
-        <section class="section section--playStation">
-            <% games.forEach(products => { %>
-                
-            <% }) %>
-        </section>
-        
-        <h2 id="ps4">
-            PS4
-        </h2>
-        <article class="card">
-            <div class="item">
-        <img src="/img/products/<%= product.image %> "alt="<%=product.name %>">
-
-        <h3>
-            The Last of Us Part II
-        </h3>
-
-        <p>
-            $27.99 en tiendas como GameStop y Target
-        </p>
-
-        <div class="div-button">
-            <a href="#" class="button" id="buy-button">Comprar</a>
-        </div>
-
-        </div>
-        <div class="item">
-        <img alt="Placeholder for God of War (2018) game cover" height="250" src="https://storage.googleapis.com/a1aa/image/xzY4FqekSd2zDChelvcXtastfVv4ZdUJKveowrCTRVU28cdPB.jpg" width="200"/>
-        <h3>
-        God of War
-        </h3>
-        <p>
-            $19.99 en varias tiendas online
-            </p>
-            <button>
-                VER
-            </button>
-        </div>
-        <div class="item">
-            <img alt="Placeholder for Horizon Zero Dawn game cover" height="250" src="https://storage.googleapis.com/a1aa/image/skaAeRVsBcy6cSwF5VOwr8vcvnhUYBa1OUJI5XXVOusjnr7JA.jpg" width="200"/>
-        <h3>
-            Horizon Zero Dawn: Complete Edition
-            </h3>
-            <p>
-        $19.99
-        </p>
-        <button>
-        VER
-        </button>
-        </div>
-        <div class="item">
-            <img alt="Placeholder for Spider-Man: Miles Morales game cover" height="250" src="https://storage.googleapis.com/a1aa/image/B01SpeeKzoqiiU2tm34XzUsZN2j162dg3aDnKiha7TzOPX3TA.jpg" width="200"/>
-        <h3>
-        Spider-Man: Miles Morales
-        </h3>
-        <p>
-            $39.99
-            </p>
-            <button>
-                VER
-        </button>
-        </div>
-    </>
-    <h2 id="ps5">
-        PS5
-    </h2>
-    <div class="catalog">
-        <div class="item">
-            <img alt="Placeholder for Demon’s Souls (Remake) game cover" height="250" src="https://storage.googleapis.com/a1aa/image/HFlRwnMk377NDFC7eF4aoBR2ZW8dCUXAFtqkfA8YsFb1OX3TA.jpg" width="200"/>
-        <h3>
-        Demon’s Souls
-        </h3>
-        <p>
-        $49.99
-        </p>
-        <button>
-        VER
-        </button>
-        </div>
-        <div class="item">
-            <img alt="Placeholder for Ratchet &amp; Clank: Rift Apart game cover" height="250" src="https://storage.googleapis.com/a1aa/image/XkwwqcLGjwb8PN3H7L1bbj6MoRLmz3p8QVTfo3tY8kAinr7JA.jpg" width="200"/>
-            <h3>
-                Ratchet &amp; Clank: Rift Apart
-            </h3>
-            <p>
-                $49.99
-            </p>
-            <button>
-        VER
-        </button>
-        </div>
-        <div class="item">
-        <img alt="Placeholder for Horizon Forbidden West game cover" height="250" src="https://storage.googleapis.com/a1aa/image/2nwP7R3Fij5qAl0ThzVjf58fqyJ3tjYsChGavEI5h3vDPX3TA.jpg" width="200"/>
-        <h3>
-        Horizon Forbidden West
-        </h3>
-        <p>
-            $69.99
-            </p>
-            <button>
-        VER
-        </button>
-    </div>
-    <div class="item">
-        <img alt="Placeholder for Spider-Man 2 game cover" height="250" src="https://storage.googleapis.com/a1aa/image/2nwP7R3Fij5qAl0ThzVjf58fqyJ3tjYsChGavEI5h3vDPX3TA.jpg" width="200"/>
-        <h3>
-            Spider-Man 2
-            </h3>
-            <p>
-                $69.99
-            </p>
-            <button>
-                VER
-        </button>
-        </div>
-    </div>
-    <h2 id="xbox">
-        XBOX
-    </h2>
-    <div class="catalog">
-        <div class="item">
-            <img alt="Placeholder for Halo Infinite game cover" height="250" src="https://storage.googleapis.com/a1aa/image/C5OObOGA0fQzTyzOBryIeIpEtegjSHKX7eXdaWGiB88G9cdPB.jpg" width="200"/>
-        <h3>
-            Halo Infinite
-            </h3>
-        <p>
-            $39.99
-            </p>
-            <button>
-                VER
-            </button>
-        </div>
-        <div class="item">
-            <img alt="Placeholder for Forza Horizon 5 game cover" height="250" src="https://storage.googleapis.com/a1aa/image/qOq8qpciMFYVAZesToGoaqZqTfqZG1khGe311i8fe5Z7156eE.jpg" width="200"/>
-            <h3>
-                Forza Horizon 5
-            </h3>
-            <p>
-                $59.99
-            </p>
-            <button>
-        VER
-        </button>
-        </div>
-        <div class="item">
-        <img alt="Placeholder for Gears 5 game cover" height="250" src="https://storage.googleapis.com/a1aa/image/ZxNie4NfP5m9kEdHgiPHnRdv4G8xqAUnKfkLid6RMddSecdPB.jpg" width="200"/>
-        <h3>
-        Gears 5
-        </h3>
-        <p>
-            $29.99
-            </p>
-            <button>
-                VER
-            </button>
-        </div>
-        <div class="item">
-            <img alt="Placeholder for Starfield game cover" height="250" src="https://storage.googleapis.com/a1aa/image/ZxNie4NfP5m9kEdHgiPHnRdv4G8xqAUnKfkLid6RMddSecdPB.jpg" width="200"/>
-            <h3>
-                Starfield
-            </h3>
-        <p>
-            $69.99
-            </p>
-            <button>
-                VER
-            </button>
-        </div>
-    </div>
-    <h2 id="pc">
-        PC
-    </h2>
-    <div class="catalog">
-        <div class="item">
-            <img alt="Placeholder for Baldur's Gate 3 game cover" height="250" src="https://storage.googleapis.com/a1aa/image/ZxNie4NfP5m9kEdHgiPHnRdv4G8xqAUnKfkLid6RMddSecdPB.jpg" width="200"/>
-        <h3>
-            Baldur's Gate 3
-            </h3>
-            <p>
-                $59.99
-        </p>
-        <button>
-            VER
-            </button>
-        </div>
-        <div class="item">
-            <img alt="Placeholder for Cyberpunk 2077 (Phantom Liberty Edition) game cover" height="250" src="https://storage.googleapis.com/a1aa/image/GIErnpRtRIKiN5LLzvbYp1eP4dNa5KsVeU3r79cYrpeDecdPB.jpg" width="200"/>
-            <h3>
-                Cyberpunk 2077 (Phantom Liberty Edition)
-            </h3>
-            <p>
-                $29.99
-            </p>
-            <button>
-                VER
-        </button>
-        </div>
-        <div class="item">
-        <img alt="Placeholder for Diablo IV game cover" height="250" src="https://storage.googleapis.com/a1aa/image/ZxNie4NfP5m9kEdHgiPHnRdv4G8xqAUnKfkLid6RMddSecdPB.jpg" width="200"/>
-        <h3>
-        Diablo IV
-        </h3>
-        <p>
-            $59.99
-        </p>
-        <button>
-            VER
-        </button>
-    </div>
-    <div class="item">
-        <img alt="Placeholder for The Witcher 3: Wild Hunt (Complete Edition) game cover" height="250" src="https://storage.googleapis.com/a1aa/image/ZxNie4NfP5m9kEdHgiPHnRdv4G8xqAUnKfkLid6RMddSecdPB.jpg" width="200"/>
-        <h3>
-            The Witcher 3: Wild Hunt (Complete Edition)
-            </h3>
-            <p>
-                $19.99
-            </p>
-            <button>
-                VER
-            </button>
-        </div>
-    </div>
-    <h2 id="switch">
-        SWITCH
-    </h2>
-    <div class="catalog">
-        <div class="item">
-            <img alt="Placeholder for The Legend of Zelda: Tears of the Kingdom game cover" height="250" src="https://storage.googleapis.com/a1aa/image/vMVpQqDfzMyPJyhegOJ5uNV2h4s7pfqPzXtx8adqmM8iduunA.jpg" width="200"/>
-            <h3>
-                The Legend of Zelda: Tears of the Kingdom
-            </h3>
-            <p>
-                $69.99
-            </p>
-            <button>
-                VER
-            </button>
-        </div>
-        <div class="item">
-            <img alt="Placeholder for Super Smash Bros. Ultimate game cover" height="250" src="https://storage.googleapis.com/a1aa/image/yzfYaGnmIa0TQa0KT8GdTT6rQspnHPGFoMRHLA7tVwTdnr7JA.jpg" width="200"/>
-            <h3>
-                Super Smash Bros. Ultimate
-            </h3>
-            <p>
-                $59.99
-            </p>
-            <button>
-        VER
-        </button>
-        </div>
-        <div class="item">
-        <img alt="Placeholder for Mario Kart 8 Deluxe game cover" height="250" src="https://storage.googleapis.com/a1aa/image/49ALs0f7bSWfW04F1lLl5PHfTjkF9LOeOp4rkhUq8Kdf256eE.jpg" width="200"/>
-        <h3>
-        Mario Kart 8 Deluxe
-        </h3>
-        <p>
-            $59.99
-            </p>
-            <button>
-                VER
-            </button>
-        </div>
-        <div class="item">
-            <img alt="Placeholder for Animal Crossing: New Horizons game cover" height="250" src="https://storage.googleapis.com/a1aa/image/49ALs0f7b">
-        </div>
-    </main>
-
-<%- include('partials/footer') %>
+</body>
+</html>

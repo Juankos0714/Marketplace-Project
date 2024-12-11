@@ -169,3 +169,16 @@ background-color: #555;  /* Color del control cuando está siendo tocado */
 height: 10px;  /* Alto para la barra horizontal */
 }
 
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--accent-color) transparent;
+}
+
+*::-webkit-scrollbar {
+  width: 6px;
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: var(--accent-color);
+  border-radius: 3px;
+}
