@@ -2,7 +2,7 @@ import { Router } from "express";
 
 import { createAccess, getAllAccesses } from "./controller/AccessController";
 import {
-  createProduct,
+  // createProduct,
   deleteProduct,
   getAllProducts,
   getUniqueProduct,
@@ -37,14 +37,14 @@ import { get } from "http";
 export const router = Router();
 
 // Ruta para la página principal
-router.get("/", renderHomePage);
-router.get("/catalogo", getAllProducts);
+router.get("/", renderHomePage); // on
+// Ruta para el catalogo/categorias
+router.get("/catalogo", getAllProducts); // on
+
 
 router.get("/categories/:nombre", categories);
 
 router.get("/productCart", authMiddleware(["common_user"]), carrito);
-
-router.get("/allCategories", allCategories);
 
 router.get("/admin", authMiddleware(["admin"]), admin);
 
@@ -86,7 +86,7 @@ router.put(
 router.post(
   "/product/:storeId",
   authMiddleware(["admin", "vendedor"]),
-  createProduct
+  // createProduct
 );
 router.put(
   "/update-product/:productId",
@@ -100,7 +100,7 @@ router.get(
 );
 router.get(
   "/product/:id",
-  authMiddleware(["admin", "vendedor", "comprador"]),
+  // authMiddleware(["admin", "vendedor", "comprador"]),
   getUniqueProduct
 );
 router.delete(
@@ -147,5 +147,3 @@ router.post("/cart/:productId", authMiddleware(["comprador"]), addToCart); // Ru
 router.put("/cart/:itemId", authMiddleware(["comprador"]), updateCartItem); // Ruta para actualizar un item del carrito
 router.delete("/cart/:itemId", authMiddleware(["comprador"]), removeFromCart); // Ruta para eliminar un item del carrito
 router.delete("/cart", authMiddleware(["comprador"]), clearCart); // Ruta para limpiar el carrito
-
-console.log("router.ts - router", router);

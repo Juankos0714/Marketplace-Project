@@ -85,30 +85,6 @@ function startServer() {
     // Router
     app.use(router);
 
-    router.post('/products', upload.single('image'), async (req, res) => {
-      try {
-          const { name, price, description, category } = req.body;
-  
-          if (!req.file) {
-              return res.status(400).json({ error: 'La imagen es obligatoria' });
-          }
-  
-          const newProduct = new Product({
-              name,
-              price,
-              description,
-              category,
-              image: `/uploads/products/${req.file.filename}` // Ruta de la imagen
-          });
-  
-          await newProduct.save();
-          res.status(201).json({ message: 'Producto creado con éxito', product: newProduct });
-      } catch (error) {
-          console.error('Error al crear el producto:', error);
-          res.status(500).json({ error: 'Error al crear el producto' });
-      }
-  });
-
     app.use()
 
     // Template Engine

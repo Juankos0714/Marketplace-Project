@@ -1,8 +1,11 @@
 :root {
-  --main-background: #001A65;
+  --main-background: url(images/bg.jpg);
   --secondary-background: #333;
   --sections-bg: #274a85;
   --card-bg: #254883;
+  --primary-background: #001A65;
+  --secondary-background: #254883;
+  --accent-color: #3ecdef;
   --degrade-bg: linear-gradient(90deg, rgba(2,13,83,0) 0%, rgba(248,29,116,1) 100%);;
   --text-color: #fff; /* Color del texto */
   --button-background: #055ccc; /*Color unico del boton*/
@@ -25,6 +28,8 @@
   --border-radius-outside: 20px;
   --border-radius-inside: calc(var(--button-border-radius)-10px);
 }
+
+
 
 * {
   margin: 0;
@@ -169,6 +174,20 @@ background-color: #555;  /* Color del control cuando está siendo tocado */
 height: 10px;  /* Alto para la barra horizontal */
 }
 
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--accent-color) transparent;
+}
+
+*::-webkit-scrollbar {
+  width: 6px;
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: var(--accent-color);
+  border-radius: 3px;
+}
+
 /* Header */
 
 header nav {
@@ -257,5 +276,19 @@ header ul li a i.fas.fa-shopping-cart {
 }
 
 header ul li a:hover i.fas.fa-shopping-cart {
-  transform: scale(1.2);
+  transform: scale(1.2);    
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--accent-color) transparent;
+}
+
+*::-webkit-scrollbar {
+  width: 6px;
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: var(--accent-color);
+  border-radius: 3px;
 }

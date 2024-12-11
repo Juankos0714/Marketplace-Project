@@ -89,9 +89,15 @@ export const updateProduct = async (req: Request, res: Response) => {
 };
 
 export const getAllProducts = async (req: Request, res: Response) => {
+  // const page = parseInt(req.query.page as string, 10) || 1;
+  // const perPage = parseInt(req.query.perPage as string, 10) || 10;
+
   try {
     // Obtener todos los productos
-    const products = await prisma.product.findMany();
+    const products = await prisma.product.findMany({
+      // skip: (page - 1) * perPage,
+      // take: perPage,
+    });
 
     // Renderizar la vista y pasar los productos
     res.render("catalogo", { products });
@@ -193,58 +199,58 @@ export const getUniqueProduct = async (req: Request, res: Response) => {
   }
 };
 
-router.post('/upload-single', uploadSingle, async (req, res) => {
-  if (!req.file) {
-    return res.status(400).json({ message: 'No file uploaded' });
-  }
+// router.post('/upload-single', uploadSingle, async (req, res) => {
+//   if (!req.file) {
+//     return res.status(400).json({ message: 'No file uploaded' });
+//   }
 
-  const imageUrl = `/images/${req.file.filename}`;
+//   const imageUrl = `/images/${req.file.filename}`;
 
-  res.json({ imageUrl });
-});
+//   res.json({ imageUrl });
+// });
 
-router.post('/upload-multiple', uploadMultiple, async (req, res) => {
-  if (!req.files || req.files.length === 0) {
-    return res.status(400).json({ message: 'No files uploaded' });
-  }
+// router.post('/upload-multiple', uploadMultiple, async (req, res) => {
+//   if (!req.files || req.files.length === 0) {
+//     return res.status(400).json({ message: 'No files uploaded' });
+//   }
 
-  const files = req.files as Express.Multer.File[];
-  const imageUrls = files.map(file => `/images/${file.filename}`);
+//   const files = req.files as Express.Multer.File[];
+//   const imageUrls = files.map(file => `/images/${file.filename}`);
 
-  res.json({ imageUrls });
-});
+//   res.json({ imageUrls });
+// });
 
-router.post('/product/:storeId', uploadSingle, createProduct);
-router.put('/update-product/:productId', uploadSingle, updateProduct);
+// router.post('/product/:storeId', uploadSingle, createProduct);
+// router.put('/update-product/:productId', uploadSingle, updateProduct);
 
 
-router.get('/most-visited-products', getMostVisitedProducts);
+// router.get('/most-visited-products', getMostVisitedProducts);
 
-router.post('/upload-single', uploadSingle, async (req, res) => {
-  if (!req.file) {
-    return res.status(400).json({ message: 'No file uploaded' });
-  }
+// router.post('/upload-single', uploadSingle, async (req, res) => {
+//   if (!req.file) {
+//     return res.status(400).json({ message: 'No file uploaded' });
+//   }
 
-  const imageUrl = `/images/${req.file.filename}`;
+//   const imageUrl = `/images/${req.file.filename}`;
   
  
 
-  res.json({ imageUrl });
-});
+//   res.json({ imageUrl });
+// });
 
-router.post('/upload-multiple', uploadMultiple, async (req, res) => {
-  if (!req.files || req.files.length === 0) {
-    return res.status(400).json({ message: 'No files uploaded' });
-  }
+// router.post('/upload-multiple', uploadMultiple, async (req, res) => {
+//   if (!req.files || req.files.length === 0) {
+//     return res.status(400).json({ message: 'No files uploaded' });
+//   }
   
-  const files = req.files as Express.Multer.File[];
-  const imageUrls = files.map(file => `/images/${file.filename}`);
+//   const files = req.files as Express.Multer.File[];
+//   const imageUrls = files.map(file => `/images/${file.filename}`);
   
 
 
-  res.json({ imageUrls });
-});
-router.post('/product/:storeId', uploadSingle, createProduct);
-router.put('/update-product/:productId', uploadSingle, updateProduct);
+//   res.json({ imageUrls });
+// });
+// router.post('/product/:storeId', uploadSingle, createProduct);
+// router.put('/update-product/:productId', uploadSingle, updateProduct);
 
-export default router;
+// export default router;
