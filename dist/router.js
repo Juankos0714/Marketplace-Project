@@ -13,12 +13,12 @@ const CartController_1 = require("./controller/CartController");
 const MainController_1 = require("./controller/MainController");
 exports.router = (0, express_1.Router)();
 // Ruta para la página principal
-exports.router.get("/", MainController_1.renderHomePage);
-exports.router.get("/catalogo", ProductController_1.getAllProducts);
+exports.router.get("/", MainController_1.renderHomePage); // on
+// Ruta para el catalogo/categorias
+exports.router.get("/catalogo", ProductController_1.getAllProducts); // on
 exports.router.get("/categories/:nombre", MainController_1.categories);
 exports.router.get("/sign-in", MainController_1.renderLoginPage);
 exports.router.get("/productCart", (0, AuthMiddleware_1.authMiddleware)(["common_user"]), MainController_1.carrito);
-exports.router.get("/allCategories", MainController_1.allCategories);
 exports.router.get("/admin", (0, AuthMiddleware_1.authMiddleware)(["admin"]), MainController_1.admin);
 exports.default = exports.router;
 /**
@@ -43,7 +43,7 @@ exports.router.put("/update-store/:storeId", (0, AuthMiddleware_1.authMiddleware
 /**
  * Rutas de productos
  */
-exports.router.post("/product/:storeId", (0, AuthMiddleware_1.authMiddleware)(["admin", "vendedor"]), ProductController_1.createProduct);
+exports.router.post("/product/:storeId", (0, AuthMiddleware_1.authMiddleware)(["admin", "vendedor"]));
 exports.router.put("/update-product/:productId", (0, AuthMiddleware_1.authMiddleware)(["admin", "vendedor"]), ProductController_1.updateProduct);
 exports.router.get("/products", (0, AuthMiddleware_1.authMiddleware)(["admin", "vendedor", "comprador"]), ProductController_1.getAllProducts);
 exports.router.get("/product/:id", AuthMiddleware_1.ensureAuthenticated, (0, AuthMiddleware_1.authMiddleware)(["admin", "vendedor", "comprador"]), ProductController_1.getUniqueProduct);
@@ -69,4 +69,3 @@ exports.router.post("/cart/:productId", (0, AuthMiddleware_1.authMiddleware)(["c
 exports.router.put("/cart/:itemId", (0, AuthMiddleware_1.authMiddleware)(["comprador"]), CartController_1.updateCartItem); // Ruta para actualizar un item del carrito
 exports.router.delete("/cart/:itemId", (0, AuthMiddleware_1.authMiddleware)(["comprador"]), CartController_1.removeFromCart); // Ruta para eliminar un item del carrito
 exports.router.delete("/cart", (0, AuthMiddleware_1.authMiddleware)(["comprador"]), CartController_1.clearCart); // Ruta para limpiar el carrito
-console.log("router.ts - router", exports.router);

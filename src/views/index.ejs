@@ -34,7 +34,7 @@
         <div class="juegos">
           <% products.forEach((product) => { %>
           <article class="juego">
-            <img src="<%= product.image %>" alt="<%= product.name %>" />
+            <img src="/images/products/<%= product.image %>" alt="<%= product.name %>" />
             <h2><%= product.name %></h2>
             <p>$<%= product.price %></p>
             <div class="div-button">
@@ -56,7 +56,7 @@
         <div class="juegos juegos-novedades">
           <% products.forEach((product) => { %>
           <article class="juego">
-            <img src="<%= product.image %>" alt="<%= product.name %>" />
+            <img src="/images/products/<%= product.image %>" alt="<%= product.name %>" />
             <h2><%= product.name %></h2>
             <p>$<%= product.price %></p>
             <div class="div-button">
@@ -76,7 +76,7 @@
             <a href="/product/<%= product.id %>">
               <article class="juego">
                 <div class="imagen">
-                  <img src="<%= product.image %>" alt="<%= product.name %>" />
+                  <img src="/images/products/<%= product.image %>" alt="<%= product.name %>" />
                 </div>
                 <div class="info-game">
                   <h2><%= product.name %></h2>

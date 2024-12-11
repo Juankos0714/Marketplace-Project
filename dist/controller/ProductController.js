@@ -4,7 +4,7 @@ exports.getUniqueProduct = exports.getMostVisitedProducts = exports.deleteProduc
 const express_1 = require("express");
 const prisma_1 = require("../database/prisma");
 const uploadMiddleware_1 = require("../middlewares/uploadMiddleware");
-const router = (0, express_1.Router)();
+const router = (0, express_1.Router)(); // Asegúrate de que la ruta sea correcta
 const createProduct = async (req, res) => {
     (0, uploadMiddleware_1.uploadSingle)(req, res, async (err) => {
         if (err) {
@@ -85,13 +85,21 @@ const updateProduct = async (req, res) => {
 };
 exports.updateProduct = updateProduct;
 const getAllProducts = async (req, res) => {
-    const page = parseInt(req.query.page, 10) || 1;
-    const perPage = parseInt(req.query.perPage, 10) || 10;
+    // const page = parseInt(req.query.page as string, 10) || 1;
+    // const perPage = parseInt(req.query.perPage as string, 10) || 10;
     try {
         // Obtener todos los productos
         const products = await prisma_1.prisma.product.findMany({
-            skip: (page - 1) * perPage,
-            take: perPage,
+            select: {
+                id: true,
+                name: true,
+                description: true,
+                image: true,
+                category: true,
+                platform: true,
+                price: true,
+                amount: true,
+            },
         });
         // Renderizar la vista y pasar los productos
         res.render("catalogo", { products });
