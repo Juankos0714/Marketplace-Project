@@ -22,7 +22,7 @@ import {
   getAllUser,
   getUniqueUser,
 } from "./controller/UserController";
-import { authMiddleware } from "./middlewares/AuthMiddleware";
+import { authMiddleware, ensureAuthenticated } from "./middlewares/AuthMiddleware";
 import {
   getCart,
   addToCart,
@@ -30,9 +30,9 @@ import {
   removeFromCart,
   clearCart
 } from "./controller/CartController";
-import { renderHomePage, categories, carrito, allCategories, admin } from "./controller/MainController";
-import mainController from "./controller/MainController";
-import { get } from "http";
+import { renderHomePage, categories, carrito, allCategories, admin, renderLoginPage, } from "./controller/MainController";
+
+
 
 export const router = Router();
 
@@ -43,6 +43,9 @@ router.get("/catalogo", getAllProducts); // on
 
 
 router.get("/categories/:nombre", categories);
+
+router.get("/sign-in", renderLoginPage);
+
 
 router.get("/productCart", authMiddleware(["common_user"]), carrito);
 
@@ -99,8 +102,8 @@ router.get(
   getAllProducts
 );
 router.get(
-  "/product/:id",
-  // authMiddleware(["admin", "vendedor", "comprador"]),
+  "/product/:id",ensureAuthenticated,
+  authMiddleware(["admin", "vendedor", "comprador"]),
   getUniqueProduct
 );
 router.delete(

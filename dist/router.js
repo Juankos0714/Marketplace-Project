@@ -16,6 +16,7 @@ exports.router = (0, express_1.Router)();
 exports.router.get("/", MainController_1.renderHomePage);
 exports.router.get("/catalogo", ProductController_1.getAllProducts);
 exports.router.get("/categories/:nombre", MainController_1.categories);
+exports.router.get("/sign-in", MainController_1.renderLoginPage);
 exports.router.get("/productCart", (0, AuthMiddleware_1.authMiddleware)(["common_user"]), MainController_1.carrito);
 exports.router.get("/allCategories", MainController_1.allCategories);
 exports.router.get("/admin", (0, AuthMiddleware_1.authMiddleware)(["admin"]), MainController_1.admin);
@@ -45,7 +46,7 @@ exports.router.put("/update-store/:storeId", (0, AuthMiddleware_1.authMiddleware
 exports.router.post("/product/:storeId", (0, AuthMiddleware_1.authMiddleware)(["admin", "vendedor"]), ProductController_1.createProduct);
 exports.router.put("/update-product/:productId", (0, AuthMiddleware_1.authMiddleware)(["admin", "vendedor"]), ProductController_1.updateProduct);
 exports.router.get("/products", (0, AuthMiddleware_1.authMiddleware)(["admin", "vendedor", "comprador"]), ProductController_1.getAllProducts);
-exports.router.get("/product/:id", (0, AuthMiddleware_1.authMiddleware)(["admin", "vendedor", "comprador"]), ProductController_1.getUniqueProduct);
+exports.router.get("/product/:id", AuthMiddleware_1.ensureAuthenticated, (0, AuthMiddleware_1.authMiddleware)(["admin", "vendedor", "comprador"]), ProductController_1.getUniqueProduct);
 exports.router.delete("/delete-product/:productId", (0, AuthMiddleware_1.authMiddleware)(["admin", "vendedor"]), ProductController_1.deleteProduct);
 exports.router.get("/most-visited-products", // Nueva ruta para los productos más visitados
 (0, AuthMiddleware_1.authMiddleware)(["admin", "vendedor", "comprador"]), ProductController_1.getMostVisitedProducts);

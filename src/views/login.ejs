@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lab Gaming - usuario</title>
+  <link rel="stylesheet" href="../../public/styles/stylesDefault.css">
+  <link rel="stylesheet" href="../../public/styles/stylesUsuario.css">
+  <link rel="stylesheet" href="../../public/styles/login.css">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400..900&family=Press+Start+2P&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+</head>
+<body>
+    <div class="max-width-1400px">    
+        <header>
+            <nav>
+                <div class="logo">
+                <img src="../../public/images/products/logo/logo.png" class="logo-img">
+                LAB GAMING
+                </div>
+                <ul>
+                <li><a href="#">Inicio</a></li>
+                <li><a href="#">Categorías</a></li>
+                <li><a href="#">Contacto</a></li>
+                <li>
+                    <input type="text" placeholder="Buscar...">
+                    <a href="#">
+                    <i class="fas fa-search"></i>
+                    </a>
+                </li>
+                </ul>
+            </nav>
+        </header>
+
+        <section class="usuario">
+            <div class="container">
+                <h1>Iniciar Sesion </h1>
+                <form class="loginForm">
+                    <label for="nombre">Nombre:</label>
+                    <input type="text" id="nombre" name="nombre" required>
+                
+                    <label for="password">Contraseña:</label>
+                    <input type="password" id="password" name="password" required>
+                
+                    <a href="#" class="button" type="submit">ingresar</a>
+
+                    <a class="iniciar_cuenta" href="iniciar_cuenta.html">¿Aun no tienes cuenta?</a>
+                </form>
+                
+        </section>        
+                
+                    
+                </div> 
+            <footer>
+
+                <%- include('./partials/footer.ejs') %>
+            </div>
+</body>
+</html>

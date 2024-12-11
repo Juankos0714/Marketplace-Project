@@ -3,15 +3,16 @@ import { prisma } from "../database/prisma";
 
 export const renderHomePage = async (req: Request, res: Response) => {
   try {
-    // Obtener todos los productos
     const products = await prisma.product.findMany();
-
-    // Renderizar la vista y pasar los productos
     res.render("index", { products });
   } catch (err) {
     console.error("Error obteniendo productos:", err);
-    res.status(500).render("errors/404.ejs"); // Renderizar página de error
+    res.status(500).render("errors/404.ejs");
   }
+};
+
+export const renderLoginPage = (req: Request, res: Response) => {
+  res.render("login");
 };  
 
 export const categories = async (req: Request, res: Response) => {

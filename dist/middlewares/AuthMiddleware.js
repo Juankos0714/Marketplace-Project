@@ -1,8 +1,24 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.authMiddleware = void 0;
+exports.authMiddleware = exports.ensureAuthenticated = void 0;
 const jsonwebtoken_1 = require("jsonwebtoken");
 const prisma_1 = require("../database/prisma");
+const ensureAuthenticated = (req, res, next) => {
+    const authHeader = req.headers.authorization;
+    if (!authHeader) {
+        return res.redirect('/sign-in');
+    }
+    const token = authHeader.split(" ")[1];
+    try {
+        const decoded = (0, jsonwebtoken_1.verify)(token, process.env.JWT_SECRET || 'clave_secreta_para_pruebas');
+        req.user = { id: decoded.userId };
+        return next();
+    }
+    catch {
+        return res.redirect('/sign-in');
+    }
+};
+exports.ensureAuthenticated = ensureAuthenticated;
 const authMiddleware = (roles) => {
     return async (req, res, next) => {
         try {
@@ -24,7 +40,7 @@ const authMiddleware = (roles) => {
             if (!hasRole) {
                 return res.status(403).json({ message: "Permiso denegado" });
             }
-            req.user = { ...user, id: user.id.toString() };
+            req.user = { id: user.id.toString() };
             next();
         }
         catch (error) {

@@ -1,20 +1,22 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.admin = exports.allCategories = exports.carrito = exports.categories = exports.renderHomePage = void 0;
+exports.admin = exports.allCategories = exports.carrito = exports.categories = exports.renderLoginPage = exports.renderHomePage = void 0;
 const prisma_1 = require("../database/prisma");
 const renderHomePage = async (req, res) => {
     try {
-        // Obtener todos los productos
         const products = await prisma_1.prisma.product.findMany();
-        // Renderizar la vista y pasar los productos
         res.render("index", { products });
     }
     catch (err) {
         console.error("Error obteniendo productos:", err);
-        res.status(500).render("errors/404.ejs"); // Renderizar página de error
+        res.status(500).render("errors/404.ejs");
     }
 };
 exports.renderHomePage = renderHomePage;
+const renderLoginPage = (req, res) => {
+    res.render("login");
+};
+exports.renderLoginPage = renderLoginPage;
 const categories = async (req, res) => {
     try {
         const category = await prisma_1.prisma.product.findMany({
