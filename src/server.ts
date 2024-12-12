@@ -7,12 +7,12 @@ import cors from "cors";
 import helmet from "helmet";
 import morgan from "morgan";
 import { AddressInfo } from "net";
+import { upload } from './middlewares/UploadMiddleware'; // Importa el middleware de subida
 
-// Determinar el entorno y cargar las variables de entorno adecuadas
-const envFile = process.env.NODE_ENV === 'production' ? '.env' : '.env.local';
-dotenv.config({ path: envFile });
+// Configuración de variables de entorno
+dotenv.config({ path: process.env.NODE_ENV === 'production' ? '.env' : '.env.local' });
 
-// Validar variables de entorno críticas
+// Funciones auxiliares
 function validateEnvironment() {
   const criticalVars = [
     { name: 'JWT_SECRET', required: true },
@@ -27,37 +27,23 @@ function validateEnvironment() {
   }
 }
 
-interface CriticalVar {
-  name: string;
-  required: boolean;
-}
-
 function ensureDirectoryExists(directoryPath: string): void {
   if (!fs.existsSync(directoryPath)) {
     fs.mkdirSync(directoryPath, { recursive: true });
   }
 }
 
+// Iniciar servidor
 function startServer() {
   const app = express();
 
   try {
-    // Seguridad adicional
     app.use(helmet());
-
-    // Configuración de CORS
     const allowedOrigins = [
       'http://localhost:5432',
       'https://marketplace-project-eta.vercel.app'
     ];
-    interface CorsOptions {
-      origin: (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) => void;
-      credentials: boolean;
-      methods: string[];
-      allowedHeaders: string[];
-    }
-
-    const corsOptions: CorsOptions = {
+    app.use(cors({
       origin: (origin, callback) => {
         if (!origin || allowedOrigins.some(allowedOrigin => origin.match(allowedOrigin))) {
           callback(null, true);
@@ -68,44 +54,52 @@ function startServer() {
       credentials: true,
       methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
       allowedHeaders: ['Content-Type', 'Authorization']
-    };
-    app.use(cors(corsOptions));
+    }));
 
-    // Configuración de carpetas estáticas
     ensureDirectoryExists(path.join(__dirname, '../public/images/products'));
     app.use(express.static("public"));
-
-    // Middleware
     app.use(express.json());
-    app.use(morgan('combined')); // Logging con morgan
+    app.use(morgan('combined'));
 
-    // Servir archivos estáticos desde la carpeta public/images/products
     app.use('/images/products', express.static(path.join(__dirname, '../public/images/products')));
-
-    // Router
     app.use(router);
 
-    // Template Engine
+    app.post('/upload-single', upload.single('image'), (req, res) => {
+      if (!req.file) {
+        return res.status(400).json({ message: 'No file uploaded' });
+      }
+      res.json({ imageUrl: req.file.path });
+    });
+
+    app.post('/upload-multiple', upload.array('images', 5), (req, res) => {
+      if (!req.files || req.files.length === 0) {
+        return res.status(400).json({ message: 'No files uploaded' });
+      }
+      const files = req.files as Express.Multer.File[];
+      res.json({ imageUrls: files.map(file => file.path) });
+    });
+
     app.set("view engine", "ejs");
     app.set("views", path.join(__dirname, "views"));
 
-    // Global error handler
-    interface ErrorRequestHandler {
-      (err: Error, req: express.Request, res: express.Response, next: express.NextFunction): void;
+    interface Error {
+      stack?: string;
+      message?: string;
     }
 
-    const errorHandler: ErrorRequestHandler = (err, req, res, next) => {
-      console.error('Unhandled Error:', err.stack); // Stack trace
+    interface Request extends express.Request {}
+    interface Response extends express.Response {}
+    interface NextFunction extends express.NextFunction {}
+
+    app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
+      console.error('Unhandled Error:', err.stack);
       res.status(500).json({
         message: 'Internal Server Error',
         ...(process.env.NODE_ENV === 'development' && { stack: err.stack, error: err.message })
       });
-    };
-
-    app.use(errorHandler);
+    });
 
     const port = parseInt(process.env.PORT || '3333', 10);
-
     const server = app.listen(port, () => {
       console.log(`Server running on port ${port} - http://localhost:${port}`);
       console.log(`Environment: ${process.env.NODE_ENV || 'development'}`);
@@ -130,7 +124,6 @@ function startServer() {
   }
 }
 
-// Event handlers for unhandled errors
 process.on('unhandledRejection', (reason, promise) => {
   console.error('Unhandled Rejection at:', promise, 'reason:', reason);
 });
@@ -140,6 +133,5 @@ process.on('uncaughtException', (error) => {
   process.exit(1);
 });
 
-// Iniciar el servidor
 validateEnvironment();
 startServer();

@@ -11,10 +11,10 @@ const fs_1 = __importDefault(require("fs"));
 const cors_1 = __importDefault(require("cors"));
 const helmet_1 = __importDefault(require("helmet"));
 const morgan_1 = __importDefault(require("morgan"));
-// Determinar el entorno y cargar las variables de entorno adecuadas
-const envFile = process.env.NODE_ENV === 'production' ? '.env' : '.env.local';
-dotenv_1.default.config({ path: envFile });
-// Validar variables de entorno críticas
+const UploadMiddleware_1 = require("./middlewares/UploadMiddleware"); // Importa el middleware de subida
+// Configuración de variables de entorno
+dotenv_1.default.config({ path: process.env.NODE_ENV === 'production' ? '.env' : '.env.local' });
+// Funciones auxiliares
 function validateEnvironment() {
     const criticalVars = [
         { name: 'JWT_SECRET', required: true },
@@ -31,17 +31,16 @@ function ensureDirectoryExists(directoryPath) {
         fs_1.default.mkdirSync(directoryPath, { recursive: true });
     }
 }
+// Iniciar servidor
 function startServer() {
     const app = (0, express_1.default)();
     try {
-        // Seguridad adicional
         app.use((0, helmet_1.default)());
-        // Configuración de CORS
         const allowedOrigins = [
             'http://localhost:5432',
             'https://marketplace-project-eta.vercel.app'
         ];
-        const corsOptions = {
+        app.use((0, cors_1.default)({
             origin: (origin, callback) => {
                 if (!origin || allowedOrigins.some(allowedOrigin => origin.match(allowedOrigin))) {
                     callback(null, true);
@@ -53,29 +52,35 @@ function startServer() {
             credentials: true,
             methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
             allowedHeaders: ['Content-Type', 'Authorization']
-        };
-        app.use((0, cors_1.default)(corsOptions));
-        // Configuración de carpetas estáticas
+        }));
         ensureDirectoryExists(path_1.default.join(__dirname, '../public/images/products'));
         app.use(express_1.default.static("public"));
-        // Middleware
         app.use(express_1.default.json());
-        app.use((0, morgan_1.default)('combined')); // Logging con morgan
-        // Servir archivos estáticos desde la carpeta public/images/products
+        app.use((0, morgan_1.default)('combined'));
         app.use('/images/products', express_1.default.static(path_1.default.join(__dirname, '../public/images/products')));
-        // Router
         app.use(router_1.router);
-        // Template Engine
+        app.post('/upload-single', UploadMiddleware_1.upload.single('image'), (req, res) => {
+            if (!req.file) {
+                return res.status(400).json({ message: 'No file uploaded' });
+            }
+            res.json({ imageUrl: req.file.path });
+        });
+        app.post('/upload-multiple', UploadMiddleware_1.upload.array('images', 5), (req, res) => {
+            if (!req.files || req.files.length === 0) {
+                return res.status(400).json({ message: 'No files uploaded' });
+            }
+            const files = req.files;
+            res.json({ imageUrls: files.map(file => file.path) });
+        });
         app.set("view engine", "ejs");
         app.set("views", path_1.default.join(__dirname, "views"));
-        const errorHandler = (err, req, res, next) => {
-            console.error('Unhandled Error:', err.stack); // Stack trace
+        app.use((err, req, res, next) => {
+            console.error('Unhandled Error:', err.stack);
             res.status(500).json({
                 message: 'Internal Server Error',
                 ...(process.env.NODE_ENV === 'development' && { stack: err.stack, error: err.message })
             });
-        };
-        app.use(errorHandler);
+        });
         const port = parseInt(process.env.PORT || '3333', 10);
         const server = app.listen(port, () => {
             console.log(`Server running on port ${port} - http://localhost:${port}`);
@@ -100,7 +105,6 @@ function startServer() {
         process.exit(1);
     }
 }
-// Event handlers for unhandled errors
 process.on('unhandledRejection', (reason, promise) => {
     console.error('Unhandled Rejection at:', promise, 'reason:', reason);
 });
@@ -108,6 +112,5 @@ process.on('uncaughtException', (error) => {
     console.error('Uncaught Exception:', error);
     process.exit(1);
 });
-// Iniciar el servidor
 validateEnvironment();
 startServer();

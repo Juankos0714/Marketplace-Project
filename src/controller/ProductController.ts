@@ -1,39 +1,38 @@
-import { Request, Response, Router } from "express";
+import { Request, Response } from "express";
 import { prisma } from "../database/prisma";
-import { uploadSingle, uploadMultiple } from '../middlewares/uploadMiddleware';
-
-const router = Router(); 
-
+import { upload } from '../middlewares/UploadMiddleware';
+import { ParamsDictionary } from "express-serve-static-core";
+import { ParsedQs } from "qs";
 
 export const createProduct = async (req: Request, res: Response): Promise<void> => {
-  uploadSingle(req, res, async (err: any) => {
-      if (err) {
-          return res.status(400).json({ error: err.message });
+  upload.single('image')(req, res, async (err: any) => {
+    if (err) {
+      return res.status(400).json({ error: err.message });
+    }
+    try {
+      const { name, description, category, platform, price, amount } = req.body;
+      const storeId = parseInt(req.params.storeId, 10);
+      if (!name || !description || !category || !platform || !price || !amount) {
+        return res.status(400).json({ error: "Todos los campos son requeridos" });
       }
-      try {
-          const { name, description, category, platform, price, amount } = req.body;
-          const storeId = parseInt(req.params.storeId, 10);
-          if (!name || !description || !category || !platform || !price || !amount) {
-              return res.status(400).json({ error: "Todos los campos son requeridos" });
-          }
-          const imageUrl = req.file ? `/images/products/${req.file.filename}` : '';
-          const product = await prisma.product.create({
-              data: {
-                  name,
-                  description,
-                  image: imageUrl,
-                  category,
-                  platform,
-                  price: parseFloat(price),
-                  amount: parseInt(amount, 10),
-                  storeId,
-              },
-          });
-          return res.status(201).json(product);
-      } catch (error) {
-          console.error("Error al crear producto:", error);
-          return res.status(500).json({ error: "Error al crear el producto" });
-      }
+      const imageUrl = req.file ? req.file.path : '';
+      const product = await prisma.product.create({
+        data: {
+          name,
+          description,
+          image: imageUrl,
+          category,
+          platform,
+          price: parseFloat(price),
+          amount: parseInt(amount, 10),
+          storeId,
+        },
+      });
+      return res.status(201).json(product);
+    } catch (error) {
+      console.error("Error al crear producto:", error);
+      return res.status(500).json({ error: "Error al crear el producto" });
+    }
   });
 };
 
@@ -208,58 +207,27 @@ export const getUniqueProduct = async (req: Request, res: Response) => {
   }
 };
 
-router.post('/upload-single', uploadSingle, async (req, res) => {
-  if (!req.file) {
-    return res.status(400).json({ message: 'No file uploaded' });
+export const getProductsByCategory = async (req: Request, res: Response) => {
+  const category = req.params.category;
+
+  try {
+    const products = await prisma.product.findMany({
+      where: {
+        category,
+      },
+    });
+
+    return res.json(products);
+  } catch (error) {
+    return res.status(500).json({ error: "Error al obtener los productos por categoría" });
   }
+};
 
-  const imageUrl = `/images/${req.file.filename}`;
-
-  res.json({ imageUrl });
-});
-
-router.post('/upload-multiple', uploadMultiple, async (req, res) => {
-  if (!req.files || req.files.length === 0) {
-    return res.status(400).json({ message: 'No files uploaded' });
-  }
-
-  const files = req.files as Express.Multer.File[];
-  const imageUrls = files.map(file => `/images/${file.filename}`);
-
-  res.json({ imageUrls });
-});
-
-router.post('/product/:storeId', uploadSingle, createProduct);
-router.put('/update-product/:productId', uploadSingle, updateProduct);
-
-
-router.get('/most-visited-products', getMostVisitedProducts);
-
-router.post('/upload-single', uploadSingle, async (req, res) => {
-  if (!req.file) {
-    return res.status(400).json({ message: 'No file uploaded' });
-  }
-
-  const imageUrl = `/images/${req.file.filename}`;
-  
- 
-
-  res.json({ imageUrl });
-});
-
-router.post('/upload-multiple', uploadMultiple, async (req, res) => {
-  if (!req.files || req.files.length === 0) {
-    return res.status(400).json({ message: 'No files uploaded' });
-  }
-  
-  const files = req.files as Express.Multer.File[];
-  const imageUrls = files.map(file => `/images/${file.filename}`);
-  
-
-
-  res.json({ imageUrls });
-});
-router.post('/product/:storeId', uploadSingle, createProduct);
-router.put('/update-product/:productId', uploadSingle, updateProduct);
-
-export default router;
+function uploadSingle(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string, any>>, next: (err: any) => Promise<Response<any, Record<string, any>>>) {
+  upload.single('image')(req, res, (err: any) => {
+    if (err) {
+      return next(err);
+    }
+    next(null);
+  });
+}

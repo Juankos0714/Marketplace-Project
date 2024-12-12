@@ -1,12 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getUniqueProduct = exports.getMostVisitedProducts = exports.deleteProduct = exports.getAllProducts = exports.updateProduct = exports.createProduct = void 0;
-const express_1 = require("express");
+exports.getProductsByCategory = exports.getUniqueProduct = exports.getMostVisitedProducts = exports.deleteProduct = exports.getAllProducts = exports.updateProduct = exports.createProduct = void 0;
 const prisma_1 = require("../database/prisma");
-const uploadMiddleware_1 = require("../middlewares/uploadMiddleware");
-const router = (0, express_1.Router)();
+const UploadMiddleware_1 = require("../middlewares/UploadMiddleware");
 const createProduct = async (req, res) => {
-    (0, uploadMiddleware_1.uploadSingle)(req, res, async (err) => {
+    UploadMiddleware_1.upload.single('image')(req, res, async (err) => {
         if (err) {
             return res.status(400).json({ error: err.message });
         }
@@ -16,7 +14,7 @@ const createProduct = async (req, res) => {
             if (!name || !description || !category || !platform || !price || !amount) {
                 return res.status(400).json({ error: "Todos los campos son requeridos" });
             }
-            const imageUrl = req.file ? `/images/products/${req.file.filename}` : '';
+            const imageUrl = req.file ? req.file.path : '';
             const product = await prisma_1.prisma.product.create({
                 data: {
                     name,
@@ -39,7 +37,7 @@ const createProduct = async (req, res) => {
 };
 exports.createProduct = createProduct;
 const updateProduct = async (req, res) => {
-    (0, uploadMiddleware_1.uploadSingle)(req, res, async (err) => {
+    uploadSingle(req, res, async (err) => {
         if (err) {
             return res.status(400).json({ error: err.message });
         }
@@ -194,39 +192,26 @@ const getUniqueProduct = async (req, res) => {
     }
 };
 exports.getUniqueProduct = getUniqueProduct;
-router.post('/upload-single', uploadMiddleware_1.uploadSingle, async (req, res) => {
-    if (!req.file) {
-        return res.status(400).json({ message: 'No file uploaded' });
+const getProductsByCategory = async (req, res) => {
+    const category = req.params.category;
+    try {
+        const products = await prisma_1.prisma.product.findMany({
+            where: {
+                category,
+            },
+        });
+        return res.json(products);
     }
-    const imageUrl = `/images/${req.file.filename}`;
-    res.json({ imageUrl });
-});
-router.post('/upload-multiple', uploadMiddleware_1.uploadMultiple, async (req, res) => {
-    if (!req.files || req.files.length === 0) {
-        return res.status(400).json({ message: 'No files uploaded' });
+    catch (error) {
+        return res.status(500).json({ error: "Error al obtener los productos por categoría" });
     }
-    const files = req.files;
-    const imageUrls = files.map(file => `/images/${file.filename}`);
-    res.json({ imageUrls });
-});
-router.post('/product/:storeId', uploadMiddleware_1.uploadSingle, exports.createProduct);
-router.put('/update-product/:productId', uploadMiddleware_1.uploadSingle, exports.updateProduct);
-router.get('/most-visited-products', exports.getMostVisitedProducts);
-router.post('/upload-single', uploadMiddleware_1.uploadSingle, async (req, res) => {
-    if (!req.file) {
-        return res.status(400).json({ message: 'No file uploaded' });
-    }
-    const imageUrl = `/images/${req.file.filename}`;
-    res.json({ imageUrl });
-});
-router.post('/upload-multiple', uploadMiddleware_1.uploadMultiple, async (req, res) => {
-    if (!req.files || req.files.length === 0) {
-        return res.status(400).json({ message: 'No files uploaded' });
-    }
-    const files = req.files;
-    const imageUrls = files.map(file => `/images/${file.filename}`);
-    res.json({ imageUrls });
-});
-router.post('/product/:storeId', uploadMiddleware_1.uploadSingle, exports.createProduct);
-router.put('/update-product/:productId', uploadMiddleware_1.uploadSingle, exports.updateProduct);
-exports.default = router;
+};
+exports.getProductsByCategory = getProductsByCategory;
+function uploadSingle(req, res, next) {
+    UploadMiddleware_1.upload.single('image')(req, res, (err) => {
+        if (err) {
+            return next(err);
+        }
+        next(null);
+    });
+}
